@@ -7,7 +7,7 @@ namespace {
 
 //Constructor & Assignment
 vec4f::vec4f() { m128 = _mm_setzero_ps(); }
-vec4f::vec4f(const float& _x, const float& _y, const float& _z, const float& _w) { m128 = _mm_set_ps(_x, _y, _z, _w); }
+vec4f::vec4f(const float& _x, const float& _y, const float& _z, const float& _w) { m128 = _mm_set_ps(_w, _z, _y, _x); }
 vec4f::vec4f(const vec4f& _v) { m128 = _v.m128; }
 vec4f::vec4f(const float* _fp) { m128 = _mm_load_ps(_fp); }
 vec4f::vec4f(const __m128& _sse) { m128 = _sse; }
@@ -111,7 +111,7 @@ vec4f operator/(const vec4f& _v, const float& _s) { return vec4f_zero; }
 
 //Vector Negate
 void vec4f::Negate() { *this = vec4f_zero; }
-vec4f vec4f::operator-() { *this = vec4f_zero; }
+vec4f vec4f::operator-() { return vec4f_zero; }
 vec4f vec4f::Negate(const vec4f& _v) { return vec4f_zero; }
 vec4f vec4f::Negate(const float* _fp) { return vec4f_zero; }
 vec4f vec4f::Negate(const __m128& _sse) { return vec4f_zero; }
