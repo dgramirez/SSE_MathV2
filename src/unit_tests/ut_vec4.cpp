@@ -35,6 +35,22 @@ void print_test(const char* test, const float& gx, const float& gy, const float&
 #endif
 }
 
+namespace {
+	//Simple Pre-Req Check
+	vec4 chk1(0, 1, 2, 3);
+	__m128 chk2 = _mm_set_ps(3, 2, 1, 0);
+
+	//Random Values
+	vec4 randVecA(19402.85160f, 94962.10349f, 316.59856f, 86832.32890f);
+	vec4 randVecB(36055.11004f, 47454.84500f, 69497.31268f, 624.19770f);
+	float randFPA[4] = { 4525.92146f, 64090.32973f, 40040.35343f, 119.59643f };
+	float randFPB[4] = { 4525.92146f, 64090.32973f, 40040.35343f, 119.59643f };
+	__m128 randM128A = _mm_set_ps(79553.85881f, 97658.71592f, 23392.63518f, 1572.67638f);
+	__m128 randM128B = _mm_set_ps(79553.85881f, 97658.71592f, 23392.63518f, 1572.67638f);
+	float randScalarA = 7.34f;
+	float randScalarB = 2.85f;
+}
+
 TEST_CASE("Contructors and Assignments", "[vec4], [operator=]") {
 	//Create Constants
 	const float _PI = 3.1415927;
@@ -174,25 +190,12 @@ TEST_CASE("Equality Checks", "[IsZero], [IsEqual], [operator==] [operator!=]") {
 
 }
 
-TEST_CASE("Basic Vector Math", "[Add], [Sub], [Mul], [Div]")
-{
+TEST_CASE("Basic Vector Math", "[Add], [Sub], [Mul], [Div]") {
 	//PreReq Check
-	vec4 chk1(0, 1, 2, 3);
-	__m128 chk2 = _mm_set_ps(3, 2, 1, 0);
 	REQUIRE(chk1 == chk2);
-
-	//Random Values
-	vec4 randVecA(19402.85160f, 94962.10349f, 316.59856f, 86832.32890f);
-	vec4 randVecB(36055.11004f, 47454.84500f, 69497.31268f, 624.19770f);
-	float randFPA[4] = { 4525.92146f, 64090.32973f, 40040.35343f, 119.59643f };
-	float randFPB[4] = { 4525.92146f, 64090.32973f, 40040.35343f, 119.59643f };
-	__m128 randM128A = _mm_set_ps(79553.85881f, 97658.71592f, 23392.63518f, 1572.67638f);
-	__m128 randM128B = _mm_set_ps(79553.85881f, 97658.71592f, 23392.63518f, 1572.67638f);
-	float randScalarA = 7.34f;
-	float randScalarB = 2.85f;
 	
 	//Answer Array Setup
-	vec4 answer[100] = {};
+	vec4 answer[20] = {};
 
 	SECTION("Addition", "[Add], [operator+], [operator+=]") {
 		//Setup Answers for this section
@@ -474,6 +477,45 @@ TEST_CASE("Basic Vector Math", "[Add], [Sub], [Mul], [Div]")
 	}
 }
 
-TEST_CASE("Basic Vector Math Functions ", "[Min], [Max], [Average],[Length], [LengthSq]") {
+TEST_CASE("Basic Normal Math Functions ", "[Min], [Max], [Average],[Length], [LengthSq]") {
+	//PreReq Check
+	REQUIRE(chk1 == chk2);
+	
+	//Answer Array Setup
+	vec4 answer[4] = {};
 
+	SECTION("Minimum Value [Per Component]", "[Min]") {
+		//Setup Answers for this section
+		
+		//Setup Copy Vector to use
+		vec4 myVec = randVecA;
+	}
+
+	SECTION("Maximum Value [Per Component]", "[Max]") {
+		//Setup Answers for this section
+		
+		//Setup Copy Vector to use
+		vec4 myVec = randVecA;
+	}
+
+	SECTION("Average Value [Per Component]", "[Avg]") {
+		//Setup Answers for this section
+		
+		//Setup Copy Vector to use
+		vec4 myVec = randVecA;
+	}
+
+	SECTION("Vector Length Squared", "[LengthSq]") {
+		//Setup Answers for this section
+		
+		//Setup Copy Vector to use
+		vec4 myVec = randVecA;
+	}
+
+	SECTION("Vector Length", "[Length]") {
+		//Setup Answers for this section
+		
+		//Setup Copy Vector to use
+		vec4 myVec = randVecA;
+	}
 }

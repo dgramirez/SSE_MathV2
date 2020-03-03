@@ -129,22 +129,28 @@ vec4f vec4f::Negate(const float* _fp) { return vec4f_zero; }
 vec4f vec4f::Negate(const __m128& _sse) { return vec4f_zero; }
 
 //Vector Minimum (Per Component)
-void vec4f::Min() { *this = vec4f_zero; }
-vec4f vec4f::Min(const float* _fp) { return vec4f_zero; }
-vec4f vec4f::Min(const __m128& _sse) { return vec4f_zero; }
-vec4f vec4f::Min(const vec4f& _v) { return vec4f_zero; }
+void vec4f::Min(const vec4f& _v) { *this = vec4f_zero; }
+vec4f vec4f::Min(const vec4f& _v1, const vec4f& _v2) { return vec4f_zero; }
+vec4f vec4f::Min(const vec4f& _v, const float* _fp) { return vec4f_zero; }
+vec4f vec4f::Min(const float* _fp, const vec4f& _v) { return vec4f_zero; }
+vec4f vec4f::Min(const vec4f& _v, const __m128& _sse) { return vec4f_zero; }
+vec4f vec4f::Min(const __m128& _sse, const vec4f& _v) { return vec4f_zero; }
 
 //Vector Maximum (Per Component)
-void vec4f::Max() { *this = vec4f_zero; }
-vec4f vec4f::Max(const float* _fp) { return vec4f_zero; }
-vec4f vec4f::Max(const __m128& _sse) { return vec4f_zero; }
-vec4f vec4f::Max(const vec4f& _v) { return vec4f_zero; }
+void vec4f::Max(const vec4f& _v) { *this = vec4f_zero; }
+vec4f vec4f::Max(const vec4f& _v1, const vec4f& _v2) { return vec4f_zero; }
+vec4f vec4f::Max(const vec4f& _v, const float* _fp) { return vec4f_zero; }
+vec4f vec4f::Max(const float* _fp, const vec4f& _v) { return vec4f_zero; }
+vec4f vec4f::Max(const vec4f& _v, const __m128& _sse) { return vec4f_zero; }
+vec4f vec4f::Max(const __m128& _sse, const vec4f& _v) { return vec4f_zero; }
 
 //Vector Average (Per Component)
-void vec4f::Average() { *this = vec4f_zero; }
-vec4f vec4f::Average(const float* _fp) { return vec4f_zero; }
-vec4f vec4f::Average(const __m128& _sse) { return vec4f_zero; }
-vec4f vec4f::Average(const vec4f& _v) { return vec4f_zero; }
+void vec4f::Average(const vec4f& _v) { *this = vec4f_zero; }
+vec4f vec4f::Average(const vec4f& _v1, const vec4f& _v2) { return vec4f_zero; }
+vec4f vec4f::Average(const vec4f& _v, const float* _fp) { return vec4f_zero; }
+vec4f vec4f::Average(const float* _fp, const vec4f& _v) { return vec4f_zero; }
+vec4f vec4f::Average(const vec4f& _v, const __m128& _sse) { return vec4f_zero; }
+vec4f vec4f::Average(const __m128& _sse, const vec4f& _v) { return vec4f_zero; }
 
 //Vector Lengths
 float vec4f::Length() { return 0.0f; }

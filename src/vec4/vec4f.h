@@ -137,22 +137,28 @@ struct vec4f {
 	static vec4f Negate(const __m128& _sse);
 
 	//Vector Minimum (Per Component)
-	void Min();
-	static vec4f Min(const float* _fp);
-	static vec4f Min(const __m128& _sse);
-	static vec4f Min(const vec4f& _v);
+	void Min(const vec4f& _v);
+	static vec4f Min(const vec4f& _v1, const vec4f& _v2);
+	static vec4f Min(const vec4f& _v, const float* _fp);
+	static vec4f Min(const float* _fp, const vec4f& _v);
+	static vec4f Min(const vec4f& _v, const __m128& _sse);
+	static vec4f Min(const __m128& _sse, const vec4f& _v);
 
 	//Vector Maximum (Per Component)
-	void Max();
-	static vec4f Max(const float* _fp);
-	static vec4f Max(const __m128& _sse);
-	static vec4f Max(const vec4f& _v);
+	void Max(const vec4f& _v);
+	static vec4f Max(const vec4f& _v1, const vec4f& _v2);
+	static vec4f Max(const vec4f& _v, const float* _fp);
+	static vec4f Max(const float* _fp, const vec4f& _v);
+	static vec4f Max(const vec4f& _v, const __m128& _sse);
+	static vec4f Max(const __m128& _sse, const vec4f& _v);
 
 	//Vector Average (Per Component)
-	void Average();
-	static vec4f Average(const float* _fp);
-	static vec4f Average(const __m128& _sse);
-	static vec4f Average(const vec4f& _v);
+	void Average(const vec4f& _v);
+	static vec4f Average(const vec4f& _v1, const vec4f& _v2);
+	static vec4f Average(const vec4f& _v, const float* _fp);
+	static vec4f Average(const float* _fp, const vec4f& _v);
+	static vec4f Average(const vec4f& _v, const __m128& _sse);
+	static vec4f Average(const __m128& _sse, const vec4f& _v);
 
 	//Vector Length
 	float Length();
