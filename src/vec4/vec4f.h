@@ -73,6 +73,12 @@ struct vec4f {
 	friend vec4f operator+(const float* _fp, const vec4f& _v);
 	friend vec4f operator+(const __m128& _sse, const vec4f& _v);
 
+	//Vector-Vector Static Add Additions
+	static vec4f Add(const float* fp1, const float* fp2);
+	static vec4f Add(const __m128& _sse1, const __m128& _sse2);
+	static vec4f Add(const float* fp, const __m128& _sse);
+	static vec4f Add(const __m128& _sse, const float* fp);
+
 	//Vector-Vector Subtraction (Self & Self Operator Overloads)
 	void Sub(const vec4f& _v);
 	void Sub(const float* _fp);
@@ -93,16 +99,22 @@ struct vec4f {
 	friend vec4f operator-(const float* _fp, const vec4f& _v);
 	friend vec4f operator-(const __m128& _sse, const vec4f& _v);
 
+	//Vector-Vector Static Subtraction Additions
+	static vec4f Sub(const float* fp1, const float* fp2);
+	static vec4f Sub(const __m128& _sse1, const __m128& _sse2);
+	static vec4f Sub(const float* fp, const __m128& _sse);
+	static vec4f Sub(const __m128& _sse, const float* fp);
+
 	//Vector-Scalar Multiply (Self & Self Operator Overload)
 	void Mul(const float& _s);
 	void operator*=(const float& _s);
 
 	//Vector-Scalar Multiply (Static & Global Operator Overload)
 	static vec4f Mul(const vec4f& _v, const float& _s);
-	static vec4f Mul(const float* _fp, const float& _s);
-	static vec4f Mul(const __m128& _sse, const float& _s);
 	static vec4f Mul(const float& _s, const vec4f& _v);
+	static vec4f Mul(const float* _fp, const float& _s);
 	static vec4f Mul(const float& _s, const float* _fp);
+	static vec4f Mul(const __m128& _sse, const float& _s);
 	static vec4f Mul(const float& _s, const __m128& _sse);
 	friend vec4f operator*(const vec4f& _v, const float& _s);
 	friend vec4f operator*(const float& _s, const vec4f& _v);
@@ -125,22 +137,46 @@ struct vec4f {
 	static vec4f Negate(const __m128& _sse);
 
 	//Vector Minimum (Per Component)
-	void Min();
-	static vec4f Min(const float* _fp);
-	static vec4f Min(const __m128& _sse);
-	static vec4f Min(const vec4f& _v);
+	void Min(const vec4f& _v);
+	static vec4f Min(const vec4f& _v1, const vec4f& _v2);
+	static vec4f Min(const vec4f& _v, const float* _fp);
+	static vec4f Min(const float* _fp, const vec4f& _v);
+	static vec4f Min(const vec4f& _v, const __m128& _sse);
+	static vec4f Min(const __m128& _sse, const vec4f& _v);
+
+	//Vector Static Minimum Additions
+	static vec4f Min(const float* fp1, const float* fp2);
+	static vec4f Min(const __m128& _sse1, const __m128& _sse2);
+	static vec4f Min(const float* fp, const __m128& _sse);
+	static vec4f Min(const __m128& _sse, const float* fp);
 
 	//Vector Maximum (Per Component)
-	void Max();
-	static vec4f Max(const float* _fp);
-	static vec4f Max(const __m128& _sse);
-	static vec4f Max(const vec4f& _v);
+	void Max(const vec4f& _v);
+	static vec4f Max(const vec4f& _v1, const vec4f& _v2);
+	static vec4f Max(const vec4f& _v, const float* _fp);
+	static vec4f Max(const float* _fp, const vec4f& _v);
+	static vec4f Max(const vec4f& _v, const __m128& _sse);
+	static vec4f Max(const __m128& _sse, const vec4f& _v);
+
+	//Vector Static Maximum Additions
+	static vec4f Max(const float* fp1, const float* fp2);
+	static vec4f Max(const __m128& _sse1, const __m128& _sse2);
+	static vec4f Max(const float* fp, const __m128& _sse);
+	static vec4f Max(const __m128& _sse, const float* fp);
 
 	//Vector Average (Per Component)
-	void Average();
-	static vec4f Average(const float* _fp);
-	static vec4f Average(const __m128& _sse);
-	static vec4f Average(const vec4f& _v);
+	void Average(const vec4f& _v);
+	static vec4f Average(const vec4f& _v1, const vec4f& _v2);
+	static vec4f Average(const vec4f& _v, const float* _fp);
+	static vec4f Average(const float* _fp, const vec4f& _v);
+	static vec4f Average(const vec4f& _v, const __m128& _sse);
+	static vec4f Average(const __m128& _sse, const vec4f& _v);
+
+	//Vector Static Average Additions
+	static vec4f Average(const float* fp1, const float* fp2);
+	static vec4f Average(const __m128& _sse1, const __m128& _sse2);
+	static vec4f Average(const float* fp, const __m128& _sse);
+	static vec4f Average(const __m128& _sse, const float* fp);
 
 	//Vector Length
 	float Length();
@@ -169,6 +205,12 @@ struct vec4f {
 	friend float operator*(const float* _fp, const vec4f& _v2);
 	friend float operator*(const __m128& _sse, const vec4f& _v2);
 
+	//Vector Dot Product Additions
+	static float Dot(const float* fp1, const float* fp2);
+	static float Dot(const __m128& _sse1, const __m128& _sse2);
+	static float Dot(const float* fp, const __m128& _sse);
+	static float Dot(const __m128& _sse, const float* fp);
+
 	//Vector Cross Product (Self & Self Operator Overloads)
 	void Cross(const vec4f& _v);
 	void Cross(const float* _fp);
@@ -188,6 +230,12 @@ struct vec4f {
 	friend vec4f operator^(const vec4f& _v1, const __m128& _sse);
 	friend vec4f operator^(const float* _fp, const vec4f& _v2);
 	friend vec4f operator^(const __m128& _sse, const vec4f& _v2);
+
+	//Vector Cross Product Additions
+	static vec4f Cross(const float* fp1, const float* fp2);
+	static vec4f Cross(const __m128& _sse1, const __m128& _sse2);
+	static vec4f Cross(const float* fp, const __m128& _sse);
+	static vec4f Cross(const __m128& _sse, const float* fp);
 
 	//Vector Normalize
 	void Normalize();
@@ -211,6 +259,12 @@ struct vec4f {
 	static float AngleBetween(const float* _fp, const vec4f& _v2);
 	static float AngleBetween(const __m128& _sse, const vec4f& _v2);
 
+	//Vector Angle Between Additions
+	static float AngleBetween(const float* fp1, const float* fp2);
+	static float AngleBetween(const __m128& _sse1, const __m128& _sse2);
+	static float AngleBetween(const float* fp, const __m128& _sse);
+	static float AngleBetween(const __m128& _sse, const float* fp);
+
 	//Vector Component
 	float Component(const vec4f& _v);
 	float Component(const float* _fp);
@@ -220,6 +274,12 @@ struct vec4f {
 	static float Component(const vec4f& _v1, const __m128& _sse);
 	static float Component(const float* _fp, const vec4f& _v2);
 	static float Component(const __m128& _sse, const vec4f& _v2);
+
+	//Vector Component Additions
+	static float Component(const float* fp1, const float* fp2);
+	static float Component(const __m128& _sse1, const __m128& _sse2);
+	static float Component(const float* fp, const __m128& _sse);
+	static float Component(const __m128& _sse, const float* fp);
 
 	//Vector Project
 	void Project(const vec4f& _v);
@@ -231,6 +291,12 @@ struct vec4f {
 	static vec4f Project(const float* _fp, const vec4f& _v2);
 	static vec4f Project(const __m128& _sse, const vec4f& _v2);
 
+	//Vector Project Additions
+	static vec4f Project(const float* fp1, const float* fp2);
+	static vec4f Project(const __m128& _sse1, const __m128& _sse2);
+	static vec4f Project(const float* fp, const __m128& _sse);
+	static vec4f Project(const __m128& _sse, const float* fp);
+
 	//Vector Reflect
 	void Reflect(const vec4f& _v);
 	void Reflect(const float* _fp);
@@ -240,5 +306,15 @@ struct vec4f {
 	static vec4f Reflect(const vec4f& _v1, const __m128& _sse);
 	static vec4f Reflect(const float* _fp, const vec4f& _v2);
 	static vec4f Reflect(const __m128& _sse, const vec4f& _v2);
+
+	//Vector Reflect Additions
+	static vec4f Reflect(const float* fp1, const float* fp2);
+	static vec4f Reflect(const __m128& _sse1, const __m128& _sse2);
+	static vec4f Reflect(const float* fp, const __m128& _sse);
+	static vec4f Reflect(const __m128& _sse, const float* fp);
 };
 #endif //VEC4F_H
+
+#ifdef VEC4_FLOATS_GLOBAL
+typedef vec4f vec4;
+#endif

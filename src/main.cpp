@@ -1,28 +1,33 @@
 #define CATCH_CONFIG_RUNNER
 #include "unit_tests/catch2.hpp"
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 int main( int argc, char* argv[] )
 {
-  Catch::Session session; // There must be exactly one instance
+    //Set Seed
+    srand(time(0));
+
+    Catch::Session session; // There must be exactly one instance
  
-  // writing to session.configData() here sets defaults
-  // this is the preferred way to set them
+    // writing to session.configData() here sets defaults
+    // this is the preferred way to set them
     
-  int returnCode = session.applyCommandLine( argc, argv );
-  if( returnCode != 0 ) // Indicates a command line error
+    int returnCode = session.applyCommandLine( argc, argv );
+    if( returnCode != 0 ) // Indicates a command line error
         return returnCode;
  
-  // writing to session.configData() or session.Config() here 
-  // overrides command line args
-  // only do this if you know you need to
+    // writing to session.configData() or session.Config() here 
+    // overrides command line args
+    // only do this if you know you need to
 
-  int numFailed = session.run();
-  printf("Press the enter key to continue . . .");
-  getchar();
+    int numFailed = session.run();
+    printf("Press the enter key to continue . . .");
+    getchar();
   
-  // numFailed is clamped to 255 as some unices only use the lower 8 bits.
-  // This clamping has already been applied, so just return it here
-  // You can also do any post run clean-up here
-  return numFailed;
+    // numFailed is clamped to 255 as some unices only use the lower 8 bits.
+    // This clamping has already been applied, so just return it here
+    // You can also do any post run clean-up here
+    return numFailed;
 }

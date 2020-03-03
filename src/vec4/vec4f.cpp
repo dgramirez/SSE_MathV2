@@ -65,6 +65,12 @@ vec4f operator+(const vec4f& _v, const __m128& _sse) { return vec4f_zero; }
 vec4f operator+(const float* _fp, const vec4f& _v) { return vec4f_zero; }
 vec4f operator+(const __m128& _sse, const vec4f& _v) { return vec4f_zero; }
 
+//Vector-Vector Static Add Additions
+vec4f vec4f::Add(const float* fp1, const float* fp2) { return vec4f_zero; }
+vec4f vec4f::Add(const __m128& _sse1, const __m128& _sse2) { return vec4f_zero; }
+vec4f vec4f::Add(const float* fp, const __m128& _sse) { return vec4f_zero; }
+vec4f vec4f::Add(const __m128& _sse, const float* fp) { return vec4f_zero; }
+
 //Vector-Vector Subtraction (Self & Self Operator Overloads)
 void vec4f::Sub(const vec4f& _v) { *this = vec4f_zero; }
 void vec4f::Sub(const float* _fp) { *this = vec4f_zero; }
@@ -84,6 +90,12 @@ vec4f operator-(const vec4f& _v, const float* _fp) { return vec4f_zero; }
 vec4f operator-(const vec4f& _v, const __m128& _sse) { return vec4f_zero; }
 vec4f operator-(const float* _fp, const vec4f& _v) { return vec4f_zero; }
 vec4f operator-(const __m128& _sse, const vec4f& _v) { return vec4f_zero; }
+
+//Vector-Vector Static Subtraction Additions
+vec4f vec4f::Sub(const float* fp1, const float* fp2) { return vec4f_zero; }
+vec4f vec4f::Sub(const __m128& _sse1, const __m128& _sse2) { return vec4f_zero; }
+vec4f vec4f::Sub(const float* fp, const __m128& _sse) { return vec4f_zero; }
+vec4f vec4f::Sub(const __m128& _sse, const float* fp) { return vec4f_zero; }
 
 //Vector-Scalar Multiply (Self & Self Operator Overload)
 void vec4f::Mul(const float& _s) { *this = vec4f_zero; }
@@ -117,22 +129,46 @@ vec4f vec4f::Negate(const float* _fp) { return vec4f_zero; }
 vec4f vec4f::Negate(const __m128& _sse) { return vec4f_zero; }
 
 //Vector Minimum (Per Component)
-void vec4f::Min() { *this = vec4f_zero; }
-vec4f vec4f::Min(const float* _fp) { return vec4f_zero; }
-vec4f vec4f::Min(const __m128& _sse) { return vec4f_zero; }
-vec4f vec4f::Min(const vec4f& _v) { return vec4f_zero; }
+void vec4f::Min(const vec4f& _v) { *this = vec4f_zero; }
+vec4f vec4f::Min(const vec4f& _v1, const vec4f& _v2) { return vec4f_zero; }
+vec4f vec4f::Min(const vec4f& _v, const float* _fp) { return vec4f_zero; }
+vec4f vec4f::Min(const float* _fp, const vec4f& _v) { return vec4f_zero; }
+vec4f vec4f::Min(const vec4f& _v, const __m128& _sse) { return vec4f_zero; }
+vec4f vec4f::Min(const __m128& _sse, const vec4f& _v) { return vec4f_zero; }
+
+//Vector Static Minimum Additions
+vec4f vec4f::Min(const float* fp1, const float* fp2) { return vec4f_zero; }
+vec4f vec4f::Min(const __m128& _sse1, const __m128& _sse2) { return vec4f_zero; }
+vec4f vec4f::Min(const float* fp, const __m128& _sse) { return vec4f_zero; }
+vec4f vec4f::Min(const __m128& _sse, const float* fp) { return vec4f_zero; }
 
 //Vector Maximum (Per Component)
-void vec4f::Max() { *this = vec4f_zero; }
-vec4f vec4f::Max(const float* _fp) { return vec4f_zero; }
-vec4f vec4f::Max(const __m128& _sse) { return vec4f_zero; }
-vec4f vec4f::Max(const vec4f& _v) { return vec4f_zero; }
+void vec4f::Max(const vec4f& _v) { *this = vec4f_zero; }
+vec4f vec4f::Max(const vec4f& _v1, const vec4f& _v2) { return vec4f_zero; }
+vec4f vec4f::Max(const vec4f& _v, const float* _fp) { return vec4f_zero; }
+vec4f vec4f::Max(const float* _fp, const vec4f& _v) { return vec4f_zero; }
+vec4f vec4f::Max(const vec4f& _v, const __m128& _sse) { return vec4f_zero; }
+vec4f vec4f::Max(const __m128& _sse, const vec4f& _v) { return vec4f_zero; }
+
+//Vector Static Maximum Additions
+vec4f vec4f::Max(const float* fp1, const float* fp2) { return vec4f_zero; }
+vec4f vec4f::Max(const __m128& _sse1, const __m128& _sse2) { return vec4f_zero; }
+vec4f vec4f::Max(const float* fp, const __m128& _sse) { return vec4f_zero; }
+vec4f vec4f::Max(const __m128& _sse, const float* fp) { return vec4f_zero; }
 
 //Vector Average (Per Component)
-void vec4f::Average() { *this = vec4f_zero; }
-vec4f vec4f::Average(const float* _fp) { return vec4f_zero; }
-vec4f vec4f::Average(const __m128& _sse) { return vec4f_zero; }
-vec4f vec4f::Average(const vec4f& _v) { return vec4f_zero; }
+void vec4f::Average(const vec4f& _v) { *this = vec4f_zero; }
+vec4f vec4f::Average(const vec4f& _v1, const vec4f& _v2) { return vec4f_zero; }
+vec4f vec4f::Average(const vec4f& _v, const float* _fp) { return vec4f_zero; }
+vec4f vec4f::Average(const float* _fp, const vec4f& _v) { return vec4f_zero; }
+vec4f vec4f::Average(const vec4f& _v, const __m128& _sse) { return vec4f_zero; }
+vec4f vec4f::Average(const __m128& _sse, const vec4f& _v) { return vec4f_zero; }
+
+//Vector Static Average Additions
+vec4f vec4f::Average(const float* fp1, const float* fp2) { return vec4f_zero; }
+vec4f vec4f::Average(const __m128& _sse1, const __m128& _sse2) { return vec4f_zero; }
+vec4f vec4f::Average(const float* fp, const __m128& _sse) { return vec4f_zero; }
+vec4f vec4f::Average(const __m128& _sse, const float* fp) { return vec4f_zero; }
 
 //Vector Lengths
 float vec4f::Length() { return 0.0f; }
@@ -161,6 +197,12 @@ float operator*(const vec4f& _v1, const __m128& _sse) { return 0.0f; }
 float operator*(const float* _fp, const vec4f& _v2) { return 0.0f; }
 float operator*(const __m128& _sse, const vec4f& _v2) { return 0.0f; }
 
+//Vector Dot Product Additions
+float vec4f::Dot(const float* fp1, const float* fp2) { return 0.0f; }
+float vec4f::Dot(const __m128& _sse1, const __m128& _sse2) { return 0.0f; }
+float vec4f::Dot(const float* fp, const __m128& _sse) { return 0.0f; }
+float vec4f::Dot(const __m128& _sse, const float* fp) { return 0.0f; }
+
 //Vector Cross Product (Self & Self Operator Overloads)
 void vec4f::Cross(const vec4f& _v) { *this = vec4f_zero; }
 void vec4f::Cross(const float* _fp) { *this = vec4f_zero; }
@@ -180,6 +222,12 @@ vec4f operator^(const vec4f& _v1, const float* _fp) { return vec4f_zero; }
 vec4f operator^(const vec4f& _v1, const __m128& _sse) { return vec4f_zero; }
 vec4f operator^(const float* _fp, const vec4f& _v2) { return vec4f_zero; }
 vec4f operator^(const __m128& _sse, const vec4f& _v2) { return vec4f_zero; }
+
+//Vector Cross Product Additions
+vec4f vec4f::Cross(const float* fp1, const float* fp2) { return vec4f_zero; }
+vec4f vec4f::Cross(const __m128& _sse1, const __m128& _sse2) { return vec4f_zero; }
+vec4f vec4f::Cross(const float* fp, const __m128& _sse) { return vec4f_zero; }
+vec4f vec4f::Cross(const __m128& _sse, const float* fp) { return vec4f_zero; }
 
 //Vector Normalize
 void vec4f::Normalize() { *this = vec4f_zero; }
@@ -203,6 +251,12 @@ float vec4f::AngleBetween(const vec4f& _v1, const __m128& _sse) { return 0.0f; }
 float vec4f::AngleBetween(const float* _fp, const vec4f& _v2) { return 0.0f; }
 float vec4f::AngleBetween(const __m128& _sse, const vec4f& _v2) { return 0.0f; }
 
+//Vector Angle Between Additions
+float vec4f::AngleBetween(const float* fp1, const float* fp2) { return 0.0f; }
+float vec4f::AngleBetween(const __m128& _sse1, const __m128& _sse2) { return 0.0f; }
+float vec4f::AngleBetween(const float* fp, const __m128& _sse) { return 0.0f; }
+float vec4f::AngleBetween(const __m128& _sse, const float* fp) { return 0.0f; }
+
 //Vector Component
 float vec4f::Component(const vec4f& _v) { return 0.0f; }
 float vec4f::Component(const float* _fp) { return 0.0f; }
@@ -212,6 +266,12 @@ float vec4f::Component(const vec4f& _v1, const float* _fp) { return 0.0f; }
 float vec4f::Component(const vec4f& _v1, const __m128& _sse) { return 0.0f; }
 float vec4f::Component(const float* _fp, const vec4f& _v2) { return 0.0f; }
 float vec4f::Component(const __m128& _sse, const vec4f& _v2) { return 0.0f; }
+
+//Vector Component Additions
+float vec4f::Component(const float* fp1, const float* fp2) { return 0.0f; }
+float vec4f::Component(const __m128& _sse1, const __m128& _sse2) { return 0.0f; }
+float vec4f::Component(const float* fp, const __m128& _sse) { return 0.0f; }
+float vec4f::Component(const __m128& _sse, const float* fp) { return 0.0f; }
 
 //Vector Project
 void vec4f::Project(const vec4f& _v) { *this = vec4f_zero; }
@@ -223,6 +283,12 @@ vec4f vec4f::Project(const vec4f& _v1, const __m128& _sse) { return vec4f_zero; 
 vec4f vec4f::Project(const float* _fp, const vec4f& _v2) { return vec4f_zero; }
 vec4f vec4f::Project(const __m128& _sse, const vec4f& _v2) { return vec4f_zero; }
 
+//Vector Project Additions
+vec4f vec4f::Project(const float* fp1, const float* fp2) { return vec4f_zero; }
+vec4f vec4f::Project(const __m128& _sse1, const __m128& _sse2) { return vec4f_zero; }
+vec4f vec4f::Project(const float* fp, const __m128& _sse) { return vec4f_zero; }
+vec4f vec4f::Project(const __m128& _sse, const float* fp) { return vec4f_zero; }
+
 //Vector Reflect
 void vec4f::Reflect(const vec4f& _v) { *this = vec4f_zero; }
 void vec4f::Reflect(const float* _fp) { *this = vec4f_zero; }
@@ -232,3 +298,9 @@ vec4f vec4f::Reflect(const vec4f& _v1, const float* _fp) { return vec4f_zero; }
 vec4f vec4f::Reflect(const vec4f& _v1, const __m128& _sse) { return vec4f_zero; }
 vec4f vec4f::Reflect(const float* _fp, const vec4f& _v2) { return vec4f_zero; }
 vec4f vec4f::Reflect(const __m128& _sse, const vec4f& _v2) { return vec4f_zero; }
+
+//Vector Reflect Additions
+vec4f vec4f::Reflect(const float* fp1, const float* fp2) { return vec4f_zero; }
+vec4f vec4f::Reflect(const __m128& _sse1, const __m128& _sse2) { return vec4f_zero; }
+vec4f vec4f::Reflect(const float* fp, const __m128& _sse) { return vec4f_zero; }
+vec4f vec4f::Reflect(const __m128& _sse, const float* fp) { return vec4f_zero; }
