@@ -17,22 +17,22 @@ float rand_num() {
 }
 
 void print(const char* _Format, ...) {
-#ifdef PRINT_DEBUG_INFO
-	#ifdef _WIN32
+	#ifdef PRINT_DEBUG_INFO
+		#ifdef _WIN32
 		va_list v1;
 		__va_start(&v1, _Format);
 		auto ret = vprintf(_Format, v1);
 		__crt_va_end(v1);
+		#endif
 	#endif
-#endif
 }
 
 void print_test(const char* test, const float& gx, const float& gy, const float& gz, const float& gw, const float& vx, const float& vy, const float& vz, const float& vw) {
-#ifdef PRINT_DEBUG_INFO
-	print("%s\n", test);
-	print("\tGiven:  (%f, %f, %f, %f)\n", gx, gy, gz, gw);
-	print("\tVector: (%f, %f, %f, %f)\n", vx, vy, vz, vw);
-#endif
+	#ifdef PRINT_DEBUG_INFO
+		print("%s\n", test);
+		print("\tGiven:  (%f, %f, %f, %f)\n", gx, gy, gz, gw);
+		print("\tVector: (%f, %f, %f, %f)\n", vx, vy, vz, vw);
+	#endif
 }
 
 namespace {
@@ -680,6 +680,230 @@ TEST_CASE("Basic Normal Math Functions ", "[Min], [Max], [Average],[Length], [Le
 	}
 }
 
-TEST_CASE("", "") {
+TEST_CASE("Vector Math Functions", "[Dot], [Cross], [Normalize], [Homogenize], [AngleBetween], [Component], [Project], [Reflect]") {
+	//PreReq Check
+	REQUIRE(chk1 == chk2);
+	
+	//Answer Array Setup
+	vec4 answer[20] = {};
 
+	SECTION("Dot Product Test", "[Dot], [Operator*]") {
+		//Setup Answers for this section
+		float vecAns = 0;
+		float fAnswer[17] = {
+
+		};
+
+		//Setup Copy Vector to use
+		vec4 myVec = randVecA;
+
+		//Dot Product Method Test: Vector
+		vecAns = myVec.Dot(randVecB);
+		CHECK(vecAns == fAnswer[0]);
+
+		//Dot Product Method Test: Float Pointer
+		vecAns = myVec.Dot(randFPA);
+		CHECK(vecAns == fAnswer[1]);
+
+		//Dot Product Method Test: m128
+		vecAns = myVec.Dot(randM128A);
+		CHECK(vecAns == fAnswer[2]);
+
+		//Static Dot Product Test: Vector & Vector
+		vecAns = vec4::Dot(randVecA, randVecB);
+		CHECK(vecAns == fAnswer[3]);
+		
+		//Static Dot Product Test: Vector & Float Pointer
+		vecAns = vec4::Dot(randVecA, randFPB);
+		CHECK(vecAns == fAnswer[4]);
+
+		//Static Dot Product Test: Float Pointer & Vector
+		vecAns = vec4::Dot(randFPA, randVecB);
+		CHECK(vecAns == fAnswer[5]);
+
+		//Static Dot Product Test: Vector & m128
+		vecAns = vec4::Dot(randVecA, randM128B);
+		CHECK(vecAns == fAnswer[6]);
+
+		//Static Dot Product Test: m128 & Vector
+		vecAns = vec4::Dot(randM128A, randVecB);
+		CHECK(vecAns == fAnswer[7]);
+
+		//Static Dot Product Test: Float Pointer & Float Pointer
+		vecAns = vec4::Dot(randFPA, randFPB);
+		CHECK(vecAns == fAnswer[8]);
+
+		//Static Dot Product Test: m128 & m128
+		vecAns = vec4::Dot(randM128A, randM128B);
+		CHECK(vecAns == fAnswer[9]);
+
+		//Static Dot Product Test: Float Pointer & m128
+		vecAns = vec4::Dot(randFPA, randM128B);
+		CHECK(vecAns == fAnswer[10]);
+
+		//Static Dot Product Test: m128 & Float Pointer
+		vecAns = vec4::Dot(randM128A, randFPB);
+		CHECK(vecAns == fAnswer[11]);
+
+		//Operator* Test: Vector & Vector
+		vecAns = randVecA * randVecB;
+		CHECK(vecAns == fAnswer[12]);
+		
+		//Operator* Test: Vector & Float Pointer
+		vecAns = randVecA * randFPB;
+		CHECK(vecAns == fAnswer[13]);
+
+		//Operator* Test: Float Pointer & Vector
+		vecAns = randFPA * randVecB;
+		CHECK(vecAns == fAnswer[14]);
+
+		//Operator* Test: Vector & m128
+		vecAns = randVecA * randM128B;
+		CHECK(vecAns == fAnswer[15]);
+
+		//Operator* Test: m128 & Vector
+		vecAns = randM128A * randVecB;
+		CHECK(vecAns == fAnswer[16]);
+	}
+
+	SECTION("Cross Product Test", "[Cross], [Operator^]") {
+		//Setup Answers for this section
+
+		//Setup Copy Vector to use
+		vec4 myVec = randVecA;
+
+		//Cross Product Method Test: Vector
+		myVec.Cross(randVecB);
+		CHECK(myVec == answer[0]);
+
+		//Cross Product Method Test: Float Pointer
+		myVec.Cross(randFPA);
+		CHECK(myVec == answer[1]);
+
+		//Cross Product Method Test: m128
+		myVec.Cross(randM128A);
+		CHECK(myVec == answer[2]);
+
+		//Operator^= Test: Vector
+		myVec ^= randVecA;
+		CHECK(myVec == answer[3]);
+
+		//Operator^= Test: Float Pointer
+		myVec ^= randFPB;
+		CHECK(myVec == answer[4]);
+
+		//Operator^= Test: m128
+		myVec ^= randM128B;
+		CHECK(myVec == answer[5]);
+
+		//Static Cross Product Test: Vector & Vector
+		myVec = vec4::Cross(randVecA, randVecB);
+		CHECK(myVec == answer[6]);
+		
+		//Static Cross Product Test: Vector & Float Pointer
+		myVec =vec4::Cross(randVecA, randFPB);
+		CHECK(myVec == answer[7]);
+
+		//Static Cross Product Test: Float Pointer & Vector
+		myVec =vec4::Cross(randFPA, randVecB);
+		CHECK(myVec == answer[8]);
+
+		//Static Cross Product Test: Vector & m128
+		myVec =vec4::Cross(randVecA, randM128B);
+		CHECK(myVec == answer[9]);
+
+		//Static Cross Product Test: m128 & Vector
+		myVec =vec4::Cross(randM128A, randVecB);
+		CHECK(myVec == answer[10]);
+
+		//Static Cross Product Test: Float Pointer & Float Pointer
+		myVec =vec4::Cross(randFPA, randFPB);
+		CHECK(myVec == answer[11]);
+
+		//Static Cross Product Test: m128 & m128
+		myVec =vec4::Cross(randM128A, randM128B);
+		CHECK(myVec == answer[12]);
+
+		//Static Cross Product Test: Float Pointer & m128
+		myVec =vec4::Cross(randFPA, randM128B);
+		CHECK(myVec == answer[13]);
+
+		//Static Cross Product Test: m128 & Float Pointer
+		myVec =vec4::Cross(randM128A, randFPB);
+		CHECK(myVec == answer[14]);
+
+		//operator^ Test: Vector & Vector
+		myVec =randVecA ^ randVecB;
+		CHECK(myVec == answer[15]);
+		
+		//operator^ Test: Vector & Float Pointer
+		myVec =randVecA ^ randFPB;
+		CHECK(myVec == answer[16]);
+
+		//operator^ Test: Float Pointer & Vector
+		myVec =randFPA ^ randVecB;
+		CHECK(myVec == answer[17]);
+
+		//operator^ Test: Vector & m128
+		myVec =randVecA ^ randM128B;
+		CHECK(myVec == answer[18]);
+
+		//operator^ Test: m128 & Vector
+		myVec =randM128A ^ randVecB;
+		CHECK(myVec == answer[19]);
+	}
+
+	SECTION("Normalize Test", "[Normalize]") {
+		//Setup Answers for this section
+		
+		//Setup Copy Vector to use
+		vec4 myVec = randVecA;
+	}
+
+	SECTION("Homogenize Test", "[Homogenize]") {
+		//Setup Answers for this section
+		
+		//Setup Copy Vector to use
+		vec4 myVec = randVecA;
+	}
+
+	SECTION("Angle Between Vector Test", "[AngleBetween]") {
+		//Setup Answers for this section
+		float vecAns = 0;
+		float fAnswer[4] = {
+
+		};
+
+		//Setup Copy Vector to use
+		vec4 myVec = randVecA;
+
+		//Angle Between Method Test
+	}
+
+	SECTION("Component Test", "[Component]") {
+		//Setup Answers for this section
+		float vecAns = 0;
+		float fAnswer[4] = {
+
+		};
+
+		//Setup Copy Vector to use
+		vec4 myVec = randVecA;
+
+		//Component Method Test
+	}
+
+	SECTION("Project Test", "[Project]") {
+		//Setup Answers for this section
+		
+		//Setup Copy Vector to use
+		vec4 myVec = randVecA;
+	}
+
+	SECTION("Reflect Test", "[Reflect]") {
+		//Setup Answers for this section
+		
+		//Setup Copy Vector to use
+		vec4 myVec = randVecA;
+	}
 }
