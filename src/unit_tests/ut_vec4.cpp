@@ -482,7 +482,7 @@ TEST_CASE("Basic Normal Math Functions ", "[Min], [Max], [Average],[Length], [Le
 	REQUIRE(chk1 == chk2);
 	
 	//Answer Array Setup
-	vec4 answer[4] = {};
+	vec4 answer[10] = {};
 
 	SECTION("Minimum Value [Per Component]", "[Min]") {
 		//Setup Answers for this section
@@ -492,23 +492,43 @@ TEST_CASE("Basic Normal Math Functions ", "[Min], [Max], [Average],[Length], [Le
 
 		//Min Method Test
 		myVec.Min(randVecB);
+		CHECK(myVec == answer[0]);
 
 		//Static Min Test: Vector & Vector
 		myVec = vec4::Min(randVecA, randVecB);
+		CHECK(myVec == answer[1]);
 
 		//Static Min Test: Vector & Float Pointer
 		myVec = vec4::Min(randVecA, randFPB);
+		CHECK(myVec == answer[2]);
 
 		//Static Min Test: Float Pointer & Vector
 		myVec = vec4::Min(randFPA, randVecB);
+		CHECK(myVec == answer[3]);
 
 		//Static Min Test: Vector & m128
 		myVec = vec4::Min(randVecA, randM128B);
+		CHECK(myVec == answer[4]);
 
 		//Static Min Test: m128 & Vector
 		myVec = vec4::Min(randM128A, randVecB);
+		CHECK(myVec == answer[5]);
 
-		
+		//Static Min Test: Float Pointer & Float Pointer
+		myVec = vec4::Min(randFPA, randFPB);
+		CHECK(myVec == answer[6]);
+
+		//Static Min Test: m128 & m128
+		myVec = vec4::Min(randM128A, randM128B);
+		CHECK(myVec == answer[7]);
+
+		//Static Min Test: Float Pointer & m128
+		myVec = vec4::Min(randFPA, randM128B);
+		CHECK(myVec == answer[8]);
+
+		//Static Min Test: m128 & Float Pointer
+		myVec = vec4::Min(randM128A, randFPB);
+		CHECK(myVec == answer[9]);
 	}
 
 	SECTION("Maximum Value [Per Component]", "[Max]") {
@@ -516,6 +536,46 @@ TEST_CASE("Basic Normal Math Functions ", "[Min], [Max], [Average],[Length], [Le
 		
 		//Setup Copy Vector to use
 		vec4 myVec = randVecA;
+
+		//Max Method Test
+		myVec.Max(randVecB);
+		CHECK(myVec == answer[0]);
+
+		//Static Max Test: Vector & Vector
+		myVec = vec4::Max(randVecA, randVecB);
+		CHECK(myVec == answer[1]);
+
+		//Static Max Test: Vector & Float Pointer
+		myVec = vec4::Max(randVecA, randFPB);
+		CHECK(myVec == answer[2]);
+
+		//Static Max Test: Float Pointer & Vector
+		myVec = vec4::Max(randFPA, randVecB);
+		CHECK(myVec == answer[3]);
+
+		//Static Max Test: Vector & m128
+		myVec = vec4::Max(randVecA, randM128B);
+		CHECK(myVec == answer[4]);
+
+		//Static Max Test: m128 & Vector
+		myVec = vec4::Max(randM128A, randVecB);
+		CHECK(myVec == answer[5]);
+
+		//Static Max Test: Float Pointer & Float Pointer
+		myVec = vec4::Max(randFPA, randFPB);
+		CHECK(myVec == answer[6]);
+
+		//Static Max Test: m128 & m128
+		myVec = vec4::Max(randM128A, randM128B);
+		CHECK(myVec == answer[7]);
+
+		//Static Max Test: Float Pointer & m128
+		myVec = vec4::Max(randFPA, randM128B);
+		CHECK(myVec == answer[8]);
+
+		//Static Max Test: m128 & Float Pointer
+		myVec = vec4::Max(randM128A, randFPB);
+		CHECK(myVec == answer[9]);
 	}
 
 	SECTION("Average Value [Per Component]", "[Avg]") {
@@ -523,19 +583,103 @@ TEST_CASE("Basic Normal Math Functions ", "[Min], [Max], [Average],[Length], [Le
 		
 		//Setup Copy Vector to use
 		vec4 myVec = randVecA;
+
+		//Average Method Test
+		myVec.Average(randVecB);
+		CHECK(myVec == answer[0]);
+
+		//Static Average Test: Vector & Vector
+		myVec = vec4::Average(randVecA, randVecB);
+		CHECK(myVec == answer[1]);
+
+		//Static Average Test: Vector & Float Pointer
+		myVec = vec4::Average(randVecA, randFPB);
+		CHECK(myVec == answer[2]);
+
+		//Static Average Test: Float Pointer & Vector
+		myVec = vec4::Average(randFPA, randVecB);
+		CHECK(myVec == answer[3]);
+
+		//Static Average Test: Vector & m128
+		myVec = vec4::Average(randVecA, randM128B);
+		CHECK(myVec == answer[4]);
+
+		//Static Average Test: m128 & Vector
+		myVec = vec4::Average(randM128A, randVecB);
+		CHECK(myVec == answer[5]);
+
+		//Static Average Test: Float Pointer & Float Pointer
+		myVec = vec4::Average(randFPA, randFPB);
+		CHECK(myVec == answer[6]);
+
+		//Static Average Test: m128 & m128
+		myVec = vec4::Average(randM128A, randM128B);
+		CHECK(myVec == answer[7]);
+
+		//Static Average Test: Float Pointer & m128
+		myVec = vec4::Average(randFPA, randM128B);
+		CHECK(myVec == answer[8]);
+
+		//Static Average Test: m128 & Float Pointer
+		myVec = vec4::Average(randM128A, randFPB);
+		CHECK(myVec == answer[9]);
 	}
 
 	SECTION("Vector Length Squared", "[LengthSq]") {
 		//Setup Answers for this section
-		
+		float vecAns = 0;
+		float fAnswer[4] = {
+
+		};
+
 		//Setup Copy Vector to use
 		vec4 myVec = randVecA;
+
+		//Length Squared Method Test
+		vecAns = myVec.LengthSq();
+		CHECK(vecAns == fAnswer[0]);
+
+		//Static Length Squared Test: Vector
+		vecAns = vec4::LengthSq(randVecB);
+		CHECK(vecAns == fAnswer[1]);
+
+		//Static Length Squared Test: Float Pointer
+		vecAns = vec4::LengthSq(randFPA);
+		CHECK(vecAns == fAnswer[2]);
+
+		//Static Length Squared Test: m128
+		vecAns = vec4::LengthSq(randM128A);
+		CHECK(vecAns == fAnswer[3]);
 	}
 
 	SECTION("Vector Length", "[Length]") {
 		//Setup Answers for this section
-		
+		float vecAns = 0;
+		float fAnswer[4] = {
+
+		};
+
 		//Setup Copy Vector to use
 		vec4 myVec = randVecA;
+
+		//Length Squared Method Test
+		vecAns = myVec.Length();
+		CHECK(vecAns == fAnswer[0]);
+
+		//Static Length Squared Test: Vector
+		vecAns = vec4::Length(randVecB);
+		CHECK(vecAns == fAnswer[1]);
+
+		//Static Length Squared Test: Float Pointer
+		vecAns = vec4::Length(randFPB);
+		CHECK(vecAns == fAnswer[2]);
+
+		//Static Length Squared Test: m128
+		vecAns = vec4::Length(randM128B);
+		CHECK(vecAns == fAnswer[3]);
 	}
+}
+
+TEST_CASE("", "") {
+
 }
