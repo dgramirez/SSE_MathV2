@@ -489,6 +489,26 @@ TEST_CASE("Basic Normal Math Functions ", "[Min], [Max], [Average],[Length], [Le
 		
 		//Setup Copy Vector to use
 		vec4 myVec = randVecA;
+
+		//Min Method Test
+		myVec.Min(randVecB);
+
+		//Static Min Test: Vector & Vector
+		myVec = vec4::Min(randVecA, randVecB);
+
+		//Static Min Test: Vector & Float Pointer
+		myVec = vec4::Min(randVecA, randFPB);
+
+		//Static Min Test: Float Pointer & Vector
+		myVec = vec4::Min(randFPA, randVecB);
+
+		//Static Min Test: Vector & m128
+		myVec = vec4::Min(randVecA, randM128B);
+
+		//Static Min Test: m128 & Vector
+		myVec = vec4::Min(randM128A, randVecB);
+
+		
 	}
 
 	SECTION("Maximum Value [Per Component]", "[Max]") {
