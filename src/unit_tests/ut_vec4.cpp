@@ -12,29 +12,6 @@
 	#include <string.h>
 #endif
 
-float rand_num() {
-	return static_cast<float>(rand()) / (static_cast<float>(RAND_MAX)/100.0f);
-}
-
-void print(const char* _Format, ...) {
-	#ifdef PRINT_DEBUG_INFO
-		#ifdef _WIN32
-		va_list v1;
-		__va_start(&v1, _Format);
-		auto ret = vprintf(_Format, v1);
-		__crt_va_end(v1);
-		#endif
-	#endif
-}
-
-void print_test(const char* test, const float& gx, const float& gy, const float& gz, const float& gw, const float& vx, const float& vy, const float& vz, const float& vw) {
-	#ifdef PRINT_DEBUG_INFO
-		print("%s\n", test);
-		print("\tGiven:  (%f, %f, %f, %f)\n", gx, gy, gz, gw);
-		print("\tVector: (%f, %f, %f, %f)\n", vx, vy, vz, vw);
-	#endif
-}
-
 namespace {
 	//Simple Pre-Req Check
 	vec4 chk1(0, 1, 2, 3);
@@ -49,6 +26,29 @@ namespace {
 	__m128 randM128B = _mm_set_ps(79553.85881f, 97658.71592f, 23392.63518f, 1572.67638f);
 	float randScalarA = 7.34f;
 	float randScalarB = 2.85f;
+
+	float rand_num() {
+		return static_cast<float>(rand()) / (static_cast<float>(RAND_MAX)/100.0f);
+	}
+
+	void print(const char* _Format, ...) {
+		#ifdef PRINT_DEBUG_INFO
+			#ifdef _WIN32
+			va_list v1;
+			__va_start(&v1, _Format);
+			auto ret = vprintf(_Format, v1);
+			__crt_va_end(v1);
+			#endif
+		#endif
+	}
+
+	void print_test(const char* test, const float& gx, const float& gy, const float& gz, const float& gw, const float& vx, const float& vy, const float& vz, const float& vw) {
+		#ifdef PRINT_DEBUG_INFO
+			print("%s\n", test);
+			print("\tGiven:  (%f, %f, %f, %f)\n", gx, gy, gz, gw);
+			print("\tVector: (%f, %f, %f, %f)\n", vx, vy, vz, vw);
+		#endif
+	}
 }
 
 TEST_CASE("Contructors and Assignments", "[vec4], [operator=]") {
