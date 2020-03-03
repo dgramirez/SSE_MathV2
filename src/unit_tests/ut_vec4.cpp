@@ -858,6 +858,22 @@ TEST_CASE("Vector Math Functions", "[Dot], [Cross], [Normalize], [Homogenize], [
 		
 		//Setup Copy Vector to use
 		vec4 myVec = randVecA;
+
+		//Normalize Method Test
+		myVec.Normalize();
+		CHECK(myVec == answer[0]);
+
+		//Static Normalize Function Check: Vector
+		myVec = vec4::Normalize(randVecB);
+		CHECK(myVec == answer[1]);
+
+		//Static Normalize Function Check: Float Pointer
+		myVec = vec4::Normalize(randFPA);
+		CHECK(myVec == answer[2]);
+
+		//Static Normalize Function Check: m128
+		myVec = vec4::Normalize(randM128A);
+		CHECK(myVec == answer[3]);
 	}
 
 	SECTION("Homogenize Test", "[Homogenize]") {
@@ -865,19 +881,81 @@ TEST_CASE("Vector Math Functions", "[Dot], [Cross], [Normalize], [Homogenize], [
 		
 		//Setup Copy Vector to use
 		vec4 myVec = randVecA;
+
+		//Homogenize Method Test
+		myVec.Homogenize();
+		CHECK(myVec == answer[0]);
+
+		//Static Homogenize Function Check: Vector
+		myVec = vec4::Homogenize(randVecB);
+		CHECK(myVec == answer[1]);
+
+		//Static Homogenize Function Check: Vector
+		myVec = vec4::Homogenize(randFPB);
+		CHECK(myVec == answer[2]);
+
+		//Static Homogenize Function Check: Vector
+		myVec = vec4::Homogenize(randM128B);
+		CHECK(myVec == answer[3]);
 	}
 
 	SECTION("Angle Between Vector Test", "[AngleBetween]") {
 		//Setup Answers for this section
 		float vecAns = 0;
-		float fAnswer[4] = {
+		float fAnswer[8] = {
 
 		};
 
 		//Setup Copy Vector to use
 		vec4 myVec = randVecA;
 
-		//Angle Between Method Test
+		//Angle Between Method Test: Vector
+		vecAns = myVec.AngleBetween(randVecB);
+		CHECK(vecAns == fAnswer[0]);
+
+		//Angle Between Method Test: Float Pointer
+		vecAns = myVec.AngleBetween(randFPA);
+		CHECK(vecAns == fAnswer[1]);
+
+		//Angle Between Method Test: m128
+		vecAns = myVec.AngleBetween(randM128A);
+		CHECK(vecAns == fAnswer[2]);
+
+		//Static Angle Between Test: Vector & Vector
+		vecAns = vec4::AngleBetween(randVecA, randVecB);
+		CHECK(vecAns == fAnswer[3]);
+		
+		//Static Angle Between Test: Vector & Float Pointer
+		vecAns = vec4::AngleBetween(randVecA, randFPB);
+		CHECK(vecAns == fAnswer[4]);
+
+		//Static Angle Between Test: Float Pointer & Vector
+		vecAns = vec4::AngleBetween(randFPA, randVecB);
+		CHECK(vecAns == fAnswer[5]);
+
+		//Static Angle Between Test: Vector & m128
+		vecAns = vec4::AngleBetween(randVecA, randM128B);
+		CHECK(vecAns == fAnswer[6]);
+
+		//Static Angle Between Test: m128 & Vector
+		vecAns = vec4::AngleBetween(randM128A, randVecB);
+		CHECK(vecAns == fAnswer[7]);
+
+		//Static Angle Between Test: Float Pointer & Float Pointer
+		vecAns = vec4::AngleBetween(randFPA, randFPB);
+		CHECK(vecAns == fAnswer[8]);
+
+		//Static Angle Between Test: m128 & m128
+		vecAns = vec4::AngleBetween(randM128A, randM128B);
+		CHECK(vecAns == fAnswer[9]);
+
+		//Static Angle Between Test: Float Pointer & m128
+		vecAns = vec4::AngleBetween(randFPA, randM128B);
+		CHECK(vecAns == fAnswer[10]);
+
+		//Static Angle Between Test: m128 & Float Pointer
+		vecAns = vec4::AngleBetween(randM128A, randFPB);
+		CHECK(vecAns == fAnswer[11]);
 	}
 
 	SECTION("Component Test", "[Component]") {
@@ -890,20 +968,162 @@ TEST_CASE("Vector Math Functions", "[Dot], [Cross], [Normalize], [Homogenize], [
 		//Setup Copy Vector to use
 		vec4 myVec = randVecA;
 
-		//Component Method Test
+		//Component Method Test: Vector
+		vecAns = myVec.Component(randVecB);
+		CHECK(vecAns == fAnswer[0]);
+
+		//Component Method Test: Float Pointer
+		vecAns = myVec.Component(randFPA);
+		CHECK(vecAns == fAnswer[1]);
+
+		//Component Method Test: m128
+		vecAns = myVec.Component(randM128A);
+		CHECK(vecAns == fAnswer[2]);
+
+		//Static Component Test: Vector & Vector
+		vecAns = vec4::Component(randVecA, randVecB);
+		CHECK(vecAns == fAnswer[3]);
+		
+		//Static Component Test: Vector & Float Pointer
+		vecAns = vec4::Component(randVecA, randFPB);
+		CHECK(vecAns == fAnswer[4]);
+
+		//Static Component Test: Float Pointer & Vector
+		vecAns = vec4::Component(randFPA, randVecB);
+		CHECK(vecAns == fAnswer[5]);
+
+		//Static Component Test: Vector & m128
+		vecAns = vec4::Component(randVecA, randM128B);
+		CHECK(vecAns == fAnswer[6]);
+
+		//Static Component Test: m128 & Vector
+		vecAns = vec4::Component(randM128A, randVecB);
+		CHECK(vecAns == fAnswer[7]);
+
+		//Static Component Test: Float Pointer & Float Pointer
+		vecAns = vec4::Component(randFPA, randFPB);
+		CHECK(vecAns == fAnswer[8]);
+
+		//Static Component Test: m128 & m128
+		vecAns = vec4::Component(randM128A, randM128B);
+		CHECK(vecAns == fAnswer[9]);
+
+		//Static Component Test: Float Pointer & m128
+		vecAns = vec4::Component(randFPA, randM128B);
+		CHECK(vecAns == fAnswer[10]);
+
+		//Static Component Test: m128 & Float Pointer
+		vecAns = vec4::Component(randM128A, randFPB);
+		CHECK(vecAns == fAnswer[11]);
 	}
 
 	SECTION("Project Test", "[Project]") {
 		//Setup Answers for this section
-		
+
 		//Setup Copy Vector to use
 		vec4 myVec = randVecA;
+
+		//Project Method Test: Vector
+		myVec.Project(randVecB);
+		CHECK(myVec == answer[0]);
+
+		//Project Method Test: Float Pointer
+		myVec.Project(randFPA);
+		CHECK(myVec == answer[1]);
+
+		//Project Method Test: m128
+		myVec.Project(randM128A);
+		CHECK(myVec == answer[2]);
+
+		//Static Project Test: Vector & Vector
+		myVec = vec4::Project(randVecA, randVecB);
+		CHECK(myVec == answer[3]);
+		
+		//Static Project Test: Vector & Float Pointer
+		myVec = vec4::Project(randVecA, randFPB);
+		CHECK(myVec == answer[4]);
+
+		//Static Project Test: Float Pointer & Vector
+		myVec = vec4::Project(randFPA, randVecB);
+		CHECK(myVec == answer[5]);
+
+		//Static Project Test: Vector & m128
+		myVec = vec4::Project(randVecA, randM128B);
+		CHECK(myVec == answer[6]);
+
+		//Static Project Test: m128 & Vector
+		myVec = vec4::Project(randM128A, randVecB);
+		CHECK(myVec == answer[7]);
+
+		//Static Project Test: Float Pointer & Float Pointer
+		myVec = vec4::Project(randFPA, randFPB);
+		CHECK(myVec == answer[8]);
+
+		//Static Project Test: m128 & m128
+		myVec = vec4::Project(randM128A, randM128B);
+		CHECK(myVec == answer[9]);
+
+		//Static Project Test: Float Pointer & m128
+		myVec = vec4::Project(randFPA, randM128B);
+		CHECK(myVec == answer[10]);
+
+		//Static Project Test: m128 & Float Pointer
+		myVec = vec4::Project(randM128A, randFPB);
+		CHECK(myVec == answer[11]);
 	}
 
 	SECTION("Reflect Test", "[Reflect]") {
 		//Setup Answers for this section
-		
+
 		//Setup Copy Vector to use
 		vec4 myVec = randVecA;
+
+		//Reflect Method Test: Vector
+		myVec.Reflect(randVecB);
+		CHECK(myVec == answer[0]);
+
+		//Reflect Method Test: Float Pointer
+		myVec.Reflect(randFPA);
+		CHECK(myVec == answer[1]);
+
+		//Reflect Method Test: m128
+		myVec.Reflect(randM128A);
+		CHECK(myVec == answer[2]);
+
+		//Static Reflect Test: Vector & Vector
+		myVec = vec4::Reflect(randVecA, randVecB);
+		CHECK(myVec == answer[3]);
+		
+		//Static Reflect Test: Vector & Float Pointer
+		myVec = vec4::Reflect(randVecA, randFPB);
+		CHECK(myVec == answer[4]);
+
+		//Static Reflect Test: Float Pointer & Vector
+		myVec = vec4::Reflect(randFPA, randVecB);
+		CHECK(myVec == answer[5]);
+
+		//Static Reflect Test: Vector & m128
+		myVec = vec4::Reflect(randVecA, randM128B);
+		CHECK(myVec == answer[6]);
+
+		//Static Reflect Test: m128 & Vector
+		myVec = vec4::Reflect(randM128A, randVecB);
+		CHECK(myVec == answer[7]);
+
+		//Static Reflect Test: Float Pointer & Float Pointer
+		myVec = vec4::Reflect(randFPA, randFPB);
+		CHECK(myVec == answer[8]);
+
+		//Static Reflect Test: m128 & m128
+		myVec = vec4::Reflect(randM128A, randM128B);
+		CHECK(myVec == answer[9]);
+
+		//Static Reflect Test: Float Pointer & m128
+		myVec = vec4::Reflect(randFPA, randM128B);
+		CHECK(myVec == answer[10]);
+
+		//Static Reflect Test: m128 & Float Pointer
+		myVec = vec4::Reflect(randM128A, randFPB);
+		CHECK(myVec == answer[11]);
 	}
 }
