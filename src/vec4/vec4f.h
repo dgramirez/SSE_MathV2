@@ -73,6 +73,12 @@ struct vec4f {
 	friend vec4f operator+(const float* _fp, const vec4f& _v);
 	friend vec4f operator+(const __m128& _sse, const vec4f& _v);
 
+	//Vector-Vector Static Add Additions
+	static vec4f Add(const float* fp1, const float* fp2);
+	static vec4f Add(const __m128& _sse1, const __m128& _sse2);
+	static vec4f Add(const float* fp, const __m128& _sse);
+	static vec4f Add(const __m128& _sse, const float* fp);
+
 	//Vector-Vector Subtraction (Self & Self Operator Overloads)
 	void Sub(const vec4f& _v);
 	void Sub(const float* _fp);
@@ -93,16 +99,22 @@ struct vec4f {
 	friend vec4f operator-(const float* _fp, const vec4f& _v);
 	friend vec4f operator-(const __m128& _sse, const vec4f& _v);
 
+	//Vector-Vector Static Subtraction Additions
+	static vec4f Sub(const float* fp1, const float* fp2);
+	static vec4f Sub(const __m128& _sse1, const __m128& _sse2);
+	static vec4f Sub(const float* fp, const __m128& _sse);
+	static vec4f Sub(const __m128& _sse, const float* fp);
+
 	//Vector-Scalar Multiply (Self & Self Operator Overload)
 	void Mul(const float& _s);
 	void operator*=(const float& _s);
 
 	//Vector-Scalar Multiply (Static & Global Operator Overload)
 	static vec4f Mul(const vec4f& _v, const float& _s);
-	static vec4f Mul(const float* _fp, const float& _s);
-	static vec4f Mul(const __m128& _sse, const float& _s);
 	static vec4f Mul(const float& _s, const vec4f& _v);
+	static vec4f Mul(const float* _fp, const float& _s);
 	static vec4f Mul(const float& _s, const float* _fp);
+	static vec4f Mul(const __m128& _sse, const float& _s);
 	static vec4f Mul(const float& _s, const __m128& _sse);
 	friend vec4f operator*(const vec4f& _v, const float& _s);
 	friend vec4f operator*(const float& _s, const vec4f& _v);

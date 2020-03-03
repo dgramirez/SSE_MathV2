@@ -65,6 +65,12 @@ vec4f operator+(const vec4f& _v, const __m128& _sse) { return vec4f_zero; }
 vec4f operator+(const float* _fp, const vec4f& _v) { return vec4f_zero; }
 vec4f operator+(const __m128& _sse, const vec4f& _v) { return vec4f_zero; }
 
+//Vector-Vector Static Add Additions
+vec4f vec4f::Add(const float* fp1, const float* fp2) { return vec4f_zero; }
+vec4f vec4f::Add(const __m128& _sse1, const __m128& _sse2) { return vec4f_zero; }
+vec4f vec4f::Add(const float* fp, const __m128& _sse) { return vec4f_zero; }
+vec4f vec4f::Add(const __m128& _sse, const float* fp) { return vec4f_zero; }
+
 //Vector-Vector Subtraction (Self & Self Operator Overloads)
 void vec4f::Sub(const vec4f& _v) { *this = vec4f_zero; }
 void vec4f::Sub(const float* _fp) { *this = vec4f_zero; }
@@ -84,6 +90,12 @@ vec4f operator-(const vec4f& _v, const float* _fp) { return vec4f_zero; }
 vec4f operator-(const vec4f& _v, const __m128& _sse) { return vec4f_zero; }
 vec4f operator-(const float* _fp, const vec4f& _v) { return vec4f_zero; }
 vec4f operator-(const __m128& _sse, const vec4f& _v) { return vec4f_zero; }
+
+//Vector-Vector Static Subtraction Additions
+vec4f vec4f::Sub(const float* fp1, const float* fp2) { return vec4f_zero; }
+vec4f vec4f::Sub(const __m128& _sse1, const __m128& _sse2) { return vec4f_zero; }
+vec4f vec4f::Sub(const float* fp, const __m128& _sse) { return vec4f_zero; }
+vec4f vec4f::Sub(const __m128& _sse, const float* fp) { return vec4f_zero; }
 
 //Vector-Scalar Multiply (Self & Self Operator Overload)
 void vec4f::Mul(const float& _s) { *this = vec4f_zero; }
