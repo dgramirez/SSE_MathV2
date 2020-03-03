@@ -242,3 +242,7 @@ struct vec4f {
 	static vec4f Reflect(const __m128& _sse, const vec4f& _v2);
 };
 #endif //VEC4F_H
+
+#ifdef VEC4_FLOATS_GLOBAL
+typedef vec4f vec4;
+#endif
