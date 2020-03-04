@@ -468,7 +468,12 @@ TEST_CASE("Basic Vector Math", "[Add], [Sub], [Mul], [Div]") {
 
 	SECTION("Scalar Divide", "[Div], [operator/=], [operator/]") {
 		//Setup Answers for this section
-		
+		answer[0] = _mm_set_ps(11830.01756f, 43.13332f, 12937.61628f, 2643.44027f);
+		answer[1] = _mm_set_ps(927.52290f, 4539.51448f, 15.134498f, 4150.88335f);
+		answer[2] = _mm_set_ps(30467.48382f, 111.08721f, 33320.03631f, 6808.01811f);
+		answer[3] = _mm_set_ps(41.96366f, 14049.24682f, 22487.83499f, 1588.04262f);
+		answer[4] = _mm_set_ps(27913.63467f, 34226.21611f, 8207.94217f, 551.81627f);
+
 		//Setup Copy Vector to use
 		vec4 myVec = randVecA;
 
@@ -494,7 +499,7 @@ TEST_CASE("Basic Vector Math", "[Add], [Sub], [Mul], [Div]") {
 
 		//Operator/ Test: vec4 & Scalar
 		myVec = randVecA / randScalarB;
-		CHECK(myVec == answer[5]);
+		CHECK(myVec == answer[2]);
 	}
 
 	SECTION("Negate", "[Negate], [operator-]") {
