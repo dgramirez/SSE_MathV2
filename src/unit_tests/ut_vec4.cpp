@@ -18,14 +18,14 @@ namespace {
 	__m128 chk2 = _mm_set_ps(3, 2, 1, 0);
 
 	//Random Values
-	vec4 randVecA(19402.85160f, 94962.10349f, 316.59856f, 86832.32890f);
-	vec4 randVecB(36055.11004f, 47454.84500f, 69497.31268f, 624.19770f);
-	float randFPA[4] = { 4525.92146f, 64090.32973f, 40040.35343f, 119.59643f };
-	float randFPB[4] = { 93058.06245f, 71915.34440f, 2021.88100f, 46768.52948f };
-	__m128 randM128A = _mm_set_ps(79553.85881f, 97658.71592f, 23392.63518f, 1572.67638f);
-	__m128 randM128B = _mm_set_ps(31179.39351f, 32603.31492f, 74536.62178f, 96166.19073f);
-	float randScalarA = 7.34f;
-	float randScalarB = 2.85f;
+	const vec4 randVecA(19402.85160f, 94962.10349f, 316.59856f, 86832.32890f);
+	const vec4 randVecB(36055.11004f, 47454.84500f, 69497.31268f, 624.19770f);
+	const float randFPA[4] = { 4525.92146f, 64090.32973f, 40040.35343f, 119.59643f };
+	const float randFPB[4] = { 93058.06245f, 71915.34440f, 2021.88100f, 46768.52948f };
+	const __m128 randM128A = _mm_set_ps(79553.85881f, 97658.71592f, 23392.63518f, 1572.67638f);
+	const __m128 randM128B = _mm_set_ps(31179.39351f, 32603.31492f, 74536.62178f, 96166.19073f);
+	const float randScalarA = 7.34f;
+	const float randScalarB = 2.85f;
 
 	float rand_num() {
 		return static_cast<float>(rand()) / (static_cast<float>(RAND_MAX)/100.0f);
@@ -500,10 +500,10 @@ TEST_CASE("Basic Vector Math", "[Add], [Sub], [Mul], [Div]") {
 	SECTION("Negate", "[Negate], [operator-]") {
 		//Setup Answers for this section
 		answer[0].m128 = _mm_set_ps(-86832.32890f, -316.59856f, -94962.10349f, -19402.85160f);
-		answer[2].m128 = _mm_set_ps(-624.19770f, -69497.31268f, -47454.84500f, -36055.11004f);
-		answer[1].m128 = _mm_set_ps(-119.59643f, -40040.35343f, -64090.32973f, -4525.92146f);
-		answer[3].m128 = _mm_set_ps(-1572.67638f, -23392.63518f, -97658.71592f, -79553.85881f);
-		answer[3].m128 = _mm_set_ps(1572.67638f, 23392.63518f, 97658.71592f, 79553.85881f);
+		answer[1].m128 = _mm_set_ps(-624.19770f, -69497.31268f, -47454.84500f, -36055.11004f);
+		answer[2].m128 = _mm_set_ps(-119.59643f, -40040.35343f, -64090.32973f, -4525.92146f);
+		answer[3].m128 = _mm_set_ps(-79553.85881f, -97658.71592f, -23392.63518f, -1572.67638f);
+		answer[4].m128 = _mm_set_ps(79553.85881f, 97658.71592f, 23392.63518f, 1572.67638f);
 		
 		//Setup Copy Vector to use
 		vec4 myVec = randVecA;

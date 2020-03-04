@@ -300,11 +300,11 @@ vec4f vec4f::Div(const __m128& _sse, const float& _s) { return vec4f_zero; }
 vec4f operator/(const vec4f& _v, const float& _s) { return vec4f_zero; }
 
 //Vector Negate
-void vec4f::Negate() { *this = vec4f_zero; }
-vec4f vec4f::operator-() { return vec4f_zero; }
-vec4f vec4f::Negate(const vec4f& _v) { return vec4f_zero; }
-vec4f vec4f::Negate(const float* _fp) { return vec4f_zero; }
-vec4f vec4f::Negate(const __m128& _sse) { return vec4f_zero; }
+void vec4f::Negate() { m128 = _mm_xor_ps(m128, _mm_set1_ps(-0.0f)); }
+vec4f vec4f::operator-() { return _mm_xor_ps(m128, _mm_set1_ps(-0.0f)); }
+vec4f vec4f::Negate(const vec4f& _v) { return _mm_xor_ps(_v.m128, _mm_set1_ps(-0.0f)); }
+vec4f vec4f::Negate(const float* _fp) { return _mm_xor_ps(_mm_load_ps(_fp), _mm_set1_ps(-0.0f)); }
+vec4f vec4f::Negate(const __m128& _sse) { return _mm_xor_ps(_sse, _mm_set1_ps(-0.0f)); }
 
 //Vector Minimum (Per Component)
 void vec4f::Min(const vec4f& _v) { *this = vec4f_zero; }
