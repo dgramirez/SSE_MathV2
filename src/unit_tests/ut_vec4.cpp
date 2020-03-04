@@ -21,9 +21,9 @@ namespace {
 	vec4 randVecA(19402.85160f, 94962.10349f, 316.59856f, 86832.32890f);
 	vec4 randVecB(36055.11004f, 47454.84500f, 69497.31268f, 624.19770f);
 	float randFPA[4] = { 4525.92146f, 64090.32973f, 40040.35343f, 119.59643f };
-	float randFPB[4] = { 4525.92146f, 64090.32973f, 40040.35343f, 119.59643f };
+	float randFPB[4] = { 93058.06245f, 71915.34440f, 2021.88100f, 46768.52948f };
 	__m128 randM128A = _mm_set_ps(79553.85881f, 97658.71592f, 23392.63518f, 1572.67638f);
-	__m128 randM128B = _mm_set_ps(79553.85881f, 97658.71592f, 23392.63518f, 1572.67638f);
+	__m128 randM128B = _mm_set_ps(31179.39351f, 32603.31492f, 74536.62178f, 96166.19073f);
 	float randScalarA = 7.34f;
 	float randScalarB = 2.85f;
 
@@ -139,6 +139,12 @@ TEST_CASE("Equality Checks", "[IsZero], [IsEqual], [operator==] [operator!=]") {
 		//Static IsZero Function Check (m128)
 		__m128 sse = _mm_setzero_ps();
 		CHECK(vec4::IsZero(sse));
+
+		//IsZero False Checks
+		CHECK_FALSE(ImNotZero.IsZero());
+		CHECK_FALSE(vec4::IsZero(randVecA));
+		CHECK_FALSE(vec4::IsZero(randFPA));
+		CHECK_FALSE(vec4::IsZero(randM128A));
 	}
 
 	SECTION("IsEqual Equality Check", "[IsEqual], [operator==]") {
@@ -165,20 +171,49 @@ TEST_CASE("Equality Checks", "[IsZero], [IsEqual], [operator==] [operator!=]") {
 		CHECK(vec4::IsEqual(NotZeroV2, m128));
 		CHECK(vec4::IsEqual(m128, NotZeroV2));
 
+		//Static Check: Float Pointer vs Float Pointer
+		CHECK(vec4::IsEqual(fp, fp));
+
+		//Static Check: m128 vs m128
+		CHECK(vec4::IsEqual(m128, m128));
+
+		//Static Check: Float Pointer vs m128
+		CHECK(vec4::IsEqual(fp, m128));
+		CHECK(vec4::IsEqual(m128, fp));
+
 		//Equality Operator Test
 		CHECK(NotZeroV2 == ImNotZero);
 		CHECK(NotZeroV2 == fp);
 		CHECK(fp == ImNotZero);
 		CHECK(NotZeroV2 == m128);
 		CHECK(m128 == ImNotZero);
+
+		//Equality False Checks
+		CHECK_FALSE(NotZeroV2.IsEqual(randVecA));
+		CHECK_FALSE(NotZeroV2.IsEqual(randFPA));
+		CHECK_FALSE(NotZeroV2.IsEqual(randM128A));
+		CHECK_FALSE(vec4::IsEqual(randVecA, randVecB));
+		CHECK_FALSE(vec4::IsEqual(randVecA, fp));
+		CHECK_FALSE(vec4::IsEqual(fp, randVecB));
+		CHECK_FALSE(vec4::IsEqual(randVecA, m128));
+		CHECK_FALSE(vec4::IsEqual(m128, randVecB));
+		CHECK_FALSE(vec4::IsEqual(randFPA, randFPB));
+		CHECK_FALSE(vec4::IsEqual(randM128A, randM128B));
+		CHECK_FALSE(vec4::IsEqual(randFPA, randM128B));
+		CHECK_FALSE(vec4::IsEqual(randM128A, randFPB));
+		CHECK_FALSE(NotZeroV2 == randVecB);
+		CHECK_FALSE(NotZeroV2 == randFPB);
+		CHECK_FALSE(NotZeroV2 == randM128B);
+		CHECK_FALSE(randFPA == NotZeroV2);
+		CHECK_FALSE(randM128A == NotZeroV2);
 	}
 
 	SECTION("Inequality Operator Check", "[operator!=]") {
 		//Create Random Vectors
-		vec4 RandomVec1(rand_num(), rand_num(),rand_num(),rand_num());
-		vec4 RandomVec2(rand_num(), rand_num(),rand_num(),rand_num());
-		float RandomFP[4] = { rand_num(), rand_num(),rand_num(),rand_num() };
-		__m128 RandomM128 = _mm_set_ps(rand_num(), rand_num(),rand_num(),rand_num());
+		vec4 RandomVec1(rand_num(), rand_num(), rand_num(), rand_num());
+		vec4 RandomVec2(rand_num(), rand_num(), rand_num(), rand_num());
+		float RandomFP[4] = { rand_num(), rand_num(), rand_num(), rand_num() };
+		__m128 RandomM128 = _mm_set_ps(rand_num(), rand_num(), rand_num(), rand_num());
 
 		//Inequality Operator Test
 		CHECK(RandomVec1 != RandomVec2);
@@ -186,6 +221,19 @@ TEST_CASE("Equality Checks", "[IsZero], [IsEqual], [operator==] [operator!=]") {
 		CHECK(RandomFP != RandomVec2);
 		CHECK(RandomVec1 != RandomM128);
 		CHECK(RandomM128 != RandomVec2);
+
+		//InEquality False Checks
+		vec4 eqRandVecA = randVecA;
+		vec4 eqFPA = randFPA;
+		vec4 eqFPB = randFPB;
+		vec4 eqM128A = randM128A;
+		vec4 eqM128B = randM128B;
+
+		CHECK_FALSE(eqRandVecA != randVecA);
+		CHECK_FALSE(eqFPA != randFPA);
+		CHECK_FALSE(randFPB != eqFPB);
+		CHECK_FALSE(eqM128A != randM128A);
+		CHECK_FALSE(randM128B != eqM128B);
 	}
 
 }
