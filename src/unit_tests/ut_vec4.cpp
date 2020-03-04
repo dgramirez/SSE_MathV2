@@ -499,6 +499,11 @@ TEST_CASE("Basic Vector Math", "[Add], [Sub], [Mul], [Div]") {
 
 	SECTION("Negate", "[Negate], [operator-]") {
 		//Setup Answers for this section
+		answer[0].m128 = _mm_set_ps(-86832.32890f, -316.59856f, -94962.10349f, -19402.85160f);
+		answer[2].m128 = _mm_set_ps(-624.19770f, -69497.31268f, -47454.84500f, -36055.11004f);
+		answer[1].m128 = _mm_set_ps(-119.59643f, -40040.35343f, -64090.32973f, -4525.92146f);
+		answer[3].m128 = _mm_set_ps(-1572.67638f, -23392.63518f, -97658.71592f, -79553.85881f);
+		answer[3].m128 = _mm_set_ps(1572.67638f, 23392.63518f, 97658.71592f, 79553.85881f);
 		
 		//Setup Copy Vector to use
 		vec4 myVec = randVecA;
