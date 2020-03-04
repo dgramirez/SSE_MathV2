@@ -627,7 +627,7 @@ TEST_CASE("Basic Normal Math Functions ", "[Min], [Max], [Average],[Length], [Le
 
 	SECTION("Vector Length Squared", "[LengthSq]") {
 		//Setup Answers for this section
-		float vecAns = 0;
+		float vecAns = 1;
 		float fAnswer[4] = {
 
 		};
@@ -654,7 +654,7 @@ TEST_CASE("Basic Normal Math Functions ", "[Min], [Max], [Average],[Length], [Le
 
 	SECTION("Vector Length", "[Length]") {
 		//Setup Answers for this section
-		float vecAns = 0;
+		float vecAns = 1;
 		float fAnswer[4] = {
 
 		};
@@ -689,7 +689,7 @@ TEST_CASE("Vector Math Functions", "[Dot], [Cross], [Normalize], [Homogenize], [
 
 	SECTION("Dot Product Test", "[Dot], [Operator*]") {
 		//Setup Answers for this section
-		float vecAns = 0;
+		float vecAns = 1;
 		float fAnswer[17] = {
 
 		};
@@ -901,7 +901,7 @@ TEST_CASE("Vector Math Functions", "[Dot], [Cross], [Normalize], [Homogenize], [
 
 	SECTION("Angle Between Vector Test", "[AngleBetween]") {
 		//Setup Answers for this section
-		float vecAns = 0;
+		float vecAns = 1;
 		float fAnswer[8] = {
 
 		};
@@ -960,7 +960,7 @@ TEST_CASE("Vector Math Functions", "[Dot], [Cross], [Normalize], [Homogenize], [
 
 	SECTION("Component Test", "[Component]") {
 		//Setup Answers for this section
-		float vecAns = 0;
+		float vecAns = 1;
 		float fAnswer[4] = {
 
 		};

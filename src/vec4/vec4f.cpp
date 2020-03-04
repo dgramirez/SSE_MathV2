@@ -5,7 +5,8 @@
 
 //Global Variables (Namespace)
 namespace {
-	static const vec4f vec4f_zero = {};
+	static const vec4f vec4f_zero = {0.0f, 0.0f, 0.0f, 1.0f};
+	static const float realZero[4] = {};
 }
 
 //Constructor & Assignment
@@ -45,19 +46,19 @@ void vec4f::operator=(const __m128& _sse) {
 //Equality Check (Zero)
 bool vec4f::IsZero() const { 
 	//Return the Comparison of the 0 vector to itself (0 == same bit value)
-	return !memcmp(&vec4f_zero, e, sizeof(vec4f));
+	return !memcmp(realZero, e, sizeof(vec4f));
 	}
 bool vec4f::IsZero(const vec4f& _v) {
 	//Return the Comparison of the 0 vector to the vector parameter (0 == same bit value)
-	return _v.IsZero();
+	return !memcmp(realZero, _v.e, sizeof(vec4f));
 	}
 bool vec4f::IsZero(const float* _fp) {
 	//Return the Comparison of the 0 vector to the float pointer parameter (0 == same bit value)
-	return !memcmp(&vec4f_zero, _fp, sizeof(vec4f));
+	return !memcmp(realZero, _fp, sizeof(vec4f));
 	}
 bool vec4f::IsZero(const __m128& _sse) {
 	//Return the Comparison of the 0 vector to the m128 parameter (0 == same bit value)
-	return !memcmp(&vec4f_zero, &_sse, sizeof(vec4f));
+	return !memcmp(realZero, &_sse, sizeof(vec4f));
 	}
 
 //Equality Check
@@ -149,18 +150,78 @@ bool vec4f::IsEqual(const __m128& _sse, const float* _fp) {
 }
 
 //Equality Check (Operator Overload)
-bool operator==(const vec4f& _v1, const vec4f& _v2) { return false; }
-bool operator==(const vec4f& _v, const float* _fp) { return false; }
-bool operator==(const vec4f& _v, const __m128& _sse) { return false; }
-bool operator==(const float* _fp, const vec4f& _v) { return false; }
-bool operator==(const __m128& _sse, const vec4f& _v) { return false; }
+bool operator==(const vec4f& _v1, const vec4f& _v2) {
+	//Create an "Equal" vector and do a parallel comparison with the vector parameter and itself
+	vec4f eq = _mm_cmpeq_ps(_v1.m128, _v2.m128); 
+
+	//return true if there is no 0 in any of the components.
+	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+	}
+bool operator==(const vec4f& _v, const float* _fp) {
+	//Create an "Equal" vector and do a parallel comparison with the vector parameter and itself
+	vec4f eq = _mm_cmpeq_ps(_v.m128, _mm_load_ps(_fp)); 
+
+	//return true if there is no 0 in any of the components.
+	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+	}
+bool operator==(const vec4f& _v, const __m128& _sse) {
+	//Create an "Equal" vector and do a parallel comparison with the vector parameter and itself
+	vec4f eq = _mm_cmpeq_ps(_v.m128, _sse); 
+
+	//return true if there is no 0 in any of the components.
+	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+	}
+bool operator==(const float* _fp, const vec4f& _v) {
+	//Create an "Equal" vector and do a parallel comparison with the vector parameter and itself
+	vec4f eq = _mm_cmpeq_ps(_mm_load_ps(_fp), _v.m128); 
+
+	//return true if there is no 0 in any of the components.
+	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+	}
+bool operator==(const __m128& _sse, const vec4f& _v) {
+	//Create an "Equal" vector and do a parallel comparison with the vector parameter and itself
+	vec4f eq = _mm_cmpeq_ps( _sse, _v.m128); 
+
+	//return true if there is no 0 in any of the components.
+	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+	}
 
 //Inequality Check (Operator Overload)
-bool operator!=(const vec4f& _v1, const vec4f& _v2) { return false; }
-bool operator!=(const vec4f& _v, const float* _fp) { return false; }
-bool operator!=(const vec4f& _v, const __m128& _sse) { return false; }
-bool operator!=(const float* _fp, const vec4f& _v) { return false; }
-bool operator!=(const __m128& _sse, const vec4f& _v) { return false; }
+bool operator!=(const vec4f& _v1, const vec4f& _v2) {
+	//Create an "Equal" vector and do a parallel comparison with the vector parameter and itself
+	vec4f eq = _mm_cmpneq_ps(_v1.m128, _v2.m128); 
+
+	//return true if there is no 0 in any of the components.
+	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+	}
+bool operator!=(const vec4f& _v, const float* _fp) {
+	//Create an "Equal" vector and do a parallel comparison with the vector parameter and itself
+	vec4f eq = _mm_cmpneq_ps(_v.m128, _mm_load_ps(_fp)); 
+
+	//return true if there is no 0 in any of the components.
+	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+	}
+bool operator!=(const vec4f& _v, const __m128& _sse) {
+	//Create an "Equal" vector and do a parallel comparison with the vector parameter and itself
+	vec4f eq = _mm_cmpneq_ps(_v.m128, _sse); 
+
+	//return true if there is no 0 in any of the components.
+	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+	}
+bool operator!=(const float* _fp, const vec4f& _v) {
+	//Create an "Equal" vector and do a parallel comparison with the vector parameter and itself
+	vec4f eq = _mm_cmpneq_ps(_mm_load_ps(_fp), _v.m128); 
+
+	//return true if there is no 0 in any of the components.
+	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+	}
+bool operator!=(const __m128& _sse, const vec4f& _v) {
+	//Create an "Equal" vector and do a parallel comparison with the vector parameter and itself
+	vec4f eq = _mm_cmpneq_ps( _sse, _v.m128); 
+
+	//return true if there is no 0 in any of the components.
+	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+	}
 
 //Vector-Vector Addition (Self)
 void vec4f::Add(const vec4f& _v) { *this = vec4f_zero; }
