@@ -24,20 +24,26 @@ struct vec4f {
 	void operator=(const __m128& _sse);
 
 	//Equality Check (Zero)
-	bool IsZero();
+	bool IsZero() const;
 	static bool IsZero(const vec4f& _v);
 	static bool IsZero(const float* _fp);
 	static bool IsZero(const __m128& _sse);
 
 	//Equality Check
-	bool IsEqual(const vec4f& _v);
-	bool IsEqual(const float* _fp);
-	bool IsEqual(const __m128& _sse);
+	bool IsEqual(const vec4f& _v) const;
+	bool IsEqual(const float* _fp) const;
+	bool IsEqual(const __m128& _sse) const;
 	static bool IsEqual(const vec4f& _v1, const vec4f& _v2);
 	static bool IsEqual(const vec4f& _v, const float* _fp);
 	static bool IsEqual(const vec4f& _v, const __m128& _sse);
 	static bool IsEqual(const float* _fp, const vec4f& _v);
 	static bool IsEqual(const __m128& _sse, const vec4f& _v);
+
+	//IsEqual Additions
+	static bool IsEqual(const float* _fp1, const float* _fp2);
+	static bool IsEqual(const __m128& _sse1, const __m128& _sse2);
+	static bool IsEqual(const float* _fp, const __m128& _sse);
+	static bool IsEqual(const __m128& _sse, const float* _fp);
 
 	//Equality Check (Operator Overload)
 	friend bool operator==(const vec4f& _v1, const vec4f& _v2);

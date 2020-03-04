@@ -1,4 +1,7 @@
 #include "vec4f.h"
+#include "../xplat.h"
+
+#define CINT(x) static_cast<int>(x) //Cast to int (unsigned)
 
 //Global Variables (Namespace)
 namespace {
@@ -6,30 +9,144 @@ namespace {
 }
 
 //Constructor & Assignment
-vec4f::vec4f() { m128 = _mm_setzero_ps(); }
-vec4f::vec4f(const float& _x, const float& _y, const float& _z, const float& _w) { m128 = _mm_set_ps(_w, _z, _y, _x); }
-vec4f::vec4f(const vec4f& _v) { m128 = _v.m128; }
-vec4f::vec4f(const float* _fp) { m128 = _mm_load_ps(_fp); }
-vec4f::vec4f(const __m128& _sse) { m128 = _sse; }
-void vec4f::operator=(const vec4f& _v) { m128 = _v.m128; }
-void vec4f::operator=(const float* _fp) { m128 = _mm_load_ps(_fp); }
-void vec4f::operator=(const __m128& _sse) { m128 = _sse; }
+vec4f::vec4f() {
+	//Set the m128 value to 0
+	m128 = _mm_setzero_ps();
+	}
+vec4f::vec4f(const float& _x, const float& _y, const float& _z, const float& _w) {
+	//Set the m128 value to xyzw
+	m128 = _mm_set_ps(_w, _z, _y, _x);
+	}
+vec4f::vec4f(const vec4f& _v) {
+	//Set the m128 value to the other vector's m128 value
+	m128 = _v.m128;
+	}
+vec4f::vec4f(const float* _fp) {
+	//Load the float pointer to the m128 value
+	m128 = _mm_load_ps(_fp);
+	}
+vec4f::vec4f(const __m128& _sse) {
+	//Set the m128 value to the parameter m128 value
+	m128 = _sse;
+	}
+void vec4f::operator=(const vec4f& _v) {
+	//Assign the m128 value to the parameter vector's m128 value
+	m128 = _v.m128;
+	}
+void vec4f::operator=(const float* _fp) {
+	//Assign the m128 to the float pointer loaded in as a m128
+	m128 = _mm_load_ps(_fp);
+	}
+void vec4f::operator=(const __m128& _sse) {
+	//Assign the m128 value to the m128 parameter value
+	m128 = _sse;
+	}
 
 //Equality Check (Zero)
-bool vec4f::IsZero() { return false; }
-bool vec4f::IsZero(const vec4f& _v) { return false; }
-bool vec4f::IsZero(const float* _fp) { return false; }
-bool vec4f::IsZero(const __m128& _sse) { return false; }
+bool vec4f::IsZero() const { 
+	//Return the Comparison of the 0 vector to itself (0 == same bit value)
+	return !memcmp(&vec4f_zero, e, sizeof(vec4f));
+	}
+bool vec4f::IsZero(const vec4f& _v) {
+	//Return the Comparison of the 0 vector to the vector parameter (0 == same bit value)
+	return _v.IsZero();
+	}
+bool vec4f::IsZero(const float* _fp) {
+	//Return the Comparison of the 0 vector to the float pointer parameter (0 == same bit value)
+	return !memcmp(&vec4f_zero, _fp, sizeof(vec4f));
+	}
+bool vec4f::IsZero(const __m128& _sse) {
+	//Return the Comparison of the 0 vector to the m128 parameter (0 == same bit value)
+	return !memcmp(&vec4f_zero, &_sse, sizeof(vec4f));
+	}
 
 //Equality Check
-bool vec4f::IsEqual(const vec4f& _v) { return false; }
-bool vec4f::IsEqual(const float* _fp) { return false; }
-bool vec4f::IsEqual(const __m128& _sse) { return false; }
-bool vec4f::IsEqual(const vec4f& _v1, const vec4f& _v2) { return false; }
-bool vec4f::IsEqual(const vec4f& _v, const float* _fp) { return false; }
-bool vec4f::IsEqual(const vec4f& _v, const __m128& _sse) { return false; }
-bool vec4f::IsEqual(const float* _fp, const vec4f& _v) { return false; }
-bool vec4f::IsEqual(const __m128& _sse, const vec4f& _v) { return false; }
+bool vec4f::IsEqual(const vec4f& _v) const {
+	//Create an "Equal" vector and do a parallel comparison with the vector parameter and itself
+	vec4f eq = _mm_cmpeq_ps(m128, _v.m128); 
+
+	//return true if there is no 0 in any of the components.
+	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+	}
+bool vec4f::IsEqual(const float* _fp) const {
+	//Create an "Equal" vector and do a parallel comparison with the float pointer parameter and itself
+	vec4f eq = _mm_cmpeq_ps(m128, _mm_load_ps(_fp));
+
+	//return true if there is no 0 in any of the components.
+	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+	}
+bool vec4f::IsEqual(const __m128& _sse) const { 
+	//Create an "Equal" vector and do a parallel comparison with the m128 parameter and itself
+	vec4f eq = _mm_cmpeq_ps(m128, _sse);
+
+	//return true if there is no 0 in any of the components.
+	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+	}
+bool vec4f::IsEqual(const vec4f& _v1, const vec4f& _v2) {
+	//Create an "Equal" vector and do a parallel comparison with the two vector parameters
+	vec4f eq = _mm_cmpeq_ps(_v1.m128, _v2.m128);
+
+	//return true if there is no 0 in any of the components.
+	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+	}
+bool vec4f::IsEqual(const vec4f& _v, const float* _fp) {
+	//Create an "Equal" vector and do a parallel comparison with the vector parameter and Float Pointer Parameter
+	vec4f eq = _mm_cmpeq_ps(_v.m128, _mm_load_ps(_fp));
+	
+	//return true if there is no 0 in any of the components.
+	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+	}
+bool vec4f::IsEqual(const float* _fp, const vec4f& _v) {
+	//Create an "Equal" vector and do a parallel comparison with the Float Pointer Parameter and Vector Parameter
+	vec4f eq = _mm_cmpeq_ps( _mm_load_ps(_fp), _v.m128);
+
+	//return true if there is no 0 in any of the components.
+	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+	}
+bool vec4f::IsEqual(const vec4f& _v, const __m128& _sse) {
+	//Create an "Equal" vector and do a parallel comparison with the Vector Parameter and m128 Parameter
+	vec4f eq = _mm_cmpeq_ps(_v.m128, _sse);
+	
+	//return true if there is no 0 in any of the components.
+	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+	}
+bool vec4f::IsEqual(const __m128& _sse, const vec4f& _v) {
+	//Create an "Equal" vector and do a parallel comparison with the m128 Parameter and Vector Parameter
+	vec4f eq = _mm_cmpeq_ps(_sse, _v.m128);
+	
+	//return true if there is no 0 in any of the components.
+	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+	}
+
+//IsEqual Additions
+bool vec4f::IsEqual(const float* _fp1, const float* _fp2) {
+	//Create an "Equal" vector and do a parallel comparison with the m128 Parameter and Vector Parameter
+	vec4f eq = _mm_cmpeq_ps(_mm_load_ps(_fp1), _mm_load_ps(_fp2));
+	
+	//return true if there is no 0 in any of the components.
+	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+}
+bool vec4f::IsEqual(const __m128& _sse1, const __m128& _sse2) {
+	//Create an "Equal" vector and do a parallel comparison with the m128 Parameter and Vector Parameter
+	vec4f eq = _mm_cmpeq_ps(_sse1, _sse2);
+	
+	//return true if there is no 0 in any of the components.
+	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+}
+bool vec4f::IsEqual(const float* _fp, const __m128& _sse) {
+	//Create an "Equal" vector and do a parallel comparison with the m128 Parameter and Vector Parameter
+	vec4f eq = _mm_cmpeq_ps(_mm_load_ps(_fp), _sse);
+	
+	//return true if there is no 0 in any of the components.
+	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+}
+bool vec4f::IsEqual(const __m128& _sse, const float* _fp) {
+	//Create an "Equal" vector and do a parallel comparison with the m128 Parameter and Vector Parameter
+	vec4f eq = _mm_cmpeq_ps(_sse, _mm_load_ps(_fp));
+	
+	//return true if there is no 0 in any of the components.
+	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+}
 
 //Equality Check (Operator Overload)
 bool operator==(const vec4f& _v1, const vec4f& _v2) { return false; }
@@ -304,3 +421,5 @@ vec4f vec4f::Reflect(const float* fp1, const float* fp2) { return vec4f_zero; }
 vec4f vec4f::Reflect(const __m128& _sse1, const __m128& _sse2) { return vec4f_zero; }
 vec4f vec4f::Reflect(const float* fp, const __m128& _sse) { return vec4f_zero; }
 vec4f vec4f::Reflect(const __m128& _sse, const float* fp) { return vec4f_zero; }
+
+#undef CINT
