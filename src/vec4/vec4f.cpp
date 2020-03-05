@@ -290,14 +290,14 @@ vec4f operator*(const vec4f& _v, const float& _s) { return vec4f_zero; }
 vec4f operator*(const float& _s, const vec4f& _v) { return vec4f_zero; }
 
 //Vector-Scalar Divide (Self & Self Operator Overload)
-void vec4f::Div(const float& _s) { *this = vec4f_zero; }
-void vec4f::operator/=(const float& _s) { *this = vec4f_zero; }
+void vec4f::Div(const float& _s) { m128 = _mm_div_ps(m128, _mm_set1_ps(_s)); }
+void vec4f::operator/=(const float& _s) { m128 = _mm_div_ps(m128, _mm_set1_ps(_s)); }
 
 //Vector-Scalar Divide (Static & Global Operator Overload)
-vec4f vec4f::Div(const vec4f& _v, const float& _s) { return vec4f_zero; }
-vec4f vec4f::Div(const float* _fp, const float& _s) { return vec4f_zero; }
-vec4f vec4f::Div(const __m128& _sse, const float& _s) { return vec4f_zero; }
-vec4f operator/(const vec4f& _v, const float& _s) { return vec4f_zero; }
+vec4f vec4f::Div(const vec4f& _v, const float& _s) { return _mm_div_ps(_v.m128, _mm_set1_ps(_s)); }
+vec4f vec4f::Div(const float* _fp, const float& _s) { return _mm_div_ps(_mm_load_ps(_fp), _mm_set1_ps(_s)); }
+vec4f vec4f::Div(const __m128& _sse, const float& _s) { return _mm_div_ps(_sse, _mm_set1_ps(_s)); }
+vec4f operator/(const vec4f& _v, const float& _s) { return _mm_div_ps(_v.m128, _mm_set1_ps(_s)); }
 
 //Vector Negate
 void vec4f::Negate() { m128 = _mm_xor_ps(m128, _mm_set1_ps(-0.0f)); }
