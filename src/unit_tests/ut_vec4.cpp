@@ -51,7 +51,7 @@ namespace {
 	}
 }
 
-TEST_CASE("Contructors and Assignments", "[vec4], [operator=]") {
+TEST_CASE("Contructors, Assignment, and Set", "[vec4], [operator=], [Set]") {
 	//Create Constants
 	const float _PI = 3.1415927;
 
@@ -117,6 +117,30 @@ TEST_CASE("Contructors and Assignments", "[vec4], [operator=]") {
 		CHECK(!memcmp(&as3, &s, sizeof(vec4)));
 	}
 
+	SECTION("Set Tests") {
+		float x = rand_num();
+		float y = rand_num();
+		float z = rand_num();
+		float w = rand_num();
+		float t[4] = { x, y, z, w };
+		
+		vec4 v(y, z, w, x);
+		float fp[4] = { w, y, z, x };
+		__m128 s = _mm_set_ps(z, w, x, y);
+
+		//Static Set: 
+		vec4 set1 = vec4::Set(x, y, z, w);
+		CHECK(!memcmp(t, &set1, sizeof(vec4)));
+
+		vec4 set2 = vec4::Set(v);
+		CHECK(!memcmp(&set2, &v, sizeof(vec4)));
+
+		vec4 set3 = vec4::Set(fp);
+		CHECK(!memcmp(fp, &set3, sizeof(vec4)));
+
+		vec4 set4 = vec4::Set(s);
+		CHECK(!memcmp(&set4, &s, sizeof(vec4)));
+	}
 }
 
 TEST_CASE("Equality Checks", "[IsZero], [IsEqual], [operator==] [operator!=]") {
