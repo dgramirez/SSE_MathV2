@@ -42,10 +42,22 @@ void vec4f::operator=(const __m128& _sse) {
 	//Assign the m128 value to the m128 parameter value
 	m128 = _sse;
 	}
-vec4f vec4f::Set(const float& _x, const float& _y, const float& _z, const float& _w) { return vec4f_zero; }
-vec4f vec4f::Set(const vec4f& _v) { return vec4f_zero; }
-vec4f vec4f::Set(const float* _fp) { return vec4f_zero; }
-vec4f vec4f::Set(const __m128& _sse) { return vec4f_zero; }
+vec4f vec4f::Set(const float& _x, const float& _y, const float& _z, const float& _w) {
+	//Set the m128 value to xyzw
+	return _mm_set_ps(_w, _z, _y, _x);
+}
+vec4f vec4f::Set(const vec4f& _v) {
+	//Set the m128 value to the other vector's m128 value
+	return _v.m128;
+}
+vec4f vec4f::Set(const float* _fp) {
+	//Load the float pointer to the m128 value
+	return _mm_load_ps(_fp);
+}
+vec4f vec4f::Set(const __m128& _sse) {
+	//Set the m128 value to the parameter m128 value
+	return _sse;
+}
 
 //Equality Check (Zero)
 bool vec4f::IsZero() const { 
