@@ -22,6 +22,10 @@ struct vec4f {
 	void operator=(const vec4f& _v);
 	void operator=(const float* _fp);
 	void operator=(const __m128& _sse);
+	static vec4f Set(const float& _x, const float& _y, const float& _z, const float& _w);
+	static vec4f Set(const vec4f& _v);
+	static vec4f Set(const float* _fp);
+	static vec4f Set(const __m128& _sse);
 
 	//Equality Check (Zero)
 	bool IsZero() const;
