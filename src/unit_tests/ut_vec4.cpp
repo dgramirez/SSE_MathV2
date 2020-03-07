@@ -271,7 +271,27 @@ TEST_CASE("Basic Vector Math", "[Add], [Sub], [Mul], [Div]") {
 
 	SECTION("Addition", "[Add], [operator+], [operator+=]") {
 		//Setup Answers for this section
-		
+		answer[0]  = vec4::Set( 55457.96164f, 142416.94849f,  69813.91124f,  87456.52660f);
+		answer[1]  = vec4::Set( 59983.88310f, 206507.27822f, 109854.26467f,  87576.12303f);
+		answer[2]  = vec4::Set(156150.07383f, 281043.90000f, 142457.57959f, 118755.51654f);
+		answer[3]  = vec4::Set(175552.92543f, 376006.00349f, 142774.17815f, 205587.84544f);
+		answer[4]  = vec4::Set(268610.98788f, 447921.34789f, 144796.05915f, 252356.37492f);
+		answer[5]  = vec4::Set(270183.66426f, 471313.98307f, 242454.77507f, 331910.23373f);
+		answer[6]  = vec4::Set( 55457.96164f, 142416.94849f,  69813.91124f,  87456.52660f);
+		answer[7]  = vec4::Set(112460.91405f, 166877.44789f,   2338.47956f, 133600.85838f);
+		answer[8]  = vec4::Set( 40581.03150f, 111545.17473f, 109537.66611f,    743.79413f);
+		answer[9]  = vec4::Set(115569.04233f, 169498.72527f,  32919.91348f, 118011.72241f);
+		answer[10] = vec4::Set( 37627.78642f,  70847.48018f, 167156.02860f,  80178.05651f);
+		answer[11] = vec4::Set( 97583.98391f, 136005.67413f,  42062.23443f,  46888.12591f);
+		answer[12] = vec4::Set( 97738.86711f,  97929.25696f, 130262.03084f, 110733.25232f);
+		answer[13] = vec4::Set(100692.11219f, 138626.95151f, 72643.668350f, 31298.989940f);
+		answer[14] = vec4::Set( 97738.86711f,  97929.25696f, 130262.03084f, 110733.25232f);
+		answer[15] = vec4::Set( 55457.96164f, 142416.94849f,  69813.91124f,  87456.52660f);
+		answer[16] = vec4::Set(112460.91405f, 166877.44789f,   2338.47956f, 133600.85838f);
+		answer[17] = vec4::Set( 40581.03150f, 111545.17473f, 109537.66611f,    743.79413f);
+		answer[18] = vec4::Set(115569.04233f, 169498.72527f,  32919.91348f, 118011.72241f);
+		answer[19] = vec4::Set( 37627.78642f,  70847.48018f, 167156.02860f,  80178.05651f);
+
 		//Setup Copy Vector to use
 		vec4 myVec = randVecA;
 
@@ -296,68 +316,88 @@ TEST_CASE("Basic Vector Math", "[Add], [Sub], [Mul], [Div]") {
 		CHECK(myVec == answer[4]);
 
 		//Member Operator+= Add: Vector vs m128
-		myVec += randM128B;
+		myVec += randM128A;
 		CHECK(myVec == answer[5]);
 
 		//Static Add: Vector vs Vector ---------------------------------
 		myVec = vec4::Add(randVecA, randVecB);
-		CHECK(myVec == answer[0]);
+		CHECK(myVec == answer[6]);
 
 		//Static Add: Vector vs FP
 		myVec = vec4::Add(randVecA, randFPB);
-		CHECK(myVec == answer[6]);
+		CHECK(myVec == answer[7]);
 
 		//Static Add: FP vs Vector
 		myVec = vec4::Add(randFPA, randVecB);
-		CHECK(myVec == answer[7]);
+		CHECK(myVec == answer[8]);
 
 		//Static Add: Vector vs m128
 		myVec = vec4::Add(randVecA, randM128B);
-		CHECK(myVec == answer[8]);
+		CHECK(myVec == answer[9]);
 
 		//Static Add: m128 vs Vector
 		myVec = vec4::Add(randM128A, randVecB);
-		CHECK(myVec == answer[9]);
+		CHECK(myVec == answer[10]);
 
 		//Static Add: Float Pointer & Float Pointer --------------------
 		myVec = vec4::Add(randFPA, randFPB);
-		CHECK(myVec == answer[10]);
+		CHECK(myVec == answer[11]);
 
 		//Static Sub: m128 & m128
 		myVec = vec4::Add(randM128A, randM128B);
-		CHECK(myVec == answer[11]);
+		CHECK(myVec == answer[12]);
 
 		//Static Sub: Float Pointer & m128
 		myVec = vec4::Add(randFPA, randM128B);
-		CHECK(myVec == answer[12]);
+		CHECK(myVec == answer[13]);
 
 		//Static Sub: m128 & Float Pointer
 		myVec = vec4::Add(randM128A, randFPB);
-		CHECK(myVec == answer[13]);
+		CHECK(myVec == answer[14]);
 
 		//Operator+ Add: Vector vs Vector ------------------------------
 		myVec = randVecA + randVecB;
-		CHECK(myVec == answer[14]);
+		CHECK(myVec == answer[15]);
 
 		//Operator+ Add: Vector vs FP
 		myVec = randVecA + randFPB;
-		CHECK(myVec == answer[15]);
+		CHECK(myVec == answer[16]);
 
 		//Operator+ Add: FP vs Vector
 		myVec = randFPA + randVecB;
-		CHECK(myVec == answer[16]);
+		CHECK(myVec == answer[17]);
 
 		//Operator+ Add: Vector vs m128
 		myVec = randVecA + randM128B;
-		CHECK(myVec == answer[17]);
+		CHECK(myVec == answer[18]);
 
 		//Operator+ Add: m128 vs Vector
 		myVec = randM128A + randVecB;
-		CHECK(myVec == answer[18]);
+		CHECK(myVec == answer[19]);
 	}
 
 	SECTION("Subtraction", "[Sub], [operator-], [operator-=]") {
 		//Setup Answers for this section
+		answer[0]  = vec4::Set( -16652.25844f,   47507.25849f,  -69180.71412f,   86208.13120f);
+		answer[1]  = vec4::Set( -21178.17990f,  -16583.07124f, -109221.06755f,   86088.53477f);
+		answer[2]  = vec4::Set( -22750.85628f,  -39975.70642f, -206879.78347f,    6534.67596f);
+		answer[3]  = vec4::Set( -42153.70788f, -134937.80991f, -207196.38203f,  -80297.65294f);
+		answer[4]  = vec4::Set(-135211.77033f, -206853.15431f, -209218.26303f, -127066.18242f);
+		answer[5]  = vec4::Set(-231377.96106f, -281389.77609f, -241821.57795f, -158245.57593f);
+		answer[6]  = vec4::Set( -16652.25844f,   47507.25849f,  -69180.71412f,   86208.13120f);
+		answer[7]  = vec4::Set( -73655.21085f,   23046.75909f,   -1705.28244f,   40063.79942f);
+		answer[8]  = vec4::Set(  31529.18858f,   16635.48473f,  -29456.95925f,    -504.60127f);
+		answer[9]  = vec4::Set( -76763.33913f,   20425.48171f,  -32286.71636f,   55652.93539f);
+		answer[10] = vec4::Set( -34482.43366f,  -24062.20982f,   28161.40324f,   78929.66111f);
+		answer[11] = vec4::Set( -88532.14099f,   -7825.01467f,   38018.47243f,  -46648.93305f);
+		answer[12] = vec4::Set( -94593.51435f,   -51143.9866f,   65055.40100f,   48374.46530f);
+		answer[13] = vec4::Set( -91640.26927f,  -10446.29205f,   7437.038510f,  -31059.79708f);
+		answer[14] = vec4::Set( -94593.51435f,  -51143.98660f,   65055.40100f,   48374.46530f);
+		answer[15] = vec4::Set( -16652.25844f,   47507.25849f,  -69180.71412f,   86208.13120f);
+		answer[16] = vec4::Set( -73655.21085f,   23046.75909f,   -1705.28244f,   40063.79942f);
+		answer[17] = vec4::Set( -31529.18858f,   16635.48473f,  -29456.95925f,    -504.60127f);
+		answer[18] = vec4::Set( -76763.33913f,   20425.48171f,  -32286.71636f,   55652.93539f);
+		answer[19] = vec4::Set( -34482.43366f,  -24062.20982f,   28161.40324f,   78929.66111f);
 		
 		//Setup Copy Vector to use
 		vec4 myVec = randVecA;
@@ -445,7 +485,17 @@ TEST_CASE("Basic Vector Math", "[Add], [Sub], [Mul], [Div]") {
 
 	SECTION("Scalar Multiply", "[Mul], [operator*], [operator*=]") {
 		//Setup Answers for this section
-		
+//		answer[0] = vec4::Set(142416.9307440f,  697021.8396166f, 2323.8334304f,  637349.2941260f);
+//		answer[1] = vec4::Set(405888.2526204f, 1986512.2429073f, 6622.9252766f, 1816445.4882591f);
+//		answer[2] = vec4::Set();
+//		answer[3] = vec4::Set();
+//		answer[4] = vec4::Set();
+//		answer[5] = vec4::Set();
+//		answer[6] = vec4::Set();
+//		answer[7] = vec4::Set();
+//		answer[8] = vec4::Set();
+//		answer[9] = vec4::Set();
+
 		//Setup Copy Vector to use
 		vec4 myVec = randVecA;
 
@@ -492,11 +542,12 @@ TEST_CASE("Basic Vector Math", "[Add], [Sub], [Mul], [Div]") {
 
 	SECTION("Scalar Divide", "[Div], [operator/=], [operator/]") {
 		//Setup Answers for this section
-		answer[0] = _mm_set_ps(11830.01756f, 43.13332f, 12937.61628f, 2643.44027f);
-		answer[1] = _mm_set_ps(927.52290f, 4539.51448f, 15.134498f, 4150.88335f);
-		answer[2] = _mm_set_ps(30467.48382f, 111.08721f, 33320.03631f, 6808.01811f);
-		answer[3] = _mm_set_ps(41.96366f, 14049.24682f, 22487.83499f, 1588.04262f);
-		answer[4] = _mm_set_ps(27913.63467f, 34226.21611f, 8207.94217f, 551.81627f);
+		answer[0] = vec4::Set( 2643.4402724f, 12937.6162792f,    43.1333188f, 11830.0175613f);
+		answer[1] = vec4::Set(  927.5229026f,  4539.5144839f,    15.1344978f,  4150.8833548f);
+		answer[2] = vec4::Set(12650.9158035f, 16650.8228070f, 24385.0219929f,   219.0167368f);
+		answer[3] = vec4::Set( 1588.0426175f, 22487.8349929f, 14049.2468175f,    41.9636596f);
+		answer[4] = vec4::Set(  551.8162736f,  8207.9421684f, 34266.2161122f, 27913.6346701f);
+		answer[5] = vec4::Set( 6808.0181052f, 33320.0363122f,   111.0872140f, 30467.4838245f);
 
 		//Setup Copy Vector to use
 		vec4 myVec = randVecA;
@@ -523,16 +574,16 @@ TEST_CASE("Basic Vector Math", "[Add], [Sub], [Mul], [Div]") {
 
 		//Operator/ Test: vec4 & Scalar
 		myVec = randVecA / randScalarB;
-		CHECK(myVec == answer[2]);
+		CHECK(myVec == answer[5]);
 	}
 
 	SECTION("Negate", "[Negate], [operator-]") {
 		//Setup Answers for this section
-		answer[0].m128 = _mm_set_ps(-86832.32890f, -316.59856f, -94962.10349f, -19402.85160f);
-		answer[1].m128 = _mm_set_ps(-624.19770f, -69497.31268f, -47454.84500f, -36055.11004f);
-		answer[2].m128 = _mm_set_ps(-119.59643f, -40040.35343f, -64090.32973f, -4525.92146f);
-		answer[3].m128 = _mm_set_ps(-79553.85881f, -97658.71592f, -23392.63518f, -1572.67638f);
-		answer[4].m128 = _mm_set_ps(79553.85881f, 97658.71592f, 23392.63518f, 1572.67638f);
+		answer[0] = vec4::Set(-19402.85160f, -94962.10349f, -316.59856f, -86832.32890f);
+		answer[1] = vec4::Set(-36055.11004f, -47454.84500f, -69497.31268f, -624.19770f);
+		answer[2] = vec4::Set(-4525.92146f, -64090.32973f, -40040.35343f, -119.59643f);
+		answer[3] = vec4::Set(-1572.67638, -23392.63518f, -97658.71592f, -79553.85881f);
+		answer[4] = vec4::Set(1572.67638f, 23392.63518f, 97658.71592f, 79553.85881f);
 		
 		//Setup Copy Vector to use
 		vec4 myVec = randVecA;
