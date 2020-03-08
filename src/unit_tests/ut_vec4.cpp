@@ -485,16 +485,16 @@ TEST_CASE("Basic Vector Math", "[Add], [Sub], [Mul], [Div]") {
 
 	SECTION("Scalar Multiply", "[Mul], [operator*], [operator*=]") {
 		//Setup Answers for this section
-//		answer[0] = vec4::Set(142416.9307440f,  697021.8396166f, 2323.8334304f,  637349.2941260f);
-//		answer[1] = vec4::Set(405888.2526204f, 1986512.2429073f, 6622.9252766f, 1816445.4882591f);
-//		answer[2] = vec4::Set();
-//		answer[3] = vec4::Set();
-//		answer[4] = vec4::Set();
-//		answer[5] = vec4::Set();
-//		answer[6] = vec4::Set();
-//		answer[7] = vec4::Set();
-//		answer[8] = vec4::Set();
-//		answer[9] = vec4::Set();
+		answer[0] = vec4::Set(142416.9307440f,  697021.8396166f,   2323.8334304f,  637349.2941260f);
+		answer[1] = vec4::Set(405888.2526204f, 1986512.2429073f,   6622.9252766f, 1816445.4882591f);
+		answer[2] = vec4::Set( 55298.1270600f,  270641.9949465f,    902.3058960f,  247472.1373650f);
+		answer[3] = vec4::Set(264644.5076936f,  348318.5623000f, 510110.2750712f,    4581.6111180f);
+		answer[4] = vec4::Set( 12898.8761610f,  182657.4397305f, 114115.0072755f,     340.8498255f);
+		answer[5] = vec4::Set(683046.1783830f,  527858.6278960f,  14840.6065400f,  343281.0063832f);
+		answer[6] = vec4::Set(  4482.1276830f,   66669.0102630f, 278327.3403720f,  226728.4976085f);
+		answer[7] = vec4::Set(705859.8399582f,  547098.8038652f, 239308.3315128f,  228856.7483634f);
+		answer[8] = vec4::Set( 55298.1270600f,  270641.9949465f,    902.3058960f,  247472.1373650f);
+		answer[9] = vec4::Set(264644.5076936f,  348318.5623000f, 510110.2750712f,    4581.6111180f);
 
 		//Setup Copy Vector to use
 		vec4 myVec = randVecA;
