@@ -49,6 +49,13 @@ namespace {
 			print("\tVector: (%f, %f, %f, %f)\n", vx, vy, vz, vw);
 		#endif
 	}
+
+	bool near_equal(float x, float y, float relValue= 0.00001f) {
+		float diff = fabs(x - y);
+		float A = fabs(x); float B = fabs(y);
+		float length = (A > B ? A : B) * relValue;
+		return diff <= length;
+	}
 }
 
 TEST_CASE("Contructors, Assignment, and Set", "[vec4], [operator=], [Set]") {
@@ -803,21 +810,21 @@ TEST_CASE("Basic Normal Math Functions ", "[Min], [Max], [Average],[Length], [Le
 
 		//Length Squared Method Test
 		vecAns = myVec.LengthSq();
-		REQUIRE( (fabs(vecAns - fAnswer[0])) < FLT_EPSILON );
+		REQUIRE( near_equal(vecAns, fAnswer[0]) );
 
 		//Static Length Squared Test: Vector
 		vecAns = vec4::LengthSq(randVecB);
-		CHECK((fabs(vecAns - fAnswer[1])) < FLT_EPSILON);
+		CHECK(near_equal(vecAns, fAnswer[1]));
 
 		//Static Length Squared Test: Float Pointer
 		vecAns = vec4::LengthSq(randFPA);
-		CHECK((fabs(vecAns - fAnswer[2])) < FLT_EPSILON);
+		CHECK(near_equal(vecAns, fAnswer[2]));
 
 		//Static Length Squared Test: m128
 		vecAns = vec4::LengthSq(randM128A);
-		CHECK((fabs(vecAns - fAnswer[3])) < FLT_EPSILON);
+		CHECK(near_equal(vecAns, fAnswer[3]));
 	}
-
+	
 	SECTION("Vector Length", "[Length]") {
 		//Setup Answers for this section
 		float vecAns = 1;
@@ -833,19 +840,19 @@ TEST_CASE("Basic Normal Math Functions ", "[Min], [Max], [Average],[Length], [Le
 
 		//Length Squared Method Test
 		vecAns = myVec.Length();
-		REQUIRE((fabs(vecAns - fAnswer[0])) < FLT_EPSILON);
+		REQUIRE(near_equal(vecAns, fAnswer[0]));
 
 		//Static Length Squared Test: Vector
 		vecAns = vec4::Length(randVecB);
-		CHECK((fabs(vecAns - fAnswer[1])) < FLT_EPSILON);
+		CHECK(near_equal(vecAns, fAnswer[1]));
 
 		//Static Length Squared Test: Float Pointer
 		vecAns = vec4::Length(randFPB);
-		CHECK((fabs(vecAns - fAnswer[2])) < FLT_EPSILON);
+		CHECK(near_equal(vecAns, fAnswer[2]));
 
 		//Static Length Squared Test: m128
 		vecAns = vec4::Length(randM128B);
-		CHECK((fabs(vecAns - fAnswer[3])) < FLT_EPSILON);
+		CHECK(near_equal(vecAns, fAnswer[3]));
 	}
 }
 
@@ -1071,7 +1078,7 @@ TEST_CASE("Vector Math Functions", "[Dot], [Cross], [Normalize], [Homogenize], [
 	SECTION("Angle Between Vector Test", "[AngleBetween]") {
 		//Setup Answers for this section
 		float vecAns = 1;
-		float fAnswer[8] = {
+		float fAnswer[12] = {
 
 		};
 
