@@ -306,83 +306,83 @@ vec4f operator-(const float* _fp, const vec4f& _v)		{ return _mm_sub_ps(_mm_load
 vec4f operator-(const __m128& _sse, const vec4f& _v)	{ return _mm_sub_ps(_sse, _v.m128); }
 
 //Vector-Vector Static Subtraction Additions
-vec4f vec4f::Sub(const float* fp1, const float* fp2)		{ return vec4f(_mm_sub_ps(_mm_load_ps(fp1), _mm_load_ps(fp2))); }
-vec4f vec4f::Sub(const __m128& _sse1, const __m128& _sse2)	{ return vec4f(_mm_sub_ps(_sse1, _sse2));; }
-vec4f vec4f::Sub(const float* fp, const __m128& _sse)		{ return vec4f(_mm_sub_ps(_mm_load_ps(fp), _sse)); }
-vec4f vec4f::Sub(const __m128& _sse, const float* fp)		{ return vec4f(_mm_sub_ps(_sse, _mm_load_ps(fp))); }
+vec4f vec4f::Sub(const float* fp1, const float* fp2)		{ return _mm_sub_ps(_mm_load_ps(fp1), _mm_load_ps(fp2)); }
+vec4f vec4f::Sub(const __m128& _sse1, const __m128& _sse2)	{ return _mm_sub_ps(_sse1, _sse2);; }
+vec4f vec4f::Sub(const float* fp, const __m128& _sse)		{ return _mm_sub_ps(_mm_load_ps(fp), _sse); }
+vec4f vec4f::Sub(const __m128& _sse, const float* fp)		{ return _mm_sub_ps(_sse, _mm_load_ps(fp)); }
 
 //Vector-Scalar Multiply (Self & Self Operator Overload)
-void vec4f::Mul(const float& _s) { *this = vec4f_zero; }
-void vec4f::operator*=(const float& _s) { *this = vec4f_zero; }
+void vec4f::Mul(const float& _s)		{ m128 = _mm_mul_ps(m128, _mm_set1_ps(_s)); }
+void vec4f::operator*=(const float& _s) { m128 = _mm_mul_ps(m128, _mm_set1_ps(_s)); }
 
 //Vector-Scalar Multiply (Static & Global Operator Overload)
-vec4f vec4f::Mul(const vec4f& _v, const float& _s) { return vec4f_zero; }
-vec4f vec4f::Mul(const float* _fp, const float& _s) { return vec4f_zero; }
-vec4f vec4f::Mul(const __m128& _sse, const float& _s) { return vec4f_zero; }
-vec4f vec4f::Mul(const float& _s, const vec4f& _v) { return vec4f_zero; }
-vec4f vec4f::Mul(const float& _s, const float* _fp) { return vec4f_zero; }
-vec4f vec4f::Mul(const float& _s, const __m128& _sse) { return vec4f_zero; }
-vec4f operator*(const vec4f& _v, const float& _s) { return vec4f_zero; }
-vec4f operator*(const float& _s, const vec4f& _v) { return vec4f_zero; }
+vec4f vec4f::Mul(const vec4f& _v, const float& _s)		{ return _mm_mul_ps(_v.m128, _mm_set1_ps(_s)); }
+vec4f vec4f::Mul(const float* _fp, const float& _s)		{ return _mm_mul_ps(_mm_load_ps(_fp), _mm_set1_ps(_s)); }
+vec4f vec4f::Mul(const __m128& _sse, const float& _s)	{ return _mm_mul_ps(_sse, _mm_set1_ps(_s)); }
+vec4f vec4f::Mul(const float& _s, const vec4f& _v)		{ return _mm_mul_ps(_mm_set1_ps(_s), _v.m128); }
+vec4f vec4f::Mul(const float& _s, const float* _fp)		{ return _mm_mul_ps(_mm_set1_ps(_s), _mm_load_ps(_fp)); }
+vec4f vec4f::Mul(const float& _s, const __m128& _sse)	{ return _mm_mul_ps(_mm_set1_ps(_s), _sse); }
+vec4f operator*(const vec4f& _v, const float& _s)		{ return _mm_mul_ps(_v.m128, _mm_set1_ps(_s)); }
+vec4f operator*(const float& _s, const vec4f& _v)		{ return _mm_mul_ps(_mm_set1_ps(_s), _v.m128); }
 
 //Vector-Scalar Divide (Self & Self Operator Overload)
-void vec4f::Div(const float& _s) { m128 = _mm_div_ps(m128, _mm_set1_ps(_s)); }
+void vec4f::Div(const float& _s)		{ m128 = _mm_div_ps(m128, _mm_set1_ps(_s)); }
 void vec4f::operator/=(const float& _s) { m128 = _mm_div_ps(m128, _mm_set1_ps(_s)); }
 
 //Vector-Scalar Divide (Static & Global Operator Overload)
-vec4f vec4f::Div(const vec4f& _v, const float& _s) { return _mm_div_ps(_v.m128, _mm_set1_ps(_s)); }
-vec4f vec4f::Div(const float* _fp, const float& _s) { return _mm_div_ps(_mm_load_ps(_fp), _mm_set1_ps(_s)); }
-vec4f vec4f::Div(const __m128& _sse, const float& _s) { return _mm_div_ps(_sse, _mm_set1_ps(_s)); }
-vec4f operator/(const vec4f& _v, const float& _s) { return _mm_div_ps(_v.m128, _mm_set1_ps(_s)); }
+vec4f vec4f::Div(const vec4f& _v, const float& _s)		{ return _mm_div_ps(_v.m128, _mm_set1_ps(_s)); }
+vec4f vec4f::Div(const float* _fp, const float& _s)		{ return _mm_div_ps(_mm_load_ps(_fp), _mm_set1_ps(_s)); }
+vec4f vec4f::Div(const __m128& _sse, const float& _s)	{ return _mm_div_ps(_sse, _mm_set1_ps(_s)); }
+vec4f operator/(const vec4f& _v, const float& _s)		{ return _mm_div_ps(_v.m128, _mm_set1_ps(_s)); }
 
 //Vector Negate
-void vec4f::Negate() { m128 = _mm_xor_ps(m128, _mm_set1_ps(-0.0f)); }
-vec4f vec4f::operator-() { return _mm_xor_ps(m128, _mm_set1_ps(-0.0f)); }
-vec4f vec4f::Negate(const vec4f& _v) { return _mm_xor_ps(_v.m128, _mm_set1_ps(-0.0f)); }
-vec4f vec4f::Negate(const float* _fp) { return _mm_xor_ps(_mm_load_ps(_fp), _mm_set1_ps(-0.0f)); }
-vec4f vec4f::Negate(const __m128& _sse) { return _mm_xor_ps(_sse, _mm_set1_ps(-0.0f)); }
+void vec4f::Negate()					{ m128 = _mm_xor_ps(m128, _mm_set1_ps(NegativeZero.f)); }
+vec4f vec4f::operator-()				{ return _mm_xor_ps(m128, _mm_set1_ps(NegativeZero.f)); }
+vec4f vec4f::Negate(const vec4f& _v)	{ return _mm_xor_ps(_v.m128, _mm_set1_ps(NegativeZero.f)); }
+vec4f vec4f::Negate(const float* _fp)	{ return _mm_xor_ps(_mm_load_ps(_fp), _mm_set1_ps(NegativeZero.f)); }
+vec4f vec4f::Negate(const __m128& _sse) { return _mm_xor_ps(_sse, _mm_set1_ps(NegativeZero.f)); }
 
 //Vector Minimum (Per Component)
-void vec4f::Min(const vec4f& _v) { *this = vec4f_zero; }
-vec4f vec4f::Min(const vec4f& _v1, const vec4f& _v2) { return vec4f_zero; }
-vec4f vec4f::Min(const vec4f& _v, const float* _fp) { return vec4f_zero; }
-vec4f vec4f::Min(const float* _fp, const vec4f& _v) { return vec4f_zero; }
-vec4f vec4f::Min(const vec4f& _v, const __m128& _sse) { return vec4f_zero; }
-vec4f vec4f::Min(const __m128& _sse, const vec4f& _v) { return vec4f_zero; }
+void vec4f::Min(const vec4f& _v)						{ m128 = _mm_min_ps(m128, _v.m128); }
+vec4f vec4f::Min(const vec4f& _v1, const vec4f& _v2)	{ return _mm_min_ps(_v1.m128, _v2.m128); }
+vec4f vec4f::Min(const vec4f& _v, const float* _fp)		{ return _mm_min_ps(_v.m128, _mm_load_ps(_fp)); }
+vec4f vec4f::Min(const float* _fp, const vec4f& _v)		{ return _mm_min_ps(_mm_load_ps(_fp), _v.m128); }
+vec4f vec4f::Min(const vec4f& _v, const __m128& _sse)	{ return _mm_min_ps(_v.m128, _sse); }
+vec4f vec4f::Min(const __m128& _sse, const vec4f& _v)	{ return _mm_min_ps(_sse, _v.m128); }
 
 //Vector Static Minimum Additions
-vec4f vec4f::Min(const float* fp1, const float* fp2) { return vec4f_zero; }
-vec4f vec4f::Min(const __m128& _sse1, const __m128& _sse2) { return vec4f_zero; }
-vec4f vec4f::Min(const float* fp, const __m128& _sse) { return vec4f_zero; }
-vec4f vec4f::Min(const __m128& _sse, const float* fp) { return vec4f_zero; }
+vec4f vec4f::Min(const float* fp1, const float* fp2)		{ return _mm_min_ps(_mm_load_ps(fp1), _mm_load_ps(fp2)); }
+vec4f vec4f::Min(const __m128& _sse1, const __m128& _sse2)	{ return _mm_min_ps(_sse1, _sse2); }
+vec4f vec4f::Min(const float* fp, const __m128& _sse)		{ return _mm_min_ps(_mm_load_ps(fp), _sse); }
+vec4f vec4f::Min(const __m128& _sse, const float* fp)		{ return _mm_min_ps(_sse, _mm_load_ps(fp)); }
 
 //Vector Maximum (Per Component)
-void vec4f::Max(const vec4f& _v) { *this = vec4f_zero; }
-vec4f vec4f::Max(const vec4f& _v1, const vec4f& _v2) { return vec4f_zero; }
-vec4f vec4f::Max(const vec4f& _v, const float* _fp) { return vec4f_zero; }
-vec4f vec4f::Max(const float* _fp, const vec4f& _v) { return vec4f_zero; }
-vec4f vec4f::Max(const vec4f& _v, const __m128& _sse) { return vec4f_zero; }
-vec4f vec4f::Max(const __m128& _sse, const vec4f& _v) { return vec4f_zero; }
+void vec4f::Max(const vec4f& _v)						{ m128 = _mm_max_ps(m128, _v.m128); }
+vec4f vec4f::Max(const vec4f& _v1, const vec4f& _v2)	{ return _mm_max_ps(_v1.m128, _v2.m128); }	
+vec4f vec4f::Max(const vec4f& _v, const float* _fp)		{ return _mm_max_ps(_v.m128, _mm_load_ps(_fp)); }	
+vec4f vec4f::Max(const float* _fp, const vec4f& _v)		{ return _mm_max_ps(_mm_load_ps(_fp), _v.m128); }	
+vec4f vec4f::Max(const vec4f& _v, const __m128& _sse)	{ return _mm_max_ps(_v.m128, _sse); }	
+vec4f vec4f::Max(const __m128& _sse, const vec4f& _v)	{ return _mm_max_ps(_sse, _v.m128); }	
 
 //Vector Static Maximum Additions
-vec4f vec4f::Max(const float* fp1, const float* fp2) { return vec4f_zero; }
-vec4f vec4f::Max(const __m128& _sse1, const __m128& _sse2) { return vec4f_zero; }
-vec4f vec4f::Max(const float* fp, const __m128& _sse) { return vec4f_zero; }
-vec4f vec4f::Max(const __m128& _sse, const float* fp) { return vec4f_zero; }
+vec4f vec4f::Max(const float* fp1, const float* fp2)		{ return _mm_max_ps(_mm_load_ps(fp1), _mm_load_ps(fp2)); }
+vec4f vec4f::Max(const __m128& _sse1, const __m128& _sse2)	{ return _mm_max_ps(_sse1, _sse2); }
+vec4f vec4f::Max(const float* fp, const __m128& _sse)		{ return _mm_max_ps(_mm_load_ps(fp), _sse); }
+vec4f vec4f::Max(const __m128& _sse, const float* fp)		{ return _mm_max_ps(_sse, _mm_load_ps(fp)); }
 
 //Vector Average (Per Component)
-void vec4f::Average(const vec4f& _v) { *this = vec4f_zero; }
-vec4f vec4f::Average(const vec4f& _v1, const vec4f& _v2) { return vec4f_zero; }
-vec4f vec4f::Average(const vec4f& _v, const float* _fp) { return vec4f_zero; }
-vec4f vec4f::Average(const float* _fp, const vec4f& _v) { return vec4f_zero; }
-vec4f vec4f::Average(const vec4f& _v, const __m128& _sse) { return vec4f_zero; }
-vec4f vec4f::Average(const __m128& _sse, const vec4f& _v) { return vec4f_zero; }
+void vec4f::Average(const vec4f& _v)						{ m128 = _mm_mul_ps(_mm_add_ps(m128, _v.m128), _mm_set1_ps(0.5f)); }
+vec4f vec4f::Average(const vec4f& _v1, const vec4f& _v2)	{ return _mm_mul_ps(_mm_add_ps(_v1.m128, _v2.m128), _mm_set1_ps(0.5f)); }
+vec4f vec4f::Average(const vec4f& _v, const float* _fp)		{ return _mm_mul_ps(_mm_add_ps(_v.m128, _mm_load_ps(_fp)), _mm_set1_ps(0.5f)); }
+vec4f vec4f::Average(const float* _fp, const vec4f& _v)		{ return _mm_mul_ps(_mm_add_ps(_mm_load_ps(_fp), _v.m128), _mm_set1_ps(0.5f)); }
+vec4f vec4f::Average(const vec4f& _v, const __m128& _sse)	{ return _mm_mul_ps(_mm_add_ps(_v.m128, _sse), _mm_set1_ps(0.5f)); }
+vec4f vec4f::Average(const __m128& _sse, const vec4f& _v)	{ return _mm_mul_ps(_mm_add_ps(_sse, _v.m128), _mm_set1_ps(0.5f)); }
 
 //Vector Static Average Additions
-vec4f vec4f::Average(const float* fp1, const float* fp2) { return vec4f_zero; }
-vec4f vec4f::Average(const __m128& _sse1, const __m128& _sse2) { return vec4f_zero; }
-vec4f vec4f::Average(const float* fp, const __m128& _sse) { return vec4f_zero; }
-vec4f vec4f::Average(const __m128& _sse, const float* fp) { return vec4f_zero; }
+vec4f vec4f::Average(const float* fp1, const float* fp2)		{ return _mm_mul_ps(_mm_add_ps(_mm_load_ps(fp1), _mm_load_ps(fp2)), _mm_set1_ps(0.5f)); }
+vec4f vec4f::Average(const __m128& _sse1, const __m128& _sse2)	{ return _mm_mul_ps(_mm_add_ps(_sse1, _sse2), _mm_set1_ps(0.5f)); }
+vec4f vec4f::Average(const float* fp, const __m128& _sse)		{ return _mm_mul_ps(_mm_add_ps(_mm_load_ps(fp), _sse), _mm_set1_ps(0.5f)); }
+vec4f vec4f::Average(const __m128& _sse, const float* fp)		{ return _mm_mul_ps(_mm_add_ps(_sse, _mm_load_ps(fp)), _mm_set1_ps(0.5f)); }
 
 //Vector Lengths
 float vec4f::Length() { return 0.0f; }
