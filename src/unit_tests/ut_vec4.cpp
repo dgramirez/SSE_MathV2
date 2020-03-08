@@ -619,7 +619,17 @@ TEST_CASE("Basic Normal Math Functions ", "[Min], [Max], [Average],[Length], [Le
 
 	SECTION("Minimum Value [Per Component]", "[Min]") {
 		//Setup Answers for this section
-		
+		answer[0] = vec4::Set(19402.85160f, 47454.84500f,   316.59856f,   624.19770f);
+		answer[1] = vec4::Set(19402.85160f, 47454.84500f,   316.59856f,   624.19770f);
+		answer[2] = vec4::Set(19402.85160f, 71915.34440f,   316.59856f, 46768.52948f);
+		answer[3] = vec4::Set( 4525.92146f, 47454.84500f, 40040.35343f,   119.59643f);
+		answer[4] = vec4::Set(19402.85160f, 74536.62178f,   316.59856f, 31179.39351f);
+		answer[5] = vec4::Set( 1572.67638f, 23392.63518f, 69497.31268f,   624.19770f);
+		answer[6] = vec4::Set( 4525.92146f, 64090.32973f,  2021.88100f,   119.59643f);
+		answer[7] = vec4::Set( 1572.67638f, 23392.63518f, 32603.31492f, 31179.39351f);
+		answer[8] = vec4::Set( 4525.92146f, 64090.32973f, 32603.31492f,   119.59643f);
+		answer[9] = vec4::Set( 1572.67638f, 23392.63518f,  2021.88100f, 46768.52948f);
+
 		//Setup Copy Vector to use
 		vec4 myVec = randVecA;
 
@@ -666,7 +676,17 @@ TEST_CASE("Basic Normal Math Functions ", "[Min], [Max], [Average],[Length], [Le
 
 	SECTION("Maximum Value [Per Component]", "[Max]") {
 		//Setup Answers for this section
-		
+		answer[0] = vec4::Set(36055.11004f, 94962.10349f, 69497.31268f, 86832.32890f);
+		answer[1] = vec4::Set(36055.11004f, 94962.10349f, 69497.31268f, 86832.32890f);
+		answer[2] = vec4::Set(93058.06245f, 94962.10349f,  2021.88100f, 86832.32890f);
+		answer[3] = vec4::Set(36055.11004f, 64090.32973f, 69497.31268f,   624.19770f);
+		answer[4] = vec4::Set(96166.19073f, 94962.10349f, 32603.31492f, 86832.32890f);
+		answer[5] = vec4::Set(36055.11004f, 47454.84500f, 97658.71592f, 79553.85881f);
+		answer[6] = vec4::Set(93058.06245f, 71915.34440f, 40040.35343f, 46768.52948f);
+		answer[7] = vec4::Set(96166.19073f, 74536.62178f, 97658.71592f, 46768.52948f);
+		answer[8] = vec4::Set(96166.19073f, 74536.62178f, 40040.35343f, 31179.39351f);
+		answer[9] = vec4::Set(93058.06245f, 71915.34440f, 97658.71592f, 79553.85881f);
+
 		//Setup Copy Vector to use
 		vec4 myVec = randVecA;
 
@@ -713,7 +733,17 @@ TEST_CASE("Basic Normal Math Functions ", "[Min], [Max], [Average],[Length], [Le
 
 	SECTION("Average Value [Per Component]", "[Avg]") {
 		//Setup Answers for this section
-		
+		answer[0] = vec4::Set( 27728.98082f, 71208.474245f, 34906.955620f, 43728.263300f);
+		answer[1] = vec4::Set( 27728.98082f, 71208.474245f, 34906.955620f, 43728.263300f);
+		answer[2] = vec4::Set(56230.457025f, 83438.723945f,  1169.239780f, 66800.429190f);
+		answer[3] = vec4::Set( 20290.51575f, 55772.587365f, 54768.833055f,   371.897065f);
+		answer[4] = vec4::Set(57784.521165f, 84749.362635f, 16459.956740f, 59005.861205f);
+		answer[5] = vec4::Set(18813.893210f, 35423.740090f, 83578.014300f, 40089.028255f);
+		answer[6] = vec4::Set(48791.991955f, 68002.837065f, 21031.117215f, 23444.062955f);
+		answer[7] = vec4::Set(48869.433555f, 48964.628480f, 65131.015420f, 55366.626160f);
+		answer[8] = vec4::Set(50346.056095f, 69313.475755f, 36321.834175f, 15649.494970f);
+		answer[9] = vec4::Set(48869.433555f, 48964.628480f, 65131.015420f, 55366.626160f);
+
 		//Setup Copy Vector to use
 		vec4 myVec = randVecA;
 
@@ -762,7 +792,10 @@ TEST_CASE("Basic Normal Math Functions ", "[Min], [Max], [Average],[Length], [Le
 		//Setup Answers for this section
 		float vecAns = 1;
 		float fAnswer[4] = {
-
+			16934225326.3030620f,
+			 8382199366.4809078f,
+			 5731298536.0675919f,
+			16415729938.3654595f
 		};
 
 		//Setup Copy Vector to use
@@ -770,26 +803,29 @@ TEST_CASE("Basic Normal Math Functions ", "[Min], [Max], [Average],[Length], [Le
 
 		//Length Squared Method Test
 		vecAns = myVec.LengthSq();
-		CHECK(vecAns == fAnswer[0]);
+		CHECK( (fabs(vecAns - fAnswer[0])) < FLT_EPSILON );
 
 		//Static Length Squared Test: Vector
 		vecAns = vec4::LengthSq(randVecB);
-		CHECK(vecAns == fAnswer[1]);
+		CHECK((fabs(vecAns - fAnswer[1])) < FLT_EPSILON);
 
 		//Static Length Squared Test: Float Pointer
 		vecAns = vec4::LengthSq(randFPA);
-		CHECK(vecAns == fAnswer[2]);
+		CHECK((fabs(vecAns - fAnswer[2])) < FLT_EPSILON);
 
 		//Static Length Squared Test: m128
 		vecAns = vec4::LengthSq(randM128A);
-		CHECK(vecAns == fAnswer[3]);
+		CHECK((fabs(vecAns - fAnswer[3])) < FLT_EPSILON);
 	}
 
 	SECTION("Vector Length", "[Length]") {
 		//Setup Answers for this section
 		float vecAns = 1;
 		float fAnswer[4] = {
-
+			130131.5692916f,
+			 91554.3519800f,
+			126582.0014836f,
+			129764.3053744f
 		};
 
 		//Setup Copy Vector to use
@@ -797,19 +833,19 @@ TEST_CASE("Basic Normal Math Functions ", "[Min], [Max], [Average],[Length], [Le
 
 		//Length Squared Method Test
 		vecAns = myVec.Length();
-		CHECK(vecAns == fAnswer[0]);
+		CHECK((fabs(vecAns - fAnswer[0])) < FLT_EPSILON);
 
 		//Static Length Squared Test: Vector
 		vecAns = vec4::Length(randVecB);
-		CHECK(vecAns == fAnswer[1]);
+		CHECK((fabs(vecAns - fAnswer[1])) < FLT_EPSILON);
 
 		//Static Length Squared Test: Float Pointer
 		vecAns = vec4::Length(randFPB);
-		CHECK(vecAns == fAnswer[2]);
+		CHECK((fabs(vecAns - fAnswer[2])) < FLT_EPSILON);
 
 		//Static Length Squared Test: m128
 		vecAns = vec4::Length(randM128B);
-		CHECK(vecAns == fAnswer[3]);
+		CHECK((fabs(vecAns - fAnswer[3])) < FLT_EPSILON);
 	}
 }
 
