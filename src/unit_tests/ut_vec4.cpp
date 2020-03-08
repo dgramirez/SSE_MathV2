@@ -297,7 +297,7 @@ TEST_CASE("Basic Vector Math", "[Add], [Sub], [Mul], [Div]") {
 
 		//Member Method Add: Vector vs Vector ----------------------
 		myVec.Add(randVecB);
-		CHECK(myVec == answer[0]);
+		REQUIRE(myVec == answer[0]);
 
 		//Member Method Add: Vector vs Float Pointer
 		myVec.Add(randFPA);
@@ -404,7 +404,7 @@ TEST_CASE("Basic Vector Math", "[Add], [Sub], [Mul], [Div]") {
 
 		//Member Method Sub: Vector vs Vector ----------------------
 		myVec.Sub(randVecB);
-		CHECK(myVec == answer[0]);
+		REQUIRE(myVec == answer[0]);
 
 		//Member Method Sub: Vector vs Float Pointer
 		myVec.Sub(randFPA);
@@ -501,7 +501,7 @@ TEST_CASE("Basic Vector Math", "[Add], [Sub], [Mul], [Div]") {
 
 		//Mul Method Test
 		myVec.Mul(randScalarA);
-		CHECK(myVec == answer[0]);
+		REQUIRE(myVec == answer[0]);
 
 		//Operator*= Test
 		myVec *= randScalarB;
@@ -554,7 +554,7 @@ TEST_CASE("Basic Vector Math", "[Add], [Sub], [Mul], [Div]") {
 
 		//Div Method Test
 		myVec.Div(randScalarA);
-		CHECK(myVec == answer[0]);
+		REQUIRE(myVec == answer[0]);
 
 		//Operator/= Test
 		myVec /= randScalarB;
@@ -590,7 +590,7 @@ TEST_CASE("Basic Vector Math", "[Add], [Sub], [Mul], [Div]") {
 
 		//Negate Method Test
 		myVec.Negate();
-		CHECK(myVec == answer[0]);
+		REQUIRE(myVec == answer[0]);
 
 		//Static Negate Test: Vector
 		myVec = vec4::Negate(randVecB);
@@ -635,7 +635,7 @@ TEST_CASE("Basic Normal Math Functions ", "[Min], [Max], [Average],[Length], [Le
 
 		//Min Method Test
 		myVec.Min(randVecB);
-		CHECK(myVec == answer[0]);
+		REQUIRE(myVec == answer[0]);
 
 		//Static Min Test: Vector & Vector
 		myVec = vec4::Min(randVecA, randVecB);
@@ -692,7 +692,7 @@ TEST_CASE("Basic Normal Math Functions ", "[Min], [Max], [Average],[Length], [Le
 
 		//Max Method Test
 		myVec.Max(randVecB);
-		CHECK(myVec == answer[0]);
+		REQUIRE(myVec == answer[0]);
 
 		//Static Max Test: Vector & Vector
 		myVec = vec4::Max(randVecA, randVecB);
@@ -749,7 +749,7 @@ TEST_CASE("Basic Normal Math Functions ", "[Min], [Max], [Average],[Length], [Le
 
 		//Average Method Test
 		myVec.Average(randVecB);
-		CHECK(myVec == answer[0]);
+		REQUIRE(myVec == answer[0]);
 
 		//Static Average Test: Vector & Vector
 		myVec = vec4::Average(randVecA, randVecB);
@@ -803,7 +803,7 @@ TEST_CASE("Basic Normal Math Functions ", "[Min], [Max], [Average],[Length], [Le
 
 		//Length Squared Method Test
 		vecAns = myVec.LengthSq();
-		CHECK( (fabs(vecAns - fAnswer[0])) < FLT_EPSILON );
+		REQUIRE( (fabs(vecAns - fAnswer[0])) < FLT_EPSILON );
 
 		//Static Length Squared Test: Vector
 		vecAns = vec4::LengthSq(randVecB);
@@ -833,7 +833,7 @@ TEST_CASE("Basic Normal Math Functions ", "[Min], [Max], [Average],[Length], [Le
 
 		//Length Squared Method Test
 		vecAns = myVec.Length();
-		CHECK((fabs(vecAns - fAnswer[0])) < FLT_EPSILON);
+		REQUIRE((fabs(vecAns - fAnswer[0])) < FLT_EPSILON);
 
 		//Static Length Squared Test: Vector
 		vecAns = vec4::Length(randVecB);
@@ -868,7 +868,7 @@ TEST_CASE("Vector Math Functions", "[Dot], [Cross], [Normalize], [Homogenize], [
 
 		//Dot Product Method Test: Vector
 		vecAns = myVec.Dot(randVecB);
-		CHECK(vecAns == fAnswer[0]);
+		REQUIRE(vecAns == fAnswer[0]);
 
 		//Dot Product Method Test: Float Pointer
 		vecAns = myVec.Dot(randFPA);
@@ -943,7 +943,7 @@ TEST_CASE("Vector Math Functions", "[Dot], [Cross], [Normalize], [Homogenize], [
 
 		//Cross Product Method Test: Vector
 		myVec.Cross(randVecB);
-		CHECK(myVec == answer[0]);
+		REQUIRE(myVec == answer[0]);
 
 		//Cross Product Method Test: Float Pointer
 		myVec.Cross(randFPA);
@@ -1030,7 +1030,7 @@ TEST_CASE("Vector Math Functions", "[Dot], [Cross], [Normalize], [Homogenize], [
 
 		//Normalize Method Test
 		myVec.Normalize();
-		CHECK(myVec == answer[0]);
+		REQUIRE(myVec == answer[0]);
 
 		//Static Normalize Function Check: Vector
 		myVec = vec4::Normalize(randVecB);
@@ -1053,7 +1053,7 @@ TEST_CASE("Vector Math Functions", "[Dot], [Cross], [Normalize], [Homogenize], [
 
 		//Homogenize Method Test
 		myVec.Homogenize();
-		CHECK(myVec == answer[0]);
+		REQUIRE(myVec == answer[0]);
 
 		//Static Homogenize Function Check: Vector
 		myVec = vec4::Homogenize(randVecB);
@@ -1080,7 +1080,7 @@ TEST_CASE("Vector Math Functions", "[Dot], [Cross], [Normalize], [Homogenize], [
 
 		//Angle Between Method Test: Vector
 		vecAns = myVec.AngleBetween(randVecB);
-		CHECK(vecAns == fAnswer[0]);
+		REQUIRE(vecAns == fAnswer[0]);
 
 		//Angle Between Method Test: Float Pointer
 		vecAns = myVec.AngleBetween(randFPA);
@@ -1139,7 +1139,7 @@ TEST_CASE("Vector Math Functions", "[Dot], [Cross], [Normalize], [Homogenize], [
 
 		//Component Method Test: Vector
 		vecAns = myVec.Component(randVecB);
-		CHECK(vecAns == fAnswer[0]);
+		REQUIRE(vecAns == fAnswer[0]);
 
 		//Component Method Test: Float Pointer
 		vecAns = myVec.Component(randFPA);
@@ -1194,7 +1194,7 @@ TEST_CASE("Vector Math Functions", "[Dot], [Cross], [Normalize], [Homogenize], [
 
 		//Project Method Test: Vector
 		myVec.Project(randVecB);
-		CHECK(myVec == answer[0]);
+		REQUIRE(myVec == answer[0]);
 
 		//Project Method Test: Float Pointer
 		myVec.Project(randFPA);
@@ -1249,7 +1249,7 @@ TEST_CASE("Vector Math Functions", "[Dot], [Cross], [Normalize], [Homogenize], [
 
 		//Reflect Method Test: Vector
 		myVec.Reflect(randVecB);
-		CHECK(myVec == answer[0]);
+		REQUIRE(myVec == answer[0]);
 
 		//Reflect Method Test: Float Pointer
 		myVec.Reflect(randFPA);
