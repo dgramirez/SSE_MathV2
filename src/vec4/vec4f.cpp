@@ -7,6 +7,9 @@
 namespace {
 	static const vec4f vec4f_zero = {0.0f, 0.0f, 0.0f, 1.0f};
 	static const float realZero[4] = {};
+	static union { float f; unsigned int i = 0xFFFFFFFF; } MaxBits;
+	static union { float f; unsigned int i = 0x80000000; } NegativeZero;
+	static const __m128 m128PosNaN = _mm_xor_ps(_mm_set1_ps(NegativeZero.f), _mm_set1_ps(MaxBits.f));
 }
 
 //Constructor & Assignment
@@ -57,6 +60,24 @@ vec4f vec4f::Set(const float* _fp) {
 vec4f vec4f::Set(const __m128& _sse) {
 	//Set the m128 value to the parameter m128 value
 	return _sse;
+}
+
+//Vec4 Absolute Value
+void vec4f::vabs() {
+	//Toggle the negative bit
+	m128 = _mm_and_ps(m128, m128PosNaN);
+}
+vec4f vec4f::vabs(const vec4f& _v) {
+	//Toggle the negative bit
+	return _mm_and_ps(_v.m128, _mm_xor_ps(_mm_set1_ps(NegativeZero.f), _mm_set1_ps(MaxBits.f)));
+}
+vec4f vec4f::vabs(const float* _fp) {
+	//Toggle the negative bit
+	return _mm_and_ps(_mm_load_ps(_fp), _mm_xor_ps(_mm_set1_ps(NegativeZero.f), _mm_set1_ps(MaxBits.f)));
+}
+vec4f vec4f::vabs(const __m128& _sse) {
+	//Toggle the negative bit
+	return _mm_and_ps(_sse, _mm_xor_ps(_mm_set1_ps(NegativeZero.f), _mm_set1_ps(MaxBits.f)));
 }
 
 //Equality Check (Zero)
@@ -167,11 +188,10 @@ bool vec4f::IsEqual(const __m128& _sse, const float* _fp) {
 
 //Equality Check (Operator Overload)
 bool operator==(const vec4f& _v1, const vec4f& _v2) {
-	//Create an "Equal" vector and do a parallel comparison with the vector parameter and itself
-	vec4f eq = _mm_cmpeq_ps(_v1.m128, _v2.m128); 
-
-	//return true if there is no 0 in any of the components.
-	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+		vec4f diff = vec4f::vabs(_v2 - _v1);
+		vec4f largest = _mm_mul_ps( _mm_max_ps(vec4f::vabs(_v1).m128, vec4f::vabs(_v2).m128) , _mm_set1_ps(0.00001f));
+		vec4f eq = _mm_cmple_ps(diff.m128, largest.m128);
+		return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
 	}
 bool operator==(const vec4f& _v, const float* _fp) {
 	//Create an "Equal" vector and do a parallel comparison with the vector parameter and itself
@@ -240,56 +260,56 @@ bool operator!=(const __m128& _sse, const vec4f& _v) {
 	}
 
 //Vector-Vector Addition (Self)
-void vec4f::Add(const vec4f& _v) { *this = vec4f_zero; }
-void vec4f::Add(const float* _fp) { *this = vec4f_zero; }
-void vec4f::Add(const __m128& _sse) { *this = vec4f_zero; }
-void vec4f::operator+=(const vec4f& _v) { *this = vec4f_zero; }
-void vec4f::operator+=(const float* _fp) { *this = vec4f_zero; }
-void vec4f::operator+=(const __m128& _sse) { *this = vec4f_zero; }
+void vec4f::Add(const vec4f& _v)			{ m128 = _mm_add_ps(m128, _v.m128); }
+void vec4f::Add(const float* _fp)			{ m128 = _mm_add_ps(m128, _mm_load_ps(_fp)); }
+void vec4f::Add(const __m128& _sse)			{ m128 = _mm_add_ps(m128, _sse); }
+void vec4f::operator+=(const vec4f& _v)		{ m128 = _mm_add_ps(m128, _v.m128); }
+void vec4f::operator+=(const float* _fp)	{ m128 = _mm_add_ps(m128, _mm_load_ps(_fp)); }
+void vec4f::operator+=(const __m128& _sse)	{ m128 = _mm_add_ps(m128, _sse); }
 
 //Vector-Vector Addition (Static & Global Operator Overloads)
-vec4f vec4f::Add(const vec4f& _v1, const vec4f& _v2) { return vec4f_zero; }
-vec4f vec4f::Add(const vec4f& _v, const float* _fp) { return vec4f_zero; }
-vec4f vec4f::Add(const vec4f& _v, const __m128& _sse) { return vec4f_zero; }
-vec4f vec4f::Add(const float* _fp, const vec4f& _v) { return vec4f_zero; }
-vec4f vec4f::Add(const __m128& _sse, const vec4f& _v) { return vec4f_zero; }
-vec4f operator+(const vec4f& _v1, const vec4f& _v2) { return vec4f_zero; }
-vec4f operator+(const vec4f& _v, const float* _fp) { return vec4f_zero; }
-vec4f operator+(const vec4f& _v, const __m128& _sse) { return vec4f_zero; }
-vec4f operator+(const float* _fp, const vec4f& _v) { return vec4f_zero; }
-vec4f operator+(const __m128& _sse, const vec4f& _v) { return vec4f_zero; }
+vec4f vec4f::Add(const vec4f& _v1, const vec4f& _v2)	{ return _mm_add_ps(_v1.m128, _v2.m128); }
+vec4f vec4f::Add(const vec4f& _v, const float* _fp)		{ return _mm_add_ps(_v.m128, _mm_load_ps(_fp)); }
+vec4f vec4f::Add(const vec4f& _v, const __m128& _sse)	{ return _mm_add_ps(_v.m128, _sse); }
+vec4f vec4f::Add(const float* _fp, const vec4f& _v)		{ return _mm_add_ps(_mm_load_ps(_fp), _v.m128); }
+vec4f vec4f::Add(const __m128& _sse, const vec4f& _v)	{ return _mm_add_ps(_sse, _v.m128); }
+vec4f operator+(const vec4f& _v1, const vec4f& _v2)		{ return _mm_add_ps(_v1.m128, _v2.m128); }
+vec4f operator+(const vec4f& _v, const float* _fp)		{ return _mm_add_ps(_v.m128, _mm_load_ps(_fp)); }
+vec4f operator+(const vec4f& _v, const __m128& _sse)	{ return _mm_add_ps(_v.m128, _sse); }
+vec4f operator+(const float* _fp, const vec4f& _v)		{ return _mm_add_ps(_mm_load_ps(_fp), _v.m128); }
+vec4f operator+(const __m128& _sse, const vec4f& _v)	{ return _mm_add_ps(_sse, _v.m128); }
 
 //Vector-Vector Static Add Additions
-vec4f vec4f::Add(const float* fp1, const float* fp2) { return vec4f_zero; }
-vec4f vec4f::Add(const __m128& _sse1, const __m128& _sse2) { return vec4f_zero; }
-vec4f vec4f::Add(const float* fp, const __m128& _sse) { return vec4f_zero; }
-vec4f vec4f::Add(const __m128& _sse, const float* fp) { return vec4f_zero; }
+vec4f vec4f::Add(const float* fp1, const float* fp2)		{ return vec4f(_mm_add_ps(_mm_load_ps(fp1), _mm_load_ps(fp2))); }
+vec4f vec4f::Add(const __m128& _sse1, const __m128& _sse2)	{ return vec4f(_mm_add_ps(_sse1, _sse2));; }
+vec4f vec4f::Add(const float* fp, const __m128& _sse)		{ return vec4f(_mm_add_ps(_mm_load_ps(fp), _sse)); }
+vec4f vec4f::Add(const __m128& _sse, const float* fp)		{ return vec4f(_mm_add_ps(_sse, _mm_load_ps(fp))); }
 
 //Vector-Vector Subtraction (Self & Self Operator Overloads)
-void vec4f::Sub(const vec4f& _v) { *this = vec4f_zero; }
-void vec4f::Sub(const float* _fp) { *this = vec4f_zero; }
-void vec4f::Sub(const __m128& _sse) { *this = vec4f_zero; }
-void vec4f::operator-=(const vec4f& _v) { *this = vec4f_zero; }
-void vec4f::operator-=(const float* _fp) { *this = vec4f_zero; }
-void vec4f::operator-=(const __m128& _sse) { *this = vec4f_zero; }
+void vec4f::Sub(const vec4f& _v)			{ m128 = _mm_sub_ps(m128, _v.m128); }
+void vec4f::Sub(const float* _fp)			{ m128 = _mm_sub_ps(m128, _mm_load_ps(_fp)); }
+void vec4f::Sub(const __m128& _sse)			{ m128 = _mm_sub_ps(m128, _sse); }
+void vec4f::operator-=(const vec4f& _v)		{ m128 = _mm_sub_ps(m128, _v.m128); }
+void vec4f::operator-=(const float* _fp)	{ m128 = _mm_sub_ps(m128, _mm_load_ps(_fp)); }
+void vec4f::operator-=(const __m128& _sse)	{ m128 = _mm_sub_ps(m128, _sse); }
 
 //Vector-Vector Subtraction (Static & Global Operator Overloads)
-vec4f vec4f::Sub(const vec4f& _v1, const vec4f& _v2) { return vec4f_zero; }
-vec4f vec4f::Sub(const vec4f& _v, const float* _fp) { return vec4f_zero; }
-vec4f vec4f::Sub(const vec4f& _v, const __m128& _sse) { return vec4f_zero; }
-vec4f vec4f::Sub(const float* _fp, const vec4f& _v) { return vec4f_zero; }
-vec4f vec4f::Sub(const __m128& _sse, const vec4f& _v) { return vec4f_zero; }
-vec4f operator-(const vec4f& _v1, const vec4f& _v2) { return vec4f_zero; }
-vec4f operator-(const vec4f& _v, const float* _fp) { return vec4f_zero; }
-vec4f operator-(const vec4f& _v, const __m128& _sse) { return vec4f_zero; }
-vec4f operator-(const float* _fp, const vec4f& _v) { return vec4f_zero; }
-vec4f operator-(const __m128& _sse, const vec4f& _v) { return vec4f_zero; }
+vec4f vec4f::Sub(const vec4f& _v1, const vec4f& _v2)	{ return _mm_sub_ps(_v1.m128, _v2.m128); }
+vec4f vec4f::Sub(const vec4f& _v, const float* _fp)		{ return _mm_sub_ps(_v.m128, _mm_load_ps(_fp)); }
+vec4f vec4f::Sub(const vec4f& _v, const __m128& _sse)	{ return _mm_sub_ps(_v.m128, _sse); }
+vec4f vec4f::Sub(const float* _fp, const vec4f& _v)		{ return _mm_sub_ps(_mm_load_ps(_fp), _v.m128); }
+vec4f vec4f::Sub(const __m128& _sse, const vec4f& _v)	{ return _mm_sub_ps(_sse, _v.m128); }
+vec4f operator-(const vec4f& _v1, const vec4f& _v2)		{ return _mm_sub_ps(_v1.m128, _v2.m128); }
+vec4f operator-(const vec4f& _v, const float* _fp)		{ return _mm_sub_ps(_v.m128, _mm_load_ps(_fp)); }
+vec4f operator-(const vec4f& _v, const __m128& _sse)	{ return _mm_sub_ps(_v.m128, _sse); }
+vec4f operator-(const float* _fp, const vec4f& _v)		{ return _mm_sub_ps(_mm_load_ps(_fp), _v.m128); }
+vec4f operator-(const __m128& _sse, const vec4f& _v)	{ return _mm_sub_ps(_sse, _v.m128); }
 
 //Vector-Vector Static Subtraction Additions
-vec4f vec4f::Sub(const float* fp1, const float* fp2) { return vec4f_zero; }
-vec4f vec4f::Sub(const __m128& _sse1, const __m128& _sse2) { return vec4f_zero; }
-vec4f vec4f::Sub(const float* fp, const __m128& _sse) { return vec4f_zero; }
-vec4f vec4f::Sub(const __m128& _sse, const float* fp) { return vec4f_zero; }
+vec4f vec4f::Sub(const float* fp1, const float* fp2)		{ return vec4f(_mm_sub_ps(_mm_load_ps(fp1), _mm_load_ps(fp2))); }
+vec4f vec4f::Sub(const __m128& _sse1, const __m128& _sse2)	{ return vec4f(_mm_sub_ps(_sse1, _sse2));; }
+vec4f vec4f::Sub(const float* fp, const __m128& _sse)		{ return vec4f(_mm_sub_ps(_mm_load_ps(fp), _sse)); }
+vec4f vec4f::Sub(const __m128& _sse, const float* fp)		{ return vec4f(_mm_sub_ps(_sse, _mm_load_ps(fp))); }
 
 //Vector-Scalar Multiply (Self & Self Operator Overload)
 void vec4f::Mul(const float& _s) { *this = vec4f_zero; }

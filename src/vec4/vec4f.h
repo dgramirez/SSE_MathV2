@@ -27,6 +27,12 @@ struct vec4f {
 	static vec4f Set(const float* _fp);
 	static vec4f Set(const __m128& _sse);
 
+	//Vec4 Absolute Value
+	void vabs();
+	static vec4f vabs(const vec4f& _v);
+	static vec4f vabs(const float* _fp);
+	static vec4f vabs(const __m128& _sse);
+
 	//Equality Check (Zero)
 	bool IsZero() const;
 	static bool IsZero(const vec4f& _v);
