@@ -385,16 +385,16 @@ vec4f vec4f::Average(const float* fp, const __m128& _sse)		{ return _mm_mul_ps(_
 vec4f vec4f::Average(const __m128& _sse, const float* fp)		{ return _mm_mul_ps(_mm_add_ps(_sse, _mm_load_ps(fp)), _mm_set1_ps(0.5f)); }
 
 //Vector Lengths
-float vec4f::Length() { return 0.0f; }
-float vec4f::Length(const vec4f& _v)  { return 0.0f; }
-float vec4f::Length(const float* _fp)  { return 0.0f; }
-float vec4f::Length(const __m128& _sse)  { return 0.0f; }
+float vec4f::Length()					{ vec4f sq = _mm_mul_ps(m128, m128); return sqrt(sq.x + sq.y + sq.z + sq.w); }
+float vec4f::Length(const vec4f& _v)	{ vec4f sq = _mm_mul_ps(_v.m128, _v.m128); return sqrt(sq.x + sq.y + sq.z + sq.w); }
+float vec4f::Length(const float* _fp)	{ vec4f sq = _mm_mul_ps(_mm_load_ps(_fp), _mm_load_ps(_fp)); return sqrt(sq.x + sq.y + sq.z + sq.w); }
+float vec4f::Length(const __m128& _sse)	{ vec4f sq = _mm_mul_ps(_sse, _sse); return sqrt(sq.x + sq.y + sq.z + sq.w); }
 
 //Vector Length Squared
-float vec4f::LengthSq() { return 0.0f; }
-float vec4f::LengthSq(const vec4f& _v)  { return 0.0f; }
-float vec4f::LengthSq(const float* _fp)  { return 0.0f; }
-float vec4f::LengthSq(const __m128& _sse)  { return 0.0f; }
+float vec4f::LengthSq()						{ vec4f sq = _mm_mul_ps(m128, m128); return sq.x + sq.y + sq.z + sq.w; }
+float vec4f::LengthSq(const vec4f& _v)		{ vec4f sq = _mm_mul_ps(_v.m128, _v.m128); return sq.x + sq.y + sq.z + sq.w; }
+float vec4f::LengthSq(const float* _fp)		{ vec4f sq = _mm_mul_ps(_mm_load_ps(_fp), _mm_load_ps(_fp)); return sq.x + sq.y + sq.z + sq.w; }
+float vec4f::LengthSq(const __m128& _sse)	{ vec4f sq = _mm_mul_ps(_sse, _sse); return sq.x + sq.y + sq.z + sq.w; }
 
 //Vector Dot Product
 float vec4f::Dot(const vec4f& _v) { return 0.0f; }
