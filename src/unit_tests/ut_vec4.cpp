@@ -1,16 +1,9 @@
 #define VEC4_FLOATS_GLOBAL
 #define PRINT_DEBUG_INFO
 
-#include <stdio.h>
-#include <stdlib.h>
+#include "../xplat.h"
 #include "catch2.hpp"
 #include "../vec4/vec4f.h"
-
-#if defined(_WIN32)
-	#include <memory>
-#else
-	#include <string.h>
-#endif
 
 namespace {
 	//Simple Pre-Req Check
