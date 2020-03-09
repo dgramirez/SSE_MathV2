@@ -1064,10 +1064,10 @@ TEST_CASE("Vector Math Functions", "[Dot], [Cross], [Normalize], [Homogenize], [
 
 	SECTION("Homogenize Test", "[Homogenize]") {
 		//Setup Answers for this section
-		answer[0] = vec4::Set(  0.2234519f,   1.0936261f,   0.0036460f, 1.0f);
-		answer[1] = vec4::Set(301.4731295f, 396.7914844f, 334.7955572f, 1.0f);
-		answer[2] = vec4::Set(  1.9897581f,   1.5376866f,   0.0432316f, 1.0f);
-		answer[3] = vec4::Set(  3.0842867f,   2.3905731f,   1.0456686f, 1.0f);
+		answer[0] = vec4::Set( 0.223451931f,  1.093626126f,   0.003646090f, 1.0f);
+		answer[1] = vec4::Set(57.762324404f, 76.025344213f, 111.338623452f, 1.0f);
+		answer[2] = vec4::Set( 1.989758144f,  1.537686670f,   0.043231656f, 1.0f);
+		answer[3] = vec4::Set( 3.084286764f,  2.390573176f,   1.045668669f, 1.0f);
 		
 		//Setup Copy Vector to use
 		vec4 myVec = randVecA;
