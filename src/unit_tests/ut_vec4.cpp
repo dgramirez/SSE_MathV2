@@ -419,7 +419,13 @@ TEST_CASE("Basic Vector Math", "[Add], [Sub], [Mul], [Div]") {
 
 		//Member Method Sub: Vector vs m128
 		myVec.Sub(randM128A);
+		CHECK_FALSE(myVec == answer[2]);
+
+		//Epsilon Change
+		vec4::ChangeEpsilon(FLT_EPSILON * 3);
 		CHECK(myVec == answer[2]);
+		vec4::ChangeEpsilon();
+		REQUIRE(near_equal(FLT_EPSILON * 2, vec4::GetEpsilon()));
 
 		//Member Operator+= Sub: Vector vs Vector ---------------------
 		myVec -= randVecA;
@@ -1031,7 +1037,11 @@ TEST_CASE("Vector Math Functions", "[Dot], [Cross], [Normalize], [Homogenize], [
 
 	SECTION("Normalize Test", "[Normalize]") {
 		//Setup Answers for this section
-		
+		answer[0] = vec4::Set(0.0149101f, 0.7297391f, 0.0024329f, 0.6672656f);
+		answer[1] = vec4::Set(0.3938109f, 0.5183242f, 0.7590825f, 0.0068177f);
+		answer[2] = vec4::Set(0.0597833f, 0.8465760f, 0.5288973f, 0.0015797f);
+		answer[3] = vec4::Set(0.0122746f, 0.0182578f, 0.7622210f, 0.0620913f);
+
 		//Setup Copy Vector to use
 		vec4 myVec = randVecA;
 
@@ -1054,6 +1064,10 @@ TEST_CASE("Vector Math Functions", "[Dot], [Cross], [Normalize], [Homogenize], [
 
 	SECTION("Homogenize Test", "[Homogenize]") {
 		//Setup Answers for this section
+		answer[0] = vec4::Set(  0.2234519f,   1.0936261f,   0.0036460f, 1.0f);
+		answer[1] = vec4::Set(301.4731295f, 396.7914844f, 334.7955572f, 1.0f);
+		answer[2] = vec4::Set(  1.9897581f,   1.5376866f,   0.0432316f, 1.0f);
+		answer[3] = vec4::Set(  3.0842867f,   2.3905731f,   1.0456686f, 1.0f);
 		
 		//Setup Copy Vector to use
 		vec4 myVec = randVecA;

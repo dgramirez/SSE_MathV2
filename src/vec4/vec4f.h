@@ -328,6 +328,10 @@ struct vec4f {
 	static vec4f Reflect(const __m128& _sse1, const __m128& _sse2);
 	static vec4f Reflect(const float* fp, const __m128& _sse);
 	static vec4f Reflect(const __m128& _sse, const float* fp);
+
+	//Addition: Epsilon Change
+	static void ChangeEpsilon(const float& _epsilon = -1.0f);
+	static float GetEpsilon();
 };
 #endif //VEC4F_H
 

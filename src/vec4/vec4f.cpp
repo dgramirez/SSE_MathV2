@@ -10,7 +10,14 @@ namespace {
 	static union { float f; unsigned int i = 0xFFFFFFFF; } MaxBits;
 	static union { float f; unsigned int i = 0x80000000; } NegativeZero;
 	static const __m128 m128PosNaN = _mm_xor_ps(_mm_set1_ps(NegativeZero.f), _mm_set1_ps(MaxBits.f));
+	float epsilon = FLT_EPSILON * 2;
 }
+
+//Epsilon
+void vec4f::ChangeEpsilon(const float& _epsilon) {
+	epsilon = _epsilon < 0 ? FLT_EPSILON * 2 : _epsilon;
+}
+float vec4f::GetEpsilon() { return epsilon; }
 
 //Constructor & Assignment
 vec4f::vec4f() {
@@ -188,10 +195,30 @@ bool vec4f::IsEqual(const __m128& _sse, const float* _fp) {
 
 //Equality Check (Operator Overload)
 bool operator==(const vec4f& _v1, const vec4f& _v2) {
-		vec4f diff = vec4f::vabs(_v2 - _v1);
-		vec4f largest = _mm_mul_ps( _mm_max_ps(vec4f::vabs(_v1).m128, vec4f::vabs(_v2).m128) , _mm_set1_ps(0.00001f));
-		vec4f eq = _mm_cmple_ps(diff.m128, largest.m128);
+	//First Equality Check, Handles Infinities
+	vec4f eq = _mm_cmpeq_ps(_v1.m128, _v2.m128);
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
+
+	//Absolute Value the vectors
+	vec4f absV1 = vec4f::vabs(_v1);
+	vec4f absV2 = vec4f::vabs(_v2);
+	vec4f diff = vec4f::vabs(_v2 - _v1);
+
+	//Second Equality Check: Near Zero
+	vec4f minChk = _mm_cmplt_ps((absV1 + absV2).m128, _mm_set1_ps(FLT_MIN));
+	if (_v1.IsZero() || _v2.IsZero() || (CINT(minChk.x) & CINT(minChk.y) & CINT(minChk.z) & CINT(minChk.w)))
+	{
+		eq = _mm_cmplt_ps(diff.m128, _mm_mul_ps(_mm_set1_ps(epsilon), _mm_set1_ps(FLT_MIN)));
 		return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+	}
+
+	//Final Equality Check: Relative
+	{
+		eq = _mm_cmplt_ps(_mm_div_ps(diff.m128, vec4f::Min((absV1 + absV2), _mm_set1_ps(FLT_MAX)).m128), _mm_set1_ps(epsilon));
+		return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+	}
+
 	}
 bool operator==(const vec4f& _v, const float* _fp) {
 	//Create an "Equal" vector and do a parallel comparison with the vector parameter and itself
