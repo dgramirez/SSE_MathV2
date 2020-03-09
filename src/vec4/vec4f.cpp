@@ -207,18 +207,14 @@ bool operator==(const vec4f& _v1, const vec4f& _v2) {
 
 	//Second Equality Check: Near Zero
 	vec4f minChk = _mm_cmplt_ps((absV1 + absV2).m128, _mm_set1_ps(FLT_MIN));
-	if (_v1.IsZero() || _v2.IsZero() || (CINT(minChk.x) & CINT(minChk.y) & CINT(minChk.z) & CINT(minChk.w)))
-	{
+	if (_v1.IsZero() || _v2.IsZero() || (CINT(minChk.x) & CINT(minChk.y) & CINT(minChk.z) & CINT(minChk.w))) {
 		eq = _mm_cmplt_ps(diff.m128, _mm_mul_ps(_mm_set1_ps(epsilon), _mm_set1_ps(FLT_MIN)));
 		return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
 	}
 
 	//Final Equality Check: Relative
-	{
-		eq = _mm_cmplt_ps(_mm_div_ps(diff.m128, vec4f::Min((absV1 + absV2), _mm_set1_ps(FLT_MAX)).m128), _mm_set1_ps(epsilon));
-		return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
-	}
-
+	eq = _mm_cmplt_ps(_mm_div_ps(diff.m128, vec4f::Min((absV1 + absV2), _mm_set1_ps(FLT_MAX)).m128), _mm_set1_ps(epsilon));
+	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
 	}
 bool operator==(const vec4f& _v, const float* _fp) {
 	//Create an "Equal" vector and do a parallel comparison with the vector parameter and itself
@@ -412,10 +408,10 @@ vec4f vec4f::Average(const float* fp, const __m128& _sse)		{ return _mm_mul_ps(_
 vec4f vec4f::Average(const __m128& _sse, const float* fp)		{ return _mm_mul_ps(_mm_add_ps(_sse, _mm_load_ps(fp)), _mm_set1_ps(0.5f)); }
 
 //Vector Lengths
-float vec4f::Length()					{ vec4f sq = _mm_mul_ps(m128, m128); return sqrt(sq.x + sq.y + sq.z + sq.w); }
-float vec4f::Length(const vec4f& _v)	{ vec4f sq = _mm_mul_ps(_v.m128, _v.m128); return sqrt(sq.x + sq.y + sq.z + sq.w); }
-float vec4f::Length(const float* _fp)	{ vec4f sq = _mm_mul_ps(_mm_load_ps(_fp), _mm_load_ps(_fp)); return sqrt(sq.x + sq.y + sq.z + sq.w); }
-float vec4f::Length(const __m128& _sse)	{ vec4f sq = _mm_mul_ps(_sse, _sse); return sqrt(sq.x + sq.y + sq.z + sq.w); }
+float vec4f::Length()					{ vec4f sq = _mm_mul_ps(m128, m128); return sqrtf(sq.x + sq.y + sq.z + sq.w); }
+float vec4f::Length(const vec4f& _v)	{ vec4f sq = _mm_mul_ps(_v.m128, _v.m128); return sqrtf(sq.x + sq.y + sq.z + sq.w); }
+float vec4f::Length(const float* _fp)	{ vec4f sq = _mm_mul_ps(_mm_load_ps(_fp), _mm_load_ps(_fp)); return sqrtf(sq.x + sq.y + sq.z + sq.w); }
+float vec4f::Length(const __m128& _sse)	{ vec4f sq = _mm_mul_ps(_sse, _sse); return sqrtf(sq.x + sq.y + sq.z + sq.w); }
 
 //Vector Length Squared
 float vec4f::LengthSq()						{ vec4f sq = _mm_mul_ps(m128, m128); return sq.x + sq.y + sq.z + sq.w; }
@@ -471,10 +467,50 @@ vec4f vec4f::Cross(const float* fp, const __m128& _sse) { return vec4f_zero; }
 vec4f vec4f::Cross(const __m128& _sse, const float* fp) { return vec4f_zero; }
 
 //Vector Normalize
-void vec4f::Normalize() { *this = vec4f_zero; }
-vec4f vec4f::Normalize(const vec4f& _v) { return vec4f_zero; }
-vec4f vec4f::Normalize(const float* _fp) { return vec4f_zero; }
-vec4f vec4f::Normalize(const __m128& _sse) { return vec4f_zero; }
+void vec4f::Normalize() {
+	//Get Length Squared
+	float l = LengthSq();
+	if (l == 0.0f)
+		m128 = _mm_setzero_ps();
+	else
+	{
+		l = 1 / sqrtf(l);
+		m128 = _mm_mul_ps(m128, _mm_set1_ps(l));
+	}
+}
+vec4f vec4f::Normalize(const vec4f& _v) {
+	//Get Length Squared
+	float l = vec4f::LengthSq(_v);
+	if (l == 0.0f)
+		return _mm_setzero_ps();
+	else
+	{
+		l = 1 / sqrtf(l);
+		return _mm_mul_ps(_v.m128, _mm_set1_ps(l));
+	}
+}
+vec4f vec4f::Normalize(const float* _fp) {
+	//Get Length Squared
+	float l = vec4f::LengthSq(_fp);
+	if (l == 0.0f)
+		return _mm_setzero_ps();
+	else
+	{
+		l = 1 / sqrtf(l);
+		return _mm_mul_ps(_mm_load_ps(_fp), _mm_set1_ps(l));
+	}
+}
+vec4f vec4f::Normalize(const __m128& _sse) {
+	//Get Length Squared
+	float l = vec4f::LengthSq(_sse);
+	if (l == 0.0f)
+		return _mm_setzero_ps();
+	else
+	{
+		l = 1 / sqrtf(l);
+		return _mm_mul_ps(_sse, _mm_set1_ps(l));
+	}
+}
 
 //Vector Homogenize (Perspective Divide)
 void vec4f::Homogenize() { *this = vec4f_zero; }
