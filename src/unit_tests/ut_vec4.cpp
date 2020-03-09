@@ -871,9 +871,25 @@ TEST_CASE("Vector Math Functions", "[Dot], [Cross], [Normalize], [Homogenize], [
 
 	SECTION("Dot Product Test", "[Dot], [Operator*]") {
 		//Setup Answers for this section
-		float vecAns = 1;
+		float vecAns = 1.0f;
 		float fAnswer[17] = {
-
+			 5282187140.623080384f,
+			 6197029861.752973981f,
+			 9190693691.568743670f,
+			 5282187140.623080384f, 
+			12696484611.922471708f,
+			 5987350873.567694011f,
+			11661754233.656577634f, 
+			 8003472548.461516557f,
+			 5116801796.106543775f,
+			 7559285236.463376027f,
+			 6521494489.731612930f,
+			 5746710925.383224161f,
+			 5282187140.623080384f,
+			12696484611.922471708f,
+			 5987350873.567694011f,
+			11661754233.656577634f,
+			 8003472548.461516557f,
 		};
 
 		//Setup Copy Vector to use
@@ -881,71 +897,71 @@ TEST_CASE("Vector Math Functions", "[Dot], [Cross], [Normalize], [Homogenize], [
 
 		//Dot Product Method Test: Vector
 		vecAns = myVec.Dot(randVecB);
-		REQUIRE(vecAns == fAnswer[0]);
+		REQUIRE(near_equal(vecAns, fAnswer[0]));
 
 		//Dot Product Method Test: Float Pointer
 		vecAns = myVec.Dot(randFPA);
-		CHECK(vecAns == fAnswer[1]);
+		CHECK(near_equal(vecAns, fAnswer[1]));
 
 		//Dot Product Method Test: m128
 		vecAns = myVec.Dot(randM128A);
-		CHECK(vecAns == fAnswer[2]);
+		CHECK(near_equal(vecAns, fAnswer[2]));
 
 		//Static Dot Product Test: Vector & Vector
 		vecAns = vec4::Dot(randVecA, randVecB);
-		CHECK(vecAns == fAnswer[3]);
+		CHECK(near_equal(vecAns, fAnswer[3]));
 		
 		//Static Dot Product Test: Vector & Float Pointer
 		vecAns = vec4::Dot(randVecA, randFPB);
-		CHECK(vecAns == fAnswer[4]);
+		CHECK(near_equal(vecAns, fAnswer[4]));
 
 		//Static Dot Product Test: Float Pointer & Vector
 		vecAns = vec4::Dot(randFPA, randVecB);
-		CHECK(vecAns == fAnswer[5]);
+		CHECK(near_equal(vecAns, fAnswer[5]));
 
 		//Static Dot Product Test: Vector & m128
 		vecAns = vec4::Dot(randVecA, randM128B);
-		CHECK(vecAns == fAnswer[6]);
+		CHECK(near_equal(vecAns, fAnswer[6]));
 
 		//Static Dot Product Test: m128 & Vector
 		vecAns = vec4::Dot(randM128A, randVecB);
-		CHECK(vecAns == fAnswer[7]);
+		CHECK(near_equal(vecAns, fAnswer[7]));
 
 		//Static Dot Product Test: Float Pointer & Float Pointer
 		vecAns = vec4::Dot(randFPA, randFPB);
-		CHECK(vecAns == fAnswer[8]);
+		CHECK(near_equal(vecAns, fAnswer[8]));
 
 		//Static Dot Product Test: m128 & m128
 		vecAns = vec4::Dot(randM128A, randM128B);
-		CHECK(vecAns == fAnswer[9]);
+		CHECK(near_equal(vecAns, fAnswer[9]));
 
 		//Static Dot Product Test: Float Pointer & m128
 		vecAns = vec4::Dot(randFPA, randM128B);
-		CHECK(vecAns == fAnswer[10]);
+		CHECK(near_equal(vecAns, fAnswer[10]));
 
 		//Static Dot Product Test: m128 & Float Pointer
 		vecAns = vec4::Dot(randM128A, randFPB);
-		CHECK(vecAns == fAnswer[11]);
+		CHECK(near_equal(vecAns, fAnswer[11]));
 
 		//Operator* Test: Vector & Vector
 		vecAns = randVecA * randVecB;
-		CHECK(vecAns == fAnswer[12]);
+		CHECK(near_equal(vecAns, fAnswer[12]));
 		
 		//Operator* Test: Vector & Float Pointer
 		vecAns = randVecA * randFPB;
-		CHECK(vecAns == fAnswer[13]);
+		CHECK(near_equal(vecAns, fAnswer[13]));
 
 		//Operator* Test: Float Pointer & Vector
 		vecAns = randFPA * randVecB;
-		CHECK(vecAns == fAnswer[14]);
+		CHECK(near_equal(vecAns, fAnswer[14]));
 
 		//Operator* Test: Vector & m128
 		vecAns = randVecA * randM128B;
-		CHECK(vecAns == fAnswer[15]);
+		CHECK(near_equal(vecAns, fAnswer[15]));
 
 		//Operator* Test: m128 & Vector
 		vecAns = randM128A * randVecB;
-		CHECK(vecAns == fAnswer[16]);
+		CHECK(near_equal(vecAns, fAnswer[16]));
 	}
 
 	SECTION("Cross Product Test", "[Cross], [Operator^]") {
