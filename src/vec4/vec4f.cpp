@@ -513,10 +513,10 @@ vec4f vec4f::Normalize(const __m128& _sse) {
 }
 
 //Vector Homogenize (Perspective Divide)
-void vec4f::Homogenize() { *this = vec4f_zero; }
-vec4f vec4f::Homogenize(const vec4f& _v) { return vec4f_zero; }
-vec4f vec4f::Homogenize(const float* _fp) { return vec4f_zero; }
-vec4f vec4f::Homogenize(const __m128& _sse) { return vec4f_zero; }
+void vec4f::Homogenize() { m128 = _mm_div_ps(m128, _mm_set1_ps(w)); }
+vec4f vec4f::Homogenize(const vec4f& _v) { return _mm_div_ps(_v.m128, _mm_set1_ps(_v.w)); }
+vec4f vec4f::Homogenize(const float* _fp) { return _mm_div_ps(_mm_load_ps(_fp), _mm_set1_ps(_fp[3])); }
+vec4f vec4f::Homogenize(const __m128& _sse) { return _mm_div_ps(_sse, _mm_set1_ps(vec4f(_sse).w)); }
 
 //Vector Angle Between
 float vec4f::AngleBetween(const vec4f& _v) { return 0.0f; }
