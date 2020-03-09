@@ -11,6 +11,13 @@ namespace {
 	static union { float f; unsigned int i = 0x80000000; } NegativeZero;
 	static const __m128 m128PosNaN = _mm_xor_ps(_mm_set1_ps(NegativeZero.f), _mm_set1_ps(MaxBits.f));
 	float epsilon = FLT_EPSILON * 2;
+	static inline float GetSSEValue(const __m128& _sse, const uint32_t& index) {
+		#if defined(_WIN32)
+		return _sse.m128_f32[index];
+		#else
+		return _sse[index];
+		#endif
+	}
 }
 
 //Epsilon
@@ -18,6 +25,9 @@ void vec4f::ChangeEpsilon(const float& _epsilon) {
 	epsilon = _epsilon < 0 ? FLT_EPSILON * 2 : _epsilon;
 }
 float vec4f::GetEpsilon() { return epsilon; }
+
+//Getting SSE Values
+
 
 //Constructor & Assignment
 vec4f::vec4f() {
@@ -420,25 +430,25 @@ float vec4f::LengthSq(const float* _fp)		{ vec4f sq = _mm_mul_ps(_mm_load_ps(_fp
 float vec4f::LengthSq(const __m128& _sse)	{ vec4f sq = _mm_mul_ps(_sse, _sse); return sq.x + sq.y + sq.z + sq.w; }
 
 //Vector Dot Product
-float vec4f::Dot(const vec4f& _v) { return 0.0f; }
-float vec4f::Dot(const float* _fp) { return 0.0f; }
-float vec4f::Dot(const __m128& _sse) { return 0.0f; }
-float vec4f::Dot(const vec4f& _v1, const vec4f& _v2) { return 0.0f; }
-float vec4f::Dot(const vec4f& _v1, const float* _fp) { return 0.0f; }
-float vec4f::Dot(const vec4f& _v1, const __m128& _sse) { return 0.0f; }
-float vec4f::Dot(const float* _fp, const vec4f& _v2) { return 0.0f; }
-float vec4f::Dot(const __m128& _sse, const vec4f& _v2) { return 0.0f; }
-float operator*(const vec4f& _v1, const vec4f& _v2) { return 0.0f; }
-float operator*(const vec4f& _v1, const float* _fp) { return 0.0f; }
-float operator*(const vec4f& _v1, const __m128& _sse) { return 0.0f; }
-float operator*(const float* _fp, const vec4f& _v2) { return 0.0f; }
-float operator*(const __m128& _sse, const vec4f& _v2) { return 0.0f; }
+float vec4f::Dot(const vec4f& _v)						{ vec4f m = _mm_mul_ps(m128, _v.m128);	return m.x + m.y + m.z + m.w; }
+float vec4f::Dot(const float* _fp)						{ vec4f m = _mm_mul_ps(m128, _mm_load_ps(_fp)); return m.x + m.y + m.z + m.w; }
+float vec4f::Dot(const __m128& _sse)					{ vec4f m = _mm_mul_ps(m128, _sse);	return m.x + m.y + m.z + m.w; }
+float vec4f::Dot(const vec4f& _v1, const vec4f& _v2)	{ vec4f m = _mm_mul_ps(_v1.m128, _v2.m128); return m.x + m.y + m.z + m.w; }
+float vec4f::Dot(const vec4f& _v1, const float* _fp)	{ vec4f m = _mm_mul_ps(_v1.m128, _mm_load_ps(_fp)); return m.x + m.y + m.z + m.w; }
+float vec4f::Dot(const vec4f& _v1, const __m128& _sse)	{ vec4f m = _mm_mul_ps(_v1.m128, _sse); return m.x + m.y + m.z + m.w; }
+float vec4f::Dot(const float* _fp, const vec4f& _v2)	{ vec4f m = _mm_mul_ps(_mm_load_ps(_fp), _v2.m128); return m.x + m.y + m.z + m.w; }
+float vec4f::Dot(const __m128& _sse, const vec4f& _v2)	{ vec4f m = _mm_mul_ps(_sse, _v2.m128); return m.x + m.y + m.z + m.w; }
+float operator*(const vec4f& _v1, const vec4f& _v2)		{ vec4f m = _mm_mul_ps(_v1.m128, _v2.m128); return m.x + m.y + m.z + m.w; }
+float operator*(const vec4f& _v1, const float* _fp)		{ vec4f m = _mm_mul_ps(_v1.m128, _mm_load_ps(_fp)); return m.x + m.y + m.z + m.w; }
+float operator*(const vec4f& _v1, const __m128& _sse)	{ vec4f m = _mm_mul_ps(_v1.m128, _sse); return m.x + m.y + m.z + m.w; }
+float operator*(const float* _fp, const vec4f& _v2)		{ vec4f m = _mm_mul_ps(_mm_load_ps(_fp), _v2.m128); return m.x + m.y + m.z + m.w; }
+float operator*(const __m128& _sse, const vec4f& _v2)	{ vec4f m = _mm_mul_ps(_sse, _v2.m128); return m.x + m.y + m.z + m.w; }
 
 //Vector Dot Product Additions
-float vec4f::Dot(const float* fp1, const float* fp2) { return 0.0f; }
-float vec4f::Dot(const __m128& _sse1, const __m128& _sse2) { return 0.0f; }
-float vec4f::Dot(const float* fp, const __m128& _sse) { return 0.0f; }
-float vec4f::Dot(const __m128& _sse, const float* fp) { return 0.0f; }
+float vec4f::Dot(const float* fp1, const float* fp2)		{ vec4f m = _mm_mul_ps(_mm_load_ps(fp1), _mm_load_ps(fp2)); return m.x + m.y + m.z + m.w; }
+float vec4f::Dot(const __m128& _sse1, const __m128& _sse2)	{ vec4f m = _mm_mul_ps(_sse1, _sse2); return m.x + m.y + m.z + m.w; }
+float vec4f::Dot(const float* fp, const __m128& _sse)		{ vec4f m = _mm_mul_ps(_mm_load_ps(fp), _sse); return m.x + m.y + m.z + m.w; }
+float vec4f::Dot(const __m128& _sse, const float* fp)		{ vec4f m = _mm_mul_ps(_sse, _mm_load_ps(fp)); return m.x + m.y + m.z + m.w; }
 
 //Vector Cross Product (Self & Self Operator Overloads)
 void vec4f::Cross(const vec4f& _v) { *this = vec4f_zero; }
@@ -513,10 +523,30 @@ vec4f vec4f::Normalize(const __m128& _sse) {
 }
 
 //Vector Homogenize (Perspective Divide)
-void vec4f::Homogenize() { m128 = _mm_div_ps(m128, _mm_set1_ps(w)); }
-vec4f vec4f::Homogenize(const vec4f& _v) { return _mm_div_ps(_v.m128, _mm_set1_ps(_v.w)); }
-vec4f vec4f::Homogenize(const float* _fp) { return _mm_div_ps(_mm_load_ps(_fp), _mm_set1_ps(_fp[3])); }
-vec4f vec4f::Homogenize(const __m128& _sse) { return _mm_div_ps(_sse, _mm_set1_ps(vec4f(_sse).w)); }
+void vec4f::Homogenize() {
+	if (IsZero())
+		m128 = _mm_setzero_ps();
+	else
+		m128 = _mm_div_ps(m128, _mm_set1_ps(w));
+}
+vec4f vec4f::Homogenize(const vec4f& _v) { 
+	if (vec4f::IsZero(_v))
+		return _mm_setzero_ps();
+	else
+		return _mm_div_ps(_v.m128, _mm_set1_ps(_v.w));
+}
+vec4f vec4f::Homogenize(const float* _fp) {
+	if (vec4f::IsZero(_fp))
+		return _mm_setzero_ps();
+	else
+		return _mm_div_ps(_mm_load_ps(_fp), _mm_set1_ps(_fp[3]));
+}
+vec4f vec4f::Homogenize(const __m128& _sse) {
+	if (vec4f::IsZero(_sse))
+		return _mm_setzero_ps();
+	else
+		return _mm_div_ps(_sse, _mm_set1_ps(GetSSEValue(_sse, 3)));
+}
 
 //Vector Angle Between
 float vec4f::AngleBetween(const vec4f& _v) { return 0.0f; }
