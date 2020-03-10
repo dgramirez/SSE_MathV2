@@ -828,10 +828,10 @@ TEST_CASE("Basic Normal Math Functions ", "[Min], [Max], [Average],[Length], [Le
 		//Setup Answers for this section
 		float vecAns = 1;
 		float fAnswer[4] = {
-			130131.5692916f,
-			 91554.3519800f,
-			126582.0014836f,
-			129764.3053744f
+			130131.569291632f,
+			 91554.351980017f,
+			126582.001483696f,
+			129764.305374465f
 		};
 
 		//Setup Copy Vector to use
@@ -1102,7 +1102,18 @@ TEST_CASE("Vector Math Functions", "[Dot], [Cross], [Normalize], [Homogenize], [
 		//Setup Answers for this section
 		float vecAns = 1;
 		float fAnswer[12] = {
-
+			1.111457545f,
+			0.890485846f,
+			0.986954532f,
+			1.111457545f,
+			0.690736164f,
+			0.527969400f,
+			0.808479323f,
+			0.819905130f,
+			1.007531596f,
+			1.098795731f,
+			0.844850650f,
+			1.208590667f
 		};
 
 		//Setup Copy Vector to use
@@ -1110,57 +1121,57 @@ TEST_CASE("Vector Math Functions", "[Dot], [Cross], [Normalize], [Homogenize], [
 
 		//Angle Between Method Test: Vector
 		vecAns = myVec.AngleBetween(randVecB);
-		REQUIRE(vecAns == fAnswer[0]);
+		REQUIRE(near_equal(vecAns, fAnswer[0]));
 
 		//Angle Between Method Test: Float Pointer
 		vecAns = myVec.AngleBetween(randFPA);
-		CHECK(vecAns == fAnswer[1]);
+		CHECK(near_equal(vecAns, fAnswer[1]));
 
 		//Angle Between Method Test: m128
 		vecAns = myVec.AngleBetween(randM128A);
-		CHECK(vecAns == fAnswer[2]);
+		CHECK(near_equal(vecAns, fAnswer[2]));
 
 		//Static Angle Between Test: Vector & Vector
 		vecAns = vec4::AngleBetween(randVecA, randVecB);
-		CHECK(vecAns == fAnswer[3]);
+		CHECK(near_equal(vecAns, fAnswer[3]));
 		
 		//Static Angle Between Test: Vector & Float Pointer
 		vecAns = vec4::AngleBetween(randVecA, randFPB);
-		CHECK(vecAns == fAnswer[4]);
+		CHECK(near_equal(vecAns, fAnswer[4]));
 
 		//Static Angle Between Test: Float Pointer & Vector
 		vecAns = vec4::AngleBetween(randFPA, randVecB);
-		CHECK(vecAns == fAnswer[5]);
+		CHECK(near_equal(vecAns, fAnswer[5]));
 
 		//Static Angle Between Test: Vector & m128
 		vecAns = vec4::AngleBetween(randVecA, randM128B);
-		CHECK(vecAns == fAnswer[6]);
+		CHECK(near_equal(vecAns, fAnswer[6]));
 
 		//Static Angle Between Test: m128 & Vector
 		vecAns = vec4::AngleBetween(randM128A, randVecB);
-		CHECK(vecAns == fAnswer[7]);
+		CHECK(near_equal(vecAns, fAnswer[7]));
 
 		//Static Angle Between Test: Float Pointer & Float Pointer
 		vecAns = vec4::AngleBetween(randFPA, randFPB);
-		CHECK(vecAns == fAnswer[8]);
+		CHECK(near_equal(vecAns, fAnswer[8]));
 
 		//Static Angle Between Test: m128 & m128
 		vecAns = vec4::AngleBetween(randM128A, randM128B);
-		CHECK(vecAns == fAnswer[9]);
+		CHECK(near_equal(vecAns, fAnswer[9]));
 
 		//Static Angle Between Test: Float Pointer & m128
 		vecAns = vec4::AngleBetween(randFPA, randM128B);
-		CHECK(vecAns == fAnswer[10]);
+		CHECK(near_equal(vecAns, fAnswer[10]));
 
 		//Static Angle Between Test: m128 & Float Pointer
 		vecAns = vec4::AngleBetween(randM128A, randFPB);
-		CHECK(vecAns == fAnswer[11]);
+		CHECK(near_equal(vecAns, fAnswer[11]));
 	}
 
 	SECTION("Component Test", "[Component]") {
 		//Setup Answers for this section
 		float vecAns = 1;
-		float fAnswer[4] = {
+		float fAnswer[12] = {
 
 		};
 
