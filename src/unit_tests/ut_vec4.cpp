@@ -1172,7 +1172,18 @@ TEST_CASE("Vector Math Functions", "[Dot], [Cross], [Normalize], [Homogenize], [
 		//Setup Answers for this section
 		float vecAns = 1;
 		float fAnswer[12] = {
-
+			 57694.550028336f,
+			 81857.235496135f,
+			 71732.867629845f,
+			 57694.550028336f,
+			100302.447923908f,
+			 65396.682343123f,
+			 89868.737015189f,
+			 87417.718277426f,
+			 40422.822645647f,
+			 58253.964483139f,
+			 50256.458977006f,
+			 45399.115656449f
 		};
 
 		//Setup Copy Vector to use
@@ -1180,51 +1191,51 @@ TEST_CASE("Vector Math Functions", "[Dot], [Cross], [Normalize], [Homogenize], [
 
 		//Component Method Test: Vector
 		vecAns = myVec.Component(randVecB);
-		REQUIRE(vecAns == fAnswer[0]);
+		REQUIRE(near_equal(vecAns, fAnswer[0]));
 
 		//Component Method Test: Float Pointer
 		vecAns = myVec.Component(randFPA);
-		CHECK(vecAns == fAnswer[1]);
+		CHECK(near_equal(vecAns, fAnswer[1]));
 
 		//Component Method Test: m128
 		vecAns = myVec.Component(randM128A);
-		CHECK(vecAns == fAnswer[2]);
+		CHECK(near_equal(vecAns, fAnswer[2]));
 
 		//Static Component Test: Vector & Vector
 		vecAns = vec4::Component(randVecA, randVecB);
-		CHECK(vecAns == fAnswer[3]);
+		CHECK(near_equal(vecAns, fAnswer[3]));
 		
 		//Static Component Test: Vector & Float Pointer
 		vecAns = vec4::Component(randVecA, randFPB);
-		CHECK(vecAns == fAnswer[4]);
+		CHECK(near_equal(vecAns, fAnswer[4]));
 
 		//Static Component Test: Float Pointer & Vector
 		vecAns = vec4::Component(randFPA, randVecB);
-		CHECK(vecAns == fAnswer[5]);
+		CHECK(near_equal(vecAns, fAnswer[5]));
 
 		//Static Component Test: Vector & m128
 		vecAns = vec4::Component(randVecA, randM128B);
-		CHECK(vecAns == fAnswer[6]);
+		CHECK(near_equal(vecAns, fAnswer[6]));
 
 		//Static Component Test: m128 & Vector
 		vecAns = vec4::Component(randM128A, randVecB);
-		CHECK(vecAns == fAnswer[7]);
+		CHECK(near_equal(vecAns, fAnswer[7]));
 
 		//Static Component Test: Float Pointer & Float Pointer
 		vecAns = vec4::Component(randFPA, randFPB);
-		CHECK(vecAns == fAnswer[8]);
+		CHECK(near_equal(vecAns, fAnswer[8]));
 
 		//Static Component Test: m128 & m128
 		vecAns = vec4::Component(randM128A, randM128B);
-		CHECK(vecAns == fAnswer[9]);
+		CHECK(near_equal(vecAns, fAnswer[9]));
 
 		//Static Component Test: Float Pointer & m128
 		vecAns = vec4::Component(randFPA, randM128B);
-		CHECK(vecAns == fAnswer[10]);
+		CHECK(near_equal(vecAns, fAnswer[10]));
 
 		//Static Component Test: m128 & Float Pointer
 		vecAns = vec4::Component(randM128A, randFPB);
-		CHECK(vecAns == fAnswer[11]);
+		CHECK(near_equal(vecAns, fAnswer[11]));
 	}
 
 	SECTION("Project Test", "[Project]") {
