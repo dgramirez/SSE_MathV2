@@ -418,21 +418,21 @@ vec4f vec4f::Average(const float* fp, const __m128& _sse)		{ return _mm_mul_ps(_
 vec4f vec4f::Average(const __m128& _sse, const float* fp)		{ return _mm_mul_ps(_mm_add_ps(_sse, _mm_load_ps(fp)), _mm_set1_ps(0.5f)); }
 
 //Vector Lengths
-float vec4f::Length()					{ vec4f sq = _mm_mul_ps(m128, m128); return sqrtf(sq.x + sq.y + sq.z + sq.w); }
+float vec4f::Length() const				{ vec4f sq = _mm_mul_ps(m128, m128); return sqrtf(sq.x + sq.y + sq.z + sq.w); }
 float vec4f::Length(const vec4f& _v)	{ vec4f sq = _mm_mul_ps(_v.m128, _v.m128); return sqrtf(sq.x + sq.y + sq.z + sq.w); }
 float vec4f::Length(const float* _fp)	{ vec4f sq = _mm_mul_ps(_mm_load_ps(_fp), _mm_load_ps(_fp)); return sqrtf(sq.x + sq.y + sq.z + sq.w); }
 float vec4f::Length(const __m128& _sse)	{ vec4f sq = _mm_mul_ps(_sse, _sse); return sqrtf(sq.x + sq.y + sq.z + sq.w); }
 
 //Vector Length Squared
-float vec4f::LengthSq()						{ vec4f sq = _mm_mul_ps(m128, m128); return sq.x + sq.y + sq.z + sq.w; }
+float vec4f::LengthSq()	const				{ vec4f sq = _mm_mul_ps(m128, m128); return sq.x + sq.y + sq.z + sq.w; }
 float vec4f::LengthSq(const vec4f& _v)		{ vec4f sq = _mm_mul_ps(_v.m128, _v.m128); return sq.x + sq.y + sq.z + sq.w; }
 float vec4f::LengthSq(const float* _fp)		{ vec4f sq = _mm_mul_ps(_mm_load_ps(_fp), _mm_load_ps(_fp)); return sq.x + sq.y + sq.z + sq.w; }
 float vec4f::LengthSq(const __m128& _sse)	{ vec4f sq = _mm_mul_ps(_sse, _sse); return sq.x + sq.y + sq.z + sq.w; }
 
 //Vector Dot Product
-float vec4f::Dot(const vec4f& _v)						{ vec4f m = _mm_mul_ps(m128, _v.m128);	return m.x + m.y + m.z + m.w; }
-float vec4f::Dot(const float* _fp)						{ vec4f m = _mm_mul_ps(m128, _mm_load_ps(_fp)); return m.x + m.y + m.z + m.w; }
-float vec4f::Dot(const __m128& _sse)					{ vec4f m = _mm_mul_ps(m128, _sse);	return m.x + m.y + m.z + m.w; }
+float vec4f::Dot(const vec4f& _v) const					{ vec4f m = _mm_mul_ps(m128, _v.m128);	return m.x + m.y + m.z + m.w; }
+float vec4f::Dot(const float* _fp) const				{ vec4f m = _mm_mul_ps(m128, _mm_load_ps(_fp)); return m.x + m.y + m.z + m.w; }
+float vec4f::Dot(const __m128& _sse) const				{ vec4f m = _mm_mul_ps(m128, _sse);	return m.x + m.y + m.z + m.w; }
 float vec4f::Dot(const vec4f& _v1, const vec4f& _v2)	{ vec4f m = _mm_mul_ps(_v1.m128, _v2.m128); return m.x + m.y + m.z + m.w; }
 float vec4f::Dot(const vec4f& _v1, const float* _fp)	{ vec4f m = _mm_mul_ps(_v1.m128, _mm_load_ps(_fp)); return m.x + m.y + m.z + m.w; }
 float vec4f::Dot(const vec4f& _v1, const __m128& _sse)	{ vec4f m = _mm_mul_ps(_v1.m128, _sse); return m.x + m.y + m.z + m.w; }
@@ -482,44 +482,40 @@ void vec4f::Normalize() {
 	float l = LengthSq();
 	if (l == 0.0f)
 		m128 = _mm_setzero_ps();
-	else
-	{
+	else {
 		l = 1 / sqrtf(l);
 		m128 = _mm_mul_ps(m128, _mm_set1_ps(l));
-}
+	}
 }
 vec4f vec4f::Normalize(const vec4f& _v) {
 	//Get Length Squared
 	float l = vec4f::LengthSq(_v);
 	if (l == 0.0f)
 		return _mm_setzero_ps();
-	else
-	{
+	else {
 		l = 1 / sqrtf(l);
 		return _mm_mul_ps(_v.m128, _mm_set1_ps(l));
-}
+	}
 }
 vec4f vec4f::Normalize(const float* _fp) {
 	//Get Length Squared
 	float l = vec4f::LengthSq(_fp);
 	if (l == 0.0f)
 		return _mm_setzero_ps();
-	else
-	{
+	else {
 		l = 1 / sqrtf(l);
 		return _mm_mul_ps(_mm_load_ps(_fp), _mm_set1_ps(l));
-}
+	}
 }
 vec4f vec4f::Normalize(const __m128& _sse) {
 	//Get Length Squared
 	float l = vec4f::LengthSq(_sse);
 	if (l == 0.0f)
 		return _mm_setzero_ps();
-	else
-	{
+	else {
 		l = 1 / sqrtf(l);
 		return _mm_mul_ps(_sse, _mm_set1_ps(l));
-}
+	}
 }
 
 //Vector Homogenize (Perspective Divide)
@@ -549,13 +545,13 @@ vec4f vec4f::Homogenize(const __m128& _sse) {
 }
 
 //Vector Angle Between
-float vec4f::AngleBetween(const vec4f& _v) { return 0.0f; }
-float vec4f::AngleBetween(const float* _fp) { return 0.0f; }
-float vec4f::AngleBetween(const __m128& _sse) { return 0.0f; }
-float vec4f::AngleBetween(const vec4f& _v1, const vec4f& _v2) { return 0.0f; }
-float vec4f::AngleBetween(const vec4f& _v1, const float* _fp) { return 0.0f; }
+float vec4f::AngleBetween(const vec4f& _v) const				{ return 0.0f; }
+float vec4f::AngleBetween(const float* _fp) const				{ return 0.0f; }
+float vec4f::AngleBetween(const __m128& _sse) const				{ return 0.0f; }
+float vec4f::AngleBetween(const vec4f& _v1, const vec4f& _v2)	{ return 0.0f; }
+float vec4f::AngleBetween(const vec4f& _v1, const float* _fp)	{ return 0.0f; }
 float vec4f::AngleBetween(const vec4f& _v1, const __m128& _sse) { return 0.0f; }
-float vec4f::AngleBetween(const float* _fp, const vec4f& _v2) { return 0.0f; }
+float vec4f::AngleBetween(const float* _fp, const vec4f& _v2)	{ return 0.0f; }
 float vec4f::AngleBetween(const __m128& _sse, const vec4f& _v2) { return 0.0f; }
 
 //Vector Angle Between Additions
@@ -565,9 +561,9 @@ float vec4f::AngleBetween(const float* fp, const __m128& _sse) { return 0.0f; }
 float vec4f::AngleBetween(const __m128& _sse, const float* fp) { return 0.0f; }
 
 //Vector Component
-float vec4f::Component(const vec4f& _v) { return 0.0f; }
-float vec4f::Component(const float* _fp) { return 0.0f; }
-float vec4f::Component(const __m128& _sse) { return 0.0f; }
+float vec4f::Component(const vec4f& _v) const { return 0.0f; }
+float vec4f::Component(const float* _fp) const { return 0.0f; }
+float vec4f::Component(const __m128& _sse) const { return 0.0f; }
 float vec4f::Component(const vec4f& _v1, const vec4f& _v2) { return 0.0f; }
 float vec4f::Component(const vec4f& _v1, const float* _fp) { return 0.0f; }
 float vec4f::Component(const vec4f& _v1, const __m128& _sse) { return 0.0f; }

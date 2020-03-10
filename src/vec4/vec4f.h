@@ -195,21 +195,21 @@ struct vec4f {
 	static vec4f Average(const __m128& _sse, const float* fp);
 
 	//Vector Length
-	float Length();
+	float Length() const;
 	static float Length(const vec4f& _v);
 	static float Length(const float* _fp);
 	static float Length(const __m128& _sse);
 
 	//Vector Length Squared
-	float LengthSq();
+	float LengthSq() const;
 	static float LengthSq(const vec4f& _v);
 	static float LengthSq(const float* _fp);
 	static float LengthSq(const __m128& _sse);
 
 	//Vector Dot Product
-	float Dot(const vec4f& _v);
-	float Dot(const float* _fp);
-	float Dot(const __m128& _sse);
+	float Dot(const vec4f& _v) const;
+	float Dot(const float* _fp) const;
+	float Dot(const __m128& _sse) const;
 	static float Dot(const vec4f& _v1, const vec4f& _v2);
 	static float Dot(const vec4f& _v1, const float* _fp);
 	static float Dot(const vec4f& _v1, const __m128& _sse);
@@ -266,9 +266,9 @@ struct vec4f {
 	static vec4f Homogenize(const __m128& _sse);
 
 	//Vector Angle Between
-	float AngleBetween(const vec4f& _v);
-	float AngleBetween(const float* _fp);
-	float AngleBetween(const __m128& _sse);
+	float AngleBetween(const vec4f& _v) const;
+	float AngleBetween(const float* _fp) const;
+	float AngleBetween(const __m128& _sse) const;
 	static float AngleBetween(const vec4f& _v1, const vec4f& _v2);
 	static float AngleBetween(const vec4f& _v1, const float* _fp);
 	static float AngleBetween(const vec4f& _v1, const __m128& _sse);
@@ -282,9 +282,9 @@ struct vec4f {
 	static float AngleBetween(const __m128& _sse, const float* fp);
 
 	//Vector Component
-	float Component(const vec4f& _v);
-	float Component(const float* _fp);
-	float Component(const __m128& _sse);
+	float Component(const vec4f& _v) const;
+	float Component(const float* _fp) const;
+	float Component(const __m128& _sse) const;
 	static float Component(const vec4f& _v1, const vec4f& _v2);
 	static float Component(const vec4f& _v1, const float* _fp);
 	static float Component(const vec4f& _v1, const __m128& _sse);
