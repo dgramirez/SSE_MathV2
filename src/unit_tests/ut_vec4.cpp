@@ -959,88 +959,141 @@ TEST_CASE("Vector Math Functions", "[Dot], [Cross], [Normalize], [Homogenize], [
 
 	SECTION("Cross Product Test", "[Cross], [Operator^]") {
 		//Setup Answers for this section
+		answer[0]  = vec4::Set( 0.742037332f, -0.150674138f, -0.282083134f, 0.0f);
+		answer[1]  = vec4::Set( 0.159113879f, -0.409325970f,  0.637199657f, 0.0f);
+		answer[2]  = vec4::Set(-0.546430804f, -0.144739851f,  0.043469805f, 0.0f);
+		answer[3]  = vec4::Set(-0.043062441f,  0.010486891f, -0.506392274f, 0.0f);
+		answer[4]  = vec4::Set( 0.309785247f, -0.399886951f, -0.034624698f, 0.0f);
+		answer[5]  = vec4::Set(-0.083015257f, -0.106616827f,  0.488604282f, 0.0f);
+		answer[6]  = vec4::Set( 0.742037332f, -0.150674138f, -0.282083134f, 0.0f);
+		answer[7]  = vec4::Set( 0.014844052f, -0.000856801f, -0.652729601f, 0.0f);
+		answer[8]  = vec4::Set( 0.368489821f,  0.162909051f, -0.302411187f, 0.0f);
+		answer[9]  = vec4::Set( 0.251659389f, -0.049320726f, -0.629534898f, 0.0f);
+		answer[10] = vec4::Set(-0.327208209f,  0.371052520f, -0.083610597f, 0.0f);
+		answer[11] = vec4::Set(-0.308812887f,  0.417404713f, -0.633209766f, 0.0f);
+		answer[12] = vec4::Set(-0.515099653f,  0.738302691f, -0.168553930f, 0.0f);
+		answer[13] = vec4::Set(-0.093845581f,  0.388312880f, -0.610942729f, 0.0f);
+		answer[14] = vec4::Set(-0.590497562f,  0.769012140f, -0.174695711f, 0.0f);
+		answer[15] = vec4::Set( 0.742037332f, -0.150674138f, -0.282083134f, 0.0f);
+		answer[16] = vec4::Set( 0.014844052f, -0.000856801f, -0.652729601f, 0.0f);
+		answer[17] = vec4::Set( 0.368489821f,  0.162909051f, -0.302411187f, 0.0f);
+		answer[18] = vec4::Set( 0.251659389f, -0.049320726f, -0.629534898f, 0.0f);
+		answer[19] = vec4::Set(-0.327208209f,  0.371052520f, -0.083610597f, 0.0f);
+
+		//Another Setup: 3D Vector [x, y, z, 0] Normalized
+		vec4 randVecA_3D = randVecA;
+		randVecA_3D.w = 0.0f;
+		randVecA_3D.Normalize();
+
+		vec4 randVecB_3D = randVecB;
+		randVecB_3D.w = 0.0f;
+		randVecB_3D.Normalize();
+
+		vec4 randFPAVec_3D = randFPA;
+		randFPAVec_3D.w = 0.0f;
+		randFPAVec_3D.Normalize();
+
+		vec4 randFPBVec_3D = randFPB;
+		randFPBVec_3D.w = 0.0f;
+		randFPBVec_3D.Normalize();
+
+		vec4 randM128AVec_3D = randM128A;
+		randM128AVec_3D.w = 0.0f;
+		randM128AVec_3D.Normalize();
+
+		vec4 randM128BVec_3D = randM128B;
+		randM128BVec_3D.w = 0.0f;
+		randM128BVec_3D.Normalize();
+
+		//Last Setup: pseudo-names
+		float* randFPA_3D = randFPAVec_3D.e;
+		float* randFPB_3D = randFPBVec_3D.e;
+		__m128 randM128A_3D = randM128AVec_3D.m128;
+		__m128 randM128B_3D = randM128BVec_3D.m128;
 
 		//Setup Copy Vector to use
-		vec4 myVec = randVecA;
+		vec4 myVec = randVecA_3D;
 
 		//Cross Product Method Test: Vector
-		myVec.Cross(randVecB);
+		myVec.Cross(randVecB_3D);
 		REQUIRE(myVec == answer[0]);
 
 		//Cross Product Method Test: Float Pointer
-		myVec.Cross(randFPA);
+		myVec.Cross(randFPA_3D);
 		CHECK(myVec == answer[1]);
 
 		//Cross Product Method Test: m128
-		myVec.Cross(randM128A);
+		myVec.Cross(randM128A_3D);
 		CHECK(myVec == answer[2]);
 
 		//Operator^= Test: Vector
-		myVec ^= randVecA;
+		myVec ^= randVecA_3D;
 		CHECK(myVec == answer[3]);
 
 		//Operator^= Test: Float Pointer
-		myVec ^= randFPB;
+		myVec ^= randFPB_3D;
 		CHECK(myVec == answer[4]);
 
 		//Operator^= Test: m128
-		myVec ^= randM128B;
+		myVec ^= randM128B_3D;
 		CHECK(myVec == answer[5]);
 
 		//Static Cross Product Test: Vector & Vector
-		myVec = vec4::Cross(randVecA, randVecB);
+		myVec = vec4::Cross(randVecA_3D, randVecB_3D);
 		CHECK(myVec == answer[6]);
 		
 		//Static Cross Product Test: Vector & Float Pointer
-		myVec =vec4::Cross(randVecA, randFPB);
+		vec4::ChangeEpsilon(FLT_EPSILON * 3.2);
+		myVec = vec4::Cross(randVecA_3D, randFPB_3D);
 		CHECK(myVec == answer[7]);
+		vec4::ChangeEpsilon();
 
 		//Static Cross Product Test: Float Pointer & Vector
-		myVec =vec4::Cross(randFPA, randVecB);
+		myVec = vec4::Cross(randFPA_3D, randVecB_3D);
 		CHECK(myVec == answer[8]);
 
 		//Static Cross Product Test: Vector & m128
-		myVec =vec4::Cross(randVecA, randM128B);
+		myVec = vec4::Cross(randVecA_3D, randM128B_3D);
 		CHECK(myVec == answer[9]);
 
 		//Static Cross Product Test: m128 & Vector
-		myVec =vec4::Cross(randM128A, randVecB);
+		myVec = vec4::Cross(randM128A_3D, randVecB_3D);
 		CHECK(myVec == answer[10]);
 
 		//Static Cross Product Test: Float Pointer & Float Pointer
-		myVec =vec4::Cross(randFPA, randFPB);
+		myVec = vec4::Cross(randFPA_3D, randFPB_3D);
 		CHECK(myVec == answer[11]);
 
 		//Static Cross Product Test: m128 & m128
-		myVec =vec4::Cross(randM128A, randM128B);
+		myVec = vec4::Cross(randM128A_3D, randM128B_3D);
 		CHECK(myVec == answer[12]);
 
 		//Static Cross Product Test: Float Pointer & m128
-		myVec =vec4::Cross(randFPA, randM128B);
+		myVec = vec4::Cross(randFPA_3D, randM128B_3D);
 		CHECK(myVec == answer[13]);
 
 		//Static Cross Product Test: m128 & Float Pointer
-		myVec =vec4::Cross(randM128A, randFPB);
+		myVec = vec4::Cross(randM128A_3D, randFPB_3D);
 		CHECK(myVec == answer[14]);
 
 		//operator^ Test: Vector & Vector
-		myVec =randVecA ^ randVecB;
+		myVec = randVecA_3D ^ randVecB_3D;
 		CHECK(myVec == answer[15]);
 		
 		//operator^ Test: Vector & Float Pointer
-		myVec =randVecA ^ randFPB;
+		myVec = randVecA_3D ^ randFPB_3D;
 		CHECK(myVec == answer[16]);
 
 		//operator^ Test: Float Pointer & Vector
-		myVec =randFPA ^ randVecB;
+		myVec = randFPA_3D ^ randVecB_3D;
 		CHECK(myVec == answer[17]);
 
 		//operator^ Test: Vector & m128
-		myVec =randVecA ^ randM128B;
+		myVec = randVecA_3D ^ randM128B_3D;
 		CHECK(myVec == answer[18]);
 
 		//operator^ Test: m128 & Vector
-		myVec =randM128A ^ randVecB;
+		myVec = randM128A_3D ^ randVecB_3D;
 		CHECK(myVec == answer[19]);
 	}
 
