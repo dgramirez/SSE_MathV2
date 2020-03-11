@@ -1360,68 +1360,99 @@ TEST_CASE("Vector Math Functions", "[Dot], [Cross], [Normalize], [Homogenize], [
 
 	SECTION("Reflect Test", "[Reflect]") {
 		//Setup Answers for this section
-		answer[0]  = vec4::Set( 26038.644188949f, -35153.129482144f,  87273.255915216f, -86045.631060926f);
-		answer[1]  = vec4::Set(-23908.019173802f,  65324.324664966f, -68423.839417984f,  86101.932335204f);
-		answer[2]  = vec4::Set( 24225.714454067f, -60598.794426086f,  88151.809850521f, -70031.311708945f);
-		answer[3]  = vec4::Set( 26038.644188949f, -35153.129482144f,  87273.255915216f, -86045.631060926f);
-		answer[4]  = vec4::Set(128073.904232354f,  19008.050276923f,   2887.642348403f, -12714.398425506f);
-		answer[5]  = vec4::Set( 46981.943041009f,   3703.048891357f,  59242.609809729f,    772.124341834f);
-		answer[6]  = vec4::Set(113797.631838452f,   8279.108204036f,  44842.487768302f, -43645.526372798f);
-		answer[7]  = vec4::Set( 67279.440068298f,  67228.819319822f,  35055.816366230f, -78361.868751462f);
-		answer[8]  = vec4::Set( 54908.587555066f, -18159.294067615f, -38749.014438427f,  29750.621300935f);
-		answer[9]  = vec4::Set( 84769.432000238f,  43529.523503549f, -68386.068963635f, -51559.669238439f);
-		answer[10] = vec4::Set( 69962.547544639f,  -6355.705960213f, -14786.457082109f,  24031.357969076f);
-		answer[11] = vec4::Set( 65178.578781292f,  28192.787701933f, -96208.405318387f, -46006.437311564f);
+		answer[0]  = vec4::Set( 0.263859410f, -0.368988776f,  0.891193298f, 0.0f);
+		answer[1]  = vec4::Set(-0.242965411f,  0.664862956f, -0.706346273f, 0.0f);
+		answer[2]  = vec4::Set( 0.226186077f, -0.914445657f, -0.335602439f, 0.0f);
+		answer[3]  = vec4::Set( 0.263859410f, -0.368988776f,  0.891193298f, 0.0f);
+		answer[4]  = vec4::Set( 0.998304991f, -0.053558586f,  0.022773259f, 0.0f);
+		answer[5]  = vec4::Set( 0.620613468f,  0.048944493f,  0.782587605f, 0.0f);
+		answer[6]  = vec4::Set( 0.919689477f, -0.111758769f,  0.376405688f, 0.0f);
+		answer[7]  = vec4::Set( 0.665667779f,  0.663828928f,  0.340906968f, 0.0f);
+		answer[8]  = vec4::Set( 0.848413913f, -0.144721481f, -0.509165517f, 0.0f);
+		answer[9]  = vec4::Set( 0.597331600f,  0.242201118f, -0.764547956f, 0.0f);
+		answer[10] = vec4::Set( 0.983832565f, -0.037689804f, -0.175079873f, 0.0f);
+		answer[11] = vec4::Set( 0.255711896f, -0.023200824f, -0.966474597f, 0.0f);
+
+		//Another Setup: 3D Vector [x, y, z, 0] Normalized
+		vec4 randVecA_3D = randVecA;
+		randVecA_3D.w = 0.0f;
+		randVecA_3D.Normalize();
+
+		vec4 randVecB_3D = randVecB;
+		randVecB_3D.w = 0.0f;
+		randVecB_3D.Normalize();
+
+		vec4 randFPAVec_3D = randFPA;
+		randFPAVec_3D.w = 0.0f;
+		randFPAVec_3D.Normalize();
+
+		vec4 randFPBVec_3D = randFPB;
+		randFPBVec_3D.w = 0.0f;
+		randFPBVec_3D.Normalize();
+
+		vec4 randM128AVec_3D = randM128A;
+		randM128AVec_3D.w = 0.0f;
+		randM128AVec_3D.Normalize();
+
+		vec4 randM128BVec_3D = randM128B;
+		randM128BVec_3D.w = 0.0f;
+		randM128BVec_3D.Normalize();
+
+		//Last Setup: pseudo-names
+		float* randFPA_3D = randFPAVec_3D.e;
+		float* randFPB_3D = randFPBVec_3D.e;
+		__m128 randM128A_3D = randM128AVec_3D.m128;
+		__m128 randM128B_3D = randM128BVec_3D.m128;
 
 		//Setup Copy Vector to use
-		vec4 myVec = randVecA;
+		vec4 myVec = randVecA_3D;
 
 		//Reflect Method Test: Vector
-		myVec.Reflect(randVecB);
+		myVec.Reflect(randVecB_3D);
 		REQUIRE(myVec == answer[0]);
 
 		//Reflect Method Test: Float Pointer
-		myVec.Reflect(randFPA);
+		myVec.Reflect(randFPA_3D);
 		CHECK(myVec == answer[1]);
 
 		//Reflect Method Test: m128
-		myVec.Reflect(randM128A);
+		myVec.Reflect(randM128A_3D);
 		CHECK(myVec == answer[2]);
 
 		//Static Reflect Test: Vector & Vector
-		myVec = vec4::Reflect(randVecA, randVecB);
+		myVec = vec4::Reflect(randVecA_3D, randVecB_3D);
 		CHECK(myVec == answer[3]);
 		
 		//Static Reflect Test: Vector & Float Pointer
-		myVec = vec4::Reflect(randVecA, randFPB);
+		myVec = vec4::Reflect(randVecA_3D, randFPB_3D);
 		CHECK(myVec == answer[4]);
 
 		//Static Reflect Test: Float Pointer & Vector
-		myVec = vec4::Reflect(randFPA, randVecB);
+		myVec = vec4::Reflect(randFPA_3D, randVecB_3D);
 		CHECK(myVec == answer[5]);
 
 		//Static Reflect Test: Vector & m128
-		myVec = vec4::Reflect(randVecA, randM128B);
+		myVec = vec4::Reflect(randVecA_3D, randM128B_3D);
 		CHECK(myVec == answer[6]);
 
 		//Static Reflect Test: m128 & Vector
-		myVec = vec4::Reflect(randM128A, randVecB);
+		myVec = vec4::Reflect(randM128A_3D, randVecB_3D);
 		CHECK(myVec == answer[7]);
 
 		//Static Reflect Test: Float Pointer & Float Pointer
-		myVec = vec4::Reflect(randFPA, randFPB);
+		myVec = vec4::Reflect(randFPA_3D, randFPB_3D);
 		CHECK(myVec == answer[8]);
 
 		//Static Reflect Test: m128 & m128
-		myVec = vec4::Reflect(randM128A, randM128B);
+		myVec = vec4::Reflect(randM128A_3D, randM128B_3D);
 		CHECK(myVec == answer[9]);
 
 		//Static Reflect Test: Float Pointer & m128
-		myVec = vec4::Reflect(randFPA, randM128B);
+		myVec = vec4::Reflect(randFPA_3D, randM128B_3D);
 		CHECK(myVec == answer[10]);
 
 		//Static Reflect Test: m128 & Float Pointer
-		myVec = vec4::Reflect(randM128A, randFPB);
+		myVec = vec4::Reflect(randM128A_3D, randFPB_3D);
 		CHECK(myVec == answer[11]);
 	}
 }
