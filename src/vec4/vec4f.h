@@ -22,22 +22,38 @@ struct vec4f {
 	void operator=(const vec4f& _v);
 	void operator=(const float* _fp);
 	void operator=(const __m128& _sse);
+	static vec4f Set(const float& _x, const float& _y, const float& _z, const float& _w);
+	static vec4f Set(const vec4f& _v);
+	static vec4f Set(const float* _fp);
+	static vec4f Set(const __m128& _sse);
+
+	//Vec4 Absolute Value
+	void vabs();
+	static vec4f vabs(const vec4f& _v);
+	static vec4f vabs(const float* _fp);
+	static vec4f vabs(const __m128& _sse);
 
 	//Equality Check (Zero)
-	bool IsZero();
+	bool IsZero() const;
 	static bool IsZero(const vec4f& _v);
 	static bool IsZero(const float* _fp);
 	static bool IsZero(const __m128& _sse);
 
 	//Equality Check
-	bool IsEqual(const vec4f& _v);
-	bool IsEqual(const float* _fp);
-	bool IsEqual(const __m128& _sse);
+	bool IsEqual(const vec4f& _v) const;
+	bool IsEqual(const float* _fp) const;
+	bool IsEqual(const __m128& _sse) const;
 	static bool IsEqual(const vec4f& _v1, const vec4f& _v2);
 	static bool IsEqual(const vec4f& _v, const float* _fp);
 	static bool IsEqual(const vec4f& _v, const __m128& _sse);
 	static bool IsEqual(const float* _fp, const vec4f& _v);
 	static bool IsEqual(const __m128& _sse, const vec4f& _v);
+
+	//IsEqual Additions
+	static bool IsEqual(const float* _fp1, const float* _fp2);
+	static bool IsEqual(const __m128& _sse1, const __m128& _sse2);
+	static bool IsEqual(const float* _fp, const __m128& _sse);
+	static bool IsEqual(const __m128& _sse, const float* _fp);
 
 	//Equality Check (Operator Overload)
 	friend bool operator==(const vec4f& _v1, const vec4f& _v2);
@@ -179,21 +195,21 @@ struct vec4f {
 	static vec4f Average(const __m128& _sse, const float* fp);
 
 	//Vector Length
-	float Length();
+	float Length() const;
 	static float Length(const vec4f& _v);
 	static float Length(const float* _fp);
 	static float Length(const __m128& _sse);
 
 	//Vector Length Squared
-	float LengthSq();
+	float LengthSq() const;
 	static float LengthSq(const vec4f& _v);
 	static float LengthSq(const float* _fp);
 	static float LengthSq(const __m128& _sse);
 
 	//Vector Dot Product
-	float Dot(const vec4f& _v);
-	float Dot(const float* _fp);
-	float Dot(const __m128& _sse);
+	float Dot(const vec4f& _v) const;
+	float Dot(const float* _fp) const;
+	float Dot(const __m128& _sse) const;
 	static float Dot(const vec4f& _v1, const vec4f& _v2);
 	static float Dot(const vec4f& _v1, const float* _fp);
 	static float Dot(const vec4f& _v1, const __m128& _sse);
@@ -250,9 +266,9 @@ struct vec4f {
 	static vec4f Homogenize(const __m128& _sse);
 
 	//Vector Angle Between
-	float AngleBetween(const vec4f& _v);
-	float AngleBetween(const float* _fp);
-	float AngleBetween(const __m128& _sse);
+	float AngleBetween(const vec4f& _v) const;
+	float AngleBetween(const float* _fp) const;
+	float AngleBetween(const __m128& _sse) const;
 	static float AngleBetween(const vec4f& _v1, const vec4f& _v2);
 	static float AngleBetween(const vec4f& _v1, const float* _fp);
 	static float AngleBetween(const vec4f& _v1, const __m128& _sse);
@@ -266,9 +282,9 @@ struct vec4f {
 	static float AngleBetween(const __m128& _sse, const float* fp);
 
 	//Vector Component
-	float Component(const vec4f& _v);
-	float Component(const float* _fp);
-	float Component(const __m128& _sse);
+	float Component(const vec4f& _v) const;
+	float Component(const float* _fp) const;
+	float Component(const __m128& _sse) const;
 	static float Component(const vec4f& _v1, const vec4f& _v2);
 	static float Component(const vec4f& _v1, const float* _fp);
 	static float Component(const vec4f& _v1, const __m128& _sse);
@@ -312,6 +328,10 @@ struct vec4f {
 	static vec4f Reflect(const __m128& _sse1, const __m128& _sse2);
 	static vec4f Reflect(const float* fp, const __m128& _sse);
 	static vec4f Reflect(const __m128& _sse, const float* fp);
+
+	//Addition: Epsilon Change
+	static void ChangeEpsilon(const float& _epsilon = -1.0f);
+	static float GetEpsilon();
 };
 #endif //VEC4F_H
 
