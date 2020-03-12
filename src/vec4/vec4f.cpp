@@ -119,95 +119,71 @@ bool vec4f::IsZero(const __m128& _sse) {
 
 //Equality Check
 bool vec4f::IsEqual(const vec4f& _v) const {
-	//Create an "Equal" vector and do a parallel comparison with the vector parameter and itself
-	vec4f eq = _mm_cmpeq_ps(m128, _v.m128); 
+	//Exact Equality Check
+	vec4f eq = _mm_cmpeq_ps(m128, _v.m128);
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
 
-	//return true if there is no 0 in any of the components.
-	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+	//Absolute Value the vectors
+	vec4f absV1 = vec4f::vabs(m128);
+	vec4f absV2 = vec4f::vabs(_v.m128);
+	vec4f diff = vec4f::vabs(_mm_sub_ps(_v.m128, m128));
+	vec4f relDiv = vec4f::Min((absV1 + absV2), _mm_set1_ps(FLT_MAX));
+
+	//Relative Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(_mm_div_ps(diff.m128, relDiv.m128), _mm_set1_ps(epsilon)));
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
+
+	//Near-Zero Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(diff.m128, _mm_set1_ps(epsilon)));
+	return (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w));
 }
 bool vec4f::IsEqual(const float* _fp) const {
-	//Create an "Equal" vector and do a parallel comparison with the float pointer parameter and itself
-	vec4f eq = _mm_cmpeq_ps(m128, _mm_load_ps(_fp));
+	//Exact Equality Check
+	__m128 fp = _mm_load_ps(_fp);
+	vec4f eq = _mm_cmpeq_ps(m128, fp);
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
 
-	//return true if there is no 0 in any of the components.
-	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+	//Absolute Value the vectors
+	vec4f absV1 = vec4f::vabs(m128);
+	vec4f absV2 = vec4f::vabs(fp);
+	vec4f diff = vec4f::vabs(_mm_sub_ps(fp, m128));
+	vec4f relDiv = vec4f::Min((absV1 + absV2), _mm_set1_ps(FLT_MAX));
+
+	//Relative Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(_mm_div_ps(diff.m128, relDiv.m128), _mm_set1_ps(epsilon)));
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
+
+	//Near-Zero Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(diff.m128, _mm_set1_ps(epsilon)));
+	return (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w));
 }
-bool vec4f::IsEqual(const __m128& _sse) const { 
-	//Create an "Equal" vector and do a parallel comparison with the m128 parameter and itself
+bool vec4f::IsEqual(const __m128& _sse) const {
+	//Exact Equality Check
 	vec4f eq = _mm_cmpeq_ps(m128, _sse);
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
 
-	//return true if there is no 0 in any of the components.
-	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+	//Absolute Value the vectors
+	vec4f absV1 = vec4f::vabs(m128);
+	vec4f absV2 = vec4f::vabs(_sse);
+	vec4f diff = vec4f::vabs(_mm_sub_ps(_sse, m128));
+	vec4f relDiv = vec4f::Min((absV1 + absV2), _mm_set1_ps(FLT_MAX));
+
+	//Relative Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(_mm_div_ps(diff.m128, relDiv.m128), _mm_set1_ps(epsilon)));
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
+
+	//Near-Zero Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(diff.m128, _mm_set1_ps(epsilon)));
+	return (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w));
 }
 bool vec4f::IsEqual(const vec4f& _v1, const vec4f& _v2) {
-	//Create an "Equal" vector and do a parallel comparison with the two vector parameters
-	vec4f eq = _mm_cmpeq_ps(_v1.m128, _v2.m128);
-
-	//return true if there is no 0 in any of the components.
-	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
-}
-bool vec4f::IsEqual(const vec4f& _v, const float* _fp) {
-	//Create an "Equal" vector and do a parallel comparison with the vector parameter and Float Pointer Parameter
-	vec4f eq = _mm_cmpeq_ps(_v.m128, _mm_load_ps(_fp));
-	
-	//return true if there is no 0 in any of the components.
-	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
-}
-bool vec4f::IsEqual(const float* _fp, const vec4f& _v) {
-	//Create an "Equal" vector and do a parallel comparison with the Float Pointer Parameter and Vector Parameter
-	vec4f eq = _mm_cmpeq_ps( _mm_load_ps(_fp), _v.m128);
-
-	//return true if there is no 0 in any of the components.
-	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
-}
-bool vec4f::IsEqual(const vec4f& _v, const __m128& _sse) {
-	//Create an "Equal" vector and do a parallel comparison with the Vector Parameter and m128 Parameter
-	vec4f eq = _mm_cmpeq_ps(_v.m128, _sse);
-	
-	//return true if there is no 0 in any of the components.
-	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
-}
-bool vec4f::IsEqual(const __m128& _sse, const vec4f& _v) {
-	//Create an "Equal" vector and do a parallel comparison with the m128 Parameter and Vector Parameter
-	vec4f eq = _mm_cmpeq_ps(_sse, _v.m128);
-	
-	//return true if there is no 0 in any of the components.
-	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
-}
-
-//IsEqual Additions
-bool vec4f::IsEqual(const float* _fp1, const float* _fp2) {
-	//Create an "Equal" vector and do a parallel comparison with the m128 Parameter and Vector Parameter
-	vec4f eq = _mm_cmpeq_ps(_mm_load_ps(_fp1), _mm_load_ps(_fp2));
-	
-	//return true if there is no 0 in any of the components.
-	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
-}
-bool vec4f::IsEqual(const __m128& _sse1, const __m128& _sse2) {
-	//Create an "Equal" vector and do a parallel comparison with the m128 Parameter and Vector Parameter
-	vec4f eq = _mm_cmpeq_ps(_sse1, _sse2);
-	
-	//return true if there is no 0 in any of the components.
-	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
-}
-bool vec4f::IsEqual(const float* _fp, const __m128& _sse) {
-	//Create an "Equal" vector and do a parallel comparison with the m128 Parameter and Vector Parameter
-	vec4f eq = _mm_cmpeq_ps(_mm_load_ps(_fp), _sse);
-	
-	//return true if there is no 0 in any of the components.
-	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
-}
-bool vec4f::IsEqual(const __m128& _sse, const float* _fp) {
-	//Create an "Equal" vector and do a parallel comparison with the m128 Parameter and Vector Parameter
-	vec4f eq = _mm_cmpeq_ps(_sse, _mm_load_ps(_fp));
-	
-	//return true if there is no 0 in any of the components.
-	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
-}
-
-//Equality Check (Operator Overload)
-bool operator==(const vec4f& _v1, const vec4f& _v2) {
-	//First Equality Check, Handles Infinities
+	//Exact Equality Check
 	vec4f eq = _mm_cmpeq_ps(_v1.m128, _v2.m128);
 	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
 		return true;
@@ -215,82 +191,310 @@ bool operator==(const vec4f& _v1, const vec4f& _v2) {
 	//Absolute Value the vectors
 	vec4f absV1 = vec4f::vabs(_v1);
 	vec4f absV2 = vec4f::vabs(_v2);
-	vec4f diff = vec4f::vabs(_v2 - _v1);
+	vec4f diff = vec4f::vabs(_mm_sub_ps(_v2.m128, _v1.m128));
+	vec4f relDiv = vec4f::Min((absV1 + absV2), _mm_set1_ps(FLT_MAX));
 
-	//Second Equality Check: Relative
-	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(_mm_div_ps(diff.m128, vec4f::Min((absV1 + absV2), _mm_set1_ps(FLT_MAX)).m128), _mm_set1_ps(epsilon)));
+	//Relative Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(_mm_div_ps(diff.m128, relDiv.m128), _mm_set1_ps(epsilon)));
 	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
 		return true;
 
-	//Third Equality Check: Near Zero
+	//Near-Zero Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(diff.m128, _mm_set1_ps(epsilon)));
+	return (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w));
+}
+bool vec4f::IsEqual(const vec4f& _v, const float* _fp) {
+	//Exact Equality Check
+	__m128 fp = _mm_load_ps(_fp);
+	vec4f eq = _mm_cmpeq_ps(_v.m128, fp);
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
+
+	//Absolute Value the vectors
+	vec4f absV1 = vec4f::vabs(_v);
+	vec4f absV2 = vec4f::vabs(fp);
+	vec4f diff = vec4f::vabs(_mm_sub_ps(fp, _v.m128));
+	vec4f relDiv = vec4f::Min((absV1 + absV2), _mm_set1_ps(FLT_MAX));
+
+	//Relative Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(_mm_div_ps(diff.m128, relDiv.m128), _mm_set1_ps(epsilon)));
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
+
+	//Near-Zero Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(diff.m128, _mm_set1_ps(epsilon)));
+	return (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w));
+}
+bool vec4f::IsEqual(const float* _fp, const vec4f& _v) {
+	//Exact Equality Check
+	__m128 fp = _mm_load_ps(_fp);
+	vec4f eq = _mm_cmpeq_ps(fp, _v.m128);
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
+
+	//Absolute Value the vectors
+	vec4f absV1 = vec4f::vabs(fp);
+	vec4f absV2 = vec4f::vabs(_v);
+	vec4f diff = vec4f::vabs(_mm_sub_ps(_v.m128, fp));
+	vec4f relDiv = vec4f::Min((absV1 + absV2), _mm_set1_ps(FLT_MAX));
+
+	//Relative Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(_mm_div_ps(diff.m128, relDiv.m128), _mm_set1_ps(epsilon)));
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
+
+	//Near-Zero Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(diff.m128, _mm_set1_ps(epsilon)));
+	return (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w));
+}
+bool vec4f::IsEqual(const vec4f& _v, const __m128& _sse) {
+	//Exact Equality Check
+	vec4f eq = _mm_cmpeq_ps(_v.m128, _sse);
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
+
+	//Absolute Value the vectors
+	vec4f absV1 = vec4f::vabs(_v);
+	vec4f absV2 = vec4f::vabs(_sse);
+	vec4f diff = vec4f::vabs(_mm_sub_ps(_sse, _v.m128));
+	vec4f relDiv = vec4f::Min((absV1 + absV2), _mm_set1_ps(FLT_MAX));
+
+	//Relative Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(_mm_div_ps(diff.m128, relDiv.m128), _mm_set1_ps(epsilon)));
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
+
+	//Near-Zero Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(diff.m128, _mm_set1_ps(epsilon)));
+	return (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w));
+}
+bool vec4f::IsEqual(const __m128& _sse, const vec4f& _v) {
+	//Exact Equality Check
+	vec4f eq = _mm_cmpeq_ps(_sse, _v.m128);
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
+
+	//Absolute Value the vectors
+	vec4f absV1 = vec4f::vabs(_sse);
+	vec4f absV2 = vec4f::vabs(_v);
+	vec4f diff = vec4f::vabs(_mm_sub_ps(_v.m128, _sse));
+	vec4f relDiv = vec4f::Min((absV1 + absV2), _mm_set1_ps(FLT_MAX));
+
+	//Relative Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(_mm_div_ps(diff.m128, relDiv.m128), _mm_set1_ps(epsilon)));
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
+
+	//Near-Zero Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(diff.m128, _mm_set1_ps(epsilon)));
+	return (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w));
+}
+
+//IsEqual Additions
+bool vec4f::IsEqual(const float* _fp1, const float* _fp2) {
+	//Exact Equality Check
+	__m128 fp1 = _mm_load_ps(_fp1);
+	__m128 fp2 = _mm_load_ps(_fp2);
+	vec4f eq = _mm_cmpeq_ps(fp1, fp2);
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
+
+	//Absolute Value the vectors
+	vec4f absV1 = vec4f::vabs(fp1);
+	vec4f absV2 = vec4f::vabs(fp2);
+	vec4f diff = vec4f::vabs(_mm_sub_ps(fp2, fp1));
+	vec4f relDiv = vec4f::Min((absV1 + absV2), _mm_set1_ps(FLT_MAX));
+
+	//Relative Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(_mm_div_ps(diff.m128, relDiv.m128), _mm_set1_ps(epsilon)));
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
+
+	//Near-Zero Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(diff.m128, _mm_set1_ps(epsilon)));
+	return (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w));
+}
+bool vec4f::IsEqual(const __m128& _sse1, const __m128& _sse2) {
+	//Exact Equality Check
+	vec4f eq = _mm_cmpeq_ps(_sse1, _sse2);
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
+
+	//Absolute Value the vectors
+	vec4f absV1 = vec4f::vabs(_sse1);
+	vec4f absV2 = vec4f::vabs(_sse2);
+	vec4f diff = vec4f::vabs(_mm_sub_ps(_sse2, _sse1));
+	vec4f relDiv = vec4f::Min((absV1 + absV2), _mm_set1_ps(FLT_MAX));
+
+	//Relative Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(_mm_div_ps(diff.m128, relDiv.m128), _mm_set1_ps(epsilon)));
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
+
+	//Near-Zero Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(diff.m128, _mm_set1_ps(epsilon)));
+	return (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w));
+}
+bool vec4f::IsEqual(const float* _fp, const __m128& _sse) {
+	//Exact Equality Check
+	__m128 fp = _mm_load_ps(_fp);
+	vec4f eq = _mm_cmpeq_ps(fp, _sse);
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
+
+	//Absolute Value the vectors
+	vec4f absV1 = vec4f::vabs(fp);
+	vec4f absV2 = vec4f::vabs(_sse);
+	vec4f diff = vec4f::vabs(_mm_sub_ps(_sse, fp));
+	vec4f relDiv = vec4f::Min((absV1 + absV2), _mm_set1_ps(FLT_MAX));
+
+	//Relative Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(_mm_div_ps(diff.m128, relDiv.m128), _mm_set1_ps(epsilon)));
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
+
+	//Near-Zero Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(diff.m128, _mm_set1_ps(epsilon)));
+	return (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w));
+}
+bool vec4f::IsEqual(const __m128& _sse, const float* _fp) {
+	//Exact Equality Check
+	__m128 fp = _mm_load_ps(_fp);
+	vec4f eq = _mm_cmpeq_ps(_sse, fp);
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
+
+	//Absolute Value the vectors
+	vec4f absV1 = vec4f::vabs(_sse);
+	vec4f absV2 = vec4f::vabs(fp);
+	vec4f diff = vec4f::vabs(_mm_sub_ps(fp, _sse));
+	vec4f relDiv = vec4f::Min((absV1 + absV2), _mm_set1_ps(FLT_MAX));
+
+	//Relative Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(_mm_div_ps(diff.m128, relDiv.m128), _mm_set1_ps(epsilon)));
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
+
+	//Near-Zero Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(diff.m128, _mm_set1_ps(epsilon)));
+	return (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w));
+}
+
+//Equality Check (Operator Overload)
+bool operator==(const vec4f& _v1, const vec4f& _v2) {
+	//Exact Equality Check
+	vec4f eq = _mm_cmpeq_ps(_v1.m128, _v2.m128);
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
+
+	//Absolute Value the vectors
+	vec4f absV1 = vec4f::vabs(_v1);
+	vec4f absV2 = vec4f::vabs(_v2);
+	vec4f diff = vec4f::vabs(_mm_sub_ps(_v2.m128, _v1.m128));
+	vec4f relDiv = vec4f::Min((absV1 + absV2), _mm_set1_ps(FLT_MAX));
+
+	//Relative Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(_mm_div_ps(diff.m128, relDiv.m128), _mm_set1_ps(epsilon)));
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
+
+	//Near-Zero Equality Check
 	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(diff.m128, _mm_set1_ps(epsilon)));
 	return (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w));
 }
 bool operator==(const vec4f& _v, const float* _fp) {
-	//Create an "Equal" vector and do a parallel comparison with the vector parameter and itself
-	vec4f eq = _mm_cmpeq_ps(_v.m128, _mm_load_ps(_fp)); 
+	//Exact Equality Check
+	__m128 fp = _mm_load_ps(_fp);
+	vec4f eq = _mm_cmpeq_ps(_v.m128, fp);
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
 
-	//return true if there is no 0 in any of the components.
-	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+	//Absolute Value the vectors
+	vec4f absV1 = vec4f::vabs(_v);
+	vec4f absV2 = vec4f::vabs(fp);
+	vec4f diff = vec4f::vabs(_mm_sub_ps(fp, _v.m128));
+	vec4f relDiv = vec4f::Min((absV1 + absV2), _mm_set1_ps(FLT_MAX));
+
+	//Relative Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(_mm_div_ps(diff.m128, relDiv.m128), _mm_set1_ps(epsilon)));
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
+
+	//Near-Zero Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(diff.m128, _mm_set1_ps(epsilon)));
+	return (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w));
 }
 bool operator==(const vec4f& _v, const __m128& _sse) {
-	//Create an "Equal" vector and do a parallel comparison with the vector parameter and itself
-	vec4f eq = _mm_cmpeq_ps(_v.m128, _sse); 
+	//Exact Equality Check
+	vec4f eq = _mm_cmpeq_ps(_v.m128, _sse);
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
 
-	//return true if there is no 0 in any of the components.
-	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+	//Absolute Value the vectors
+	vec4f absV1 = vec4f::vabs(_v);
+	vec4f absV2 = vec4f::vabs(_sse);
+	vec4f diff = vec4f::vabs(_mm_sub_ps(_sse, _v.m128));
+	vec4f relDiv = vec4f::Min((absV1 + absV2), _mm_set1_ps(FLT_MAX));
+
+	//Relative Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(_mm_div_ps(diff.m128, relDiv.m128), _mm_set1_ps(epsilon)));
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
+
+	//Near-Zero Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(diff.m128, _mm_set1_ps(epsilon)));
+	return (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w));
 }
 bool operator==(const float* _fp, const vec4f& _v) {
-	//Create an "Equal" vector and do a parallel comparison with the vector parameter and itself
-	vec4f eq = _mm_cmpeq_ps(_mm_load_ps(_fp), _v.m128); 
+	//Exact Equality Check
+	__m128 fp = _mm_load_ps(_fp);
+	vec4f eq = _mm_cmpeq_ps(fp, _v.m128);
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
 
-	//return true if there is no 0 in any of the components.
-	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+	//Absolute Value the vectors
+	vec4f absV1 = vec4f::vabs(fp);
+	vec4f absV2 = vec4f::vabs(_v);
+	vec4f diff = vec4f::vabs(_mm_sub_ps(_v.m128, fp));
+	vec4f relDiv = vec4f::Min((absV1 + absV2), _mm_set1_ps(FLT_MAX));
+
+	//Relative Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(_mm_div_ps(diff.m128, relDiv.m128), _mm_set1_ps(epsilon)));
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
+
+	//Near-Zero Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(diff.m128, _mm_set1_ps(epsilon)));
+	return (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w));
 }
 bool operator==(const __m128& _sse, const vec4f& _v) {
-	//Create an "Equal" vector and do a parallel comparison with the vector parameter and itself
-	vec4f eq = _mm_cmpeq_ps( _sse, _v.m128); 
+	//Exact Equality Check
+	vec4f eq = _mm_cmpeq_ps(_sse, _v.m128);
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
 
-	//return true if there is no 0 in any of the components.
-	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
+	//Absolute Value the vectors
+	vec4f absV1 = vec4f::vabs(_sse);
+	vec4f absV2 = vec4f::vabs(_v);
+	vec4f diff = vec4f::vabs(_mm_sub_ps(_v.m128, _sse));
+	vec4f relDiv = vec4f::Min((absV1 + absV2), _mm_set1_ps(FLT_MAX));
+
+	//Relative Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(_mm_div_ps(diff.m128, relDiv.m128), _mm_set1_ps(epsilon)));
+	if (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w))
+		return true;
+
+	//Near-Zero Equality Check
+	eq = _mm_or_ps(eq.m128, _mm_cmple_ps(diff.m128, _mm_set1_ps(epsilon)));
+	return (CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w));
 }
 
 //Inequality Check (Operator Overload)
-bool operator!=(const vec4f& _v1, const vec4f& _v2) {
-	//Create an "Equal" vector and do a parallel comparison with the vector parameter and itself
-	vec4f eq = _mm_cmpneq_ps(_v1.m128, _v2.m128); 
-
-	//return true if there is no 0 in any of the components.
-	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
-}
-bool operator!=(const vec4f& _v, const float* _fp) {
-	//Create an "Equal" vector and do a parallel comparison with the vector parameter and itself
-	vec4f eq = _mm_cmpneq_ps(_v.m128, _mm_load_ps(_fp)); 
-
-	//return true if there is no 0 in any of the components.
-	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
-}
-bool operator!=(const vec4f& _v, const __m128& _sse) {
-	//Create an "Equal" vector and do a parallel comparison with the vector parameter and itself
-	vec4f eq = _mm_cmpneq_ps(_v.m128, _sse); 
-
-	//return true if there is no 0 in any of the components.
-	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
-}
-bool operator!=(const float* _fp, const vec4f& _v) {
-	//Create an "Equal" vector and do a parallel comparison with the vector parameter and itself
-	vec4f eq = _mm_cmpneq_ps(_mm_load_ps(_fp), _v.m128); 
-
-	//return true if there is no 0 in any of the components.
-	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
-}
-bool operator!=(const __m128& _sse, const vec4f& _v) {
-	//Create an "Equal" vector and do a parallel comparison with the vector parameter and itself
-	vec4f eq = _mm_cmpneq_ps( _sse, _v.m128); 
-
-	//return true if there is no 0 in any of the components.
-	return CINT(eq.x) & CINT(eq.y) & CINT(eq.z) & CINT(eq.w);
-}
+bool operator!=(const vec4f& _v1, const vec4f& _v2)		{ return !(_v1 == _v2); }
+bool operator!=(const vec4f& _v, const float* _fp)		{ return !(_v == _fp); }
+bool operator!=(const vec4f& _v, const __m128& _sse)	{ return !(_v == _sse); }
+bool operator!=(const float* _fp, const vec4f& _v)		{ return !(_fp == _v); }
+bool operator!=(const __m128& _sse, const vec4f& _v)	{ return !(_sse == _v); }
 
 //Vector-Vector Addition (Self)
 void vec4f::Add(const vec4f& _v)			{ m128 = _mm_add_ps(m128, _v.m128); }

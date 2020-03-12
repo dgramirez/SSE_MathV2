@@ -1,5 +1,4 @@
 #define VEC4_FLOATS_GLOBAL
-#define PRINT_DEBUG_INFO
 
 #include "../xplat.h"
 #include "catch2.hpp"
@@ -415,10 +414,11 @@ TEST_CASE("Basic Vector Math", "[Add], [Sub], [Mul], [Div]") {
 		CHECK_FALSE(myVec == answer[2]);
 
 		//Epsilon Change
-		vec4::ChangeEpsilon(FLT_EPSILON * 3);
+		vec4::ChangeEpsilon(FLT_EPSILON * 2.50723899f);
 		CHECK(myVec == answer[2]);
 		vec4::ChangeEpsilon();
 		REQUIRE(near_equal(FLT_EPSILON * 2, vec4::GetEpsilon()));
+		vec4::ChangeEpsilon();
 
 		//Member Operator+= Sub: Vector vs Vector ---------------------
 		myVec -= randVecA;
