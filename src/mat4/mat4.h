@@ -9,6 +9,7 @@ struct mat4f {
 	union {
 		struct { __m128 m128X, m128Y, m128Z, m128T; };
 		struct { vec4f vecX, vecY, vecZ, vecT; };
+		vec4f vec[4];
 		float e[16];
 		struct {
 			float
@@ -240,3 +241,7 @@ struct mat4f {
 };
 
 #endif //MAT4F_H
+
+#ifdef MAT4_FLOATS_GLOBAL
+typedef mat4f mat4;
+#endif
