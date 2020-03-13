@@ -47,14 +47,39 @@ mat4f::mat4f(const float& _e11, const float& _e12, const float& _e13, const floa
 	m128T = _mm_set_ps(_e44, _e43, _e42, _e41);
 }
 void mat4f::operator=(const mat4f& _matrix) {
-
+	m128X = _matrix.m128X;
+	m128Y = _matrix.m128Y;
+	m128Z = _matrix.m128Z;
+	m128T = _matrix.m128T;
 }
-void mat4f::operator=(const float* _matrixFP) {}
-mat4f mat4f::Set(const float& _diagonal) { return fake_ans; }
-mat4f mat4f::Set(const __m128& _vectorSSEx, const __m128& _vectorSSEy, const __m128& _vectorSSEz, const __m128& _vectorSSEt) { return fake_ans; }
-mat4f mat4f::Set(const float* _vectorFPx, const float* _vectorFPy, const float* _vectorFPz, const float* _vectorFPt) { return fake_ans; }
-mat4f mat4f::Set(const float* _matrixFP) { return fake_ans; }
+void mat4f::operator=(const float* _matrixFP) {
+	m128X = _mm_load_ps(_matrixFP);
+	m128Y = _mm_load_ps(&_matrixFP[4]);
+	m128Z = _mm_load_ps(&_matrixFP[8]);
+	m128T = _mm_load_ps(&_matrixFP[12]);
+}
+mat4f mat4f::Set(const float& _diagonal) { 
+	//Return the Constructed Matrix with Parameter
+	return mat4f(_diagonal);
+}
+mat4f mat4f::Set(const __m128& _vectorSSEx, const __m128& _vectorSSEy, const __m128& _vectorSSEz, const __m128& _vectorSSEt) {
+	//Return the Constructed Matrix with Parameters
+	return mat4f(_vectorSSEx, _vectorSSEy, _vectorSSEz, _vectorSSEt);
+}
+mat4f mat4f::Set(const float* _vectorFPx, const float* _vectorFPy, const float* _vectorFPz, const float* _vectorFPt) {
+	//Return the Constructed Matrix with Parameters
+	return mat4f(_vectorFPx, _vectorFPy, _vectorFPz, _vectorFPt);
+}
+mat4f mat4f::Set(const float* _matrixFP) {
+	//Return the Constructed Matrix with Parameter
+	return mat4f(_matrixFP);
+}
 mat4f mat4f::Set(const float& _e11, const float& _e12, const float& _e13, const float& _e14,
 	const float& _e21, const float& _e22, const float& _e23, const float& _e24,
 	const float& _e31, const float& _e32, const float& _e33, const float& _e34,
-	const float& _e41, const float& _e42, const float& _e43, const float& _e44) { return fake_ans; }
+	const float& _e41, const float& _e42, const float& _e43, const float& _e44) { 
+	return mat4f(_e11, _e12, _e13, _e14,
+		_e21, _e22, _e23, _e24,
+		_e31, _e32, _e33, _e34,
+		_e41, _e42, _e43, _e44);
+}
