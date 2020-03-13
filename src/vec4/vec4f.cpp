@@ -22,14 +22,10 @@ namespace {
 	//Global Epsilon (Changable via ChangeEpsilon Function)
 	float epsilon = FLT_EPSILON * 2;
 	
-	//Getting SSE Values
-	static inline float GetSSEValue(const __m128& _vectorSSE, const uint32_t& index) {
-		#if defined(_WIN32)
-		return _vectorSSE.m128_f32[index];
-		#else
-		return _vectorSSE[index];
-		#endif
-}
+	//Global Const Values for Shuffle
+	const int CROSS_FLIP1 = 0xC9;
+	const int CROSS_FLIP2 = 0xD2;
+	const int SSE_W = 0xFF;
 }
 
 //Epsilon
@@ -667,167 +663,137 @@ float vec4f::Dot(const __m128& _vectorSSE, const float* _vectorFP)		{ vec4f m = 
 
 //Vector Cross Product (Self & Self Operator Overloads)
 void vec4f::Cross(const vec4f& _vector) {
-	m128 = _mm_set_ps(
-		0.0f,
-		(x * _vector.y) - (y * _vector.x),
-		(z * _vector.x) - (x * _vector.z),
-		(y * _vector.z) - (z * _vector.y)
+	m128 = _mm_sub_ps(
+		_mm_mul_ps(_mm_shuffle_ps(m128, m128, CROSS_FLIP1), _mm_shuffle_ps(_vector.m128, _vector.m128, CROSS_FLIP2)),
+		_mm_mul_ps(_mm_shuffle_ps(m128, m128, CROSS_FLIP2), _mm_shuffle_ps(_vector.m128, _vector.m128, CROSS_FLIP1))
 	);
 }
 void vec4f::Cross(const float* _vectorFP) {
-	m128 = _mm_set_ps(
-		0.0f,
-		(x * _vectorFP[1]) - (y * _vectorFP[0]),
-		(z * _vectorFP[0]) - (x * _vectorFP[2]),
-		(y * _vectorFP[2]) - (z * _vectorFP[1])
+	__m128 fp = _mm_load_ps(_vectorFP);
+	m128 = _mm_sub_ps(
+		_mm_mul_ps(_mm_shuffle_ps(m128, m128, CROSS_FLIP1), _mm_shuffle_ps(fp, fp, CROSS_FLIP2)),
+		_mm_mul_ps(_mm_shuffle_ps(m128, m128, CROSS_FLIP2), _mm_shuffle_ps(fp, fp, CROSS_FLIP1))
 	);
 }
 void vec4f::Cross(const __m128& _vectorSSE) {
-	m128 = _mm_set_ps(
-		0.0f,
-		(x * GetSSEValue(_vectorSSE, 1)) - (y * GetSSEValue(_vectorSSE, 0)),
-		(z * GetSSEValue(_vectorSSE, 0)) - (x * GetSSEValue(_vectorSSE, 2)),
-		(y * GetSSEValue(_vectorSSE, 2)) - (z * GetSSEValue(_vectorSSE, 1))
+	m128 = _mm_sub_ps(
+		_mm_mul_ps(_mm_shuffle_ps(m128, m128, CROSS_FLIP1), _mm_shuffle_ps(_vectorSSE, _vectorSSE, CROSS_FLIP2)),
+		_mm_mul_ps(_mm_shuffle_ps(m128, m128, CROSS_FLIP2), _mm_shuffle_ps(_vectorSSE, _vectorSSE, CROSS_FLIP1))
 	);
 }
 void vec4f::operator^=(const vec4f& _vector) {
-	m128 = _mm_set_ps(
-		0.0f,
-		(x * _vector.y) - (y * _vector.x),
-		(z * _vector.x) - (x * _vector.z),
-		(y * _vector.z) - (z * _vector.y)
+	m128 = _mm_sub_ps(
+		_mm_mul_ps(_mm_shuffle_ps(m128, m128, CROSS_FLIP1), _mm_shuffle_ps(_vector.m128, _vector.m128, CROSS_FLIP2)),
+		_mm_mul_ps(_mm_shuffle_ps(m128, m128, CROSS_FLIP2), _mm_shuffle_ps(_vector.m128, _vector.m128, CROSS_FLIP1))
 	);
 }
 void vec4f::operator^=(const float* _vectorFP) {
-	m128 = _mm_set_ps(
-		0.0f,
-		(x * _vectorFP[1]) - (y * _vectorFP[0]),
-		(z * _vectorFP[0]) - (x * _vectorFP[2]),
-		(y * _vectorFP[2]) - (z * _vectorFP[1])
+	__m128 fp = _mm_load_ps(_vectorFP);
+	m128 = _mm_sub_ps(
+		_mm_mul_ps(_mm_shuffle_ps(m128, m128, CROSS_FLIP1), _mm_shuffle_ps(fp, fp, CROSS_FLIP2)),
+		_mm_mul_ps(_mm_shuffle_ps(m128, m128, CROSS_FLIP2), _mm_shuffle_ps(fp, fp, CROSS_FLIP1))
 	);
 }
 void vec4f::operator^=(const __m128& _vectorSSE) {
-	m128 = _mm_set_ps(
-		0.0f,
-		(x * GetSSEValue(_vectorSSE, 1)) - (y * GetSSEValue(_vectorSSE, 0)),
-		(z * GetSSEValue(_vectorSSE, 0)) - (x * GetSSEValue(_vectorSSE, 2)),
-		(y * GetSSEValue(_vectorSSE, 2)) - (z * GetSSEValue(_vectorSSE, 1))
+	m128 = _mm_sub_ps(
+		_mm_mul_ps(_mm_shuffle_ps(m128, m128, CROSS_FLIP1), _mm_shuffle_ps(_vectorSSE, _vectorSSE, CROSS_FLIP2)),
+		_mm_mul_ps(_mm_shuffle_ps(m128, m128, CROSS_FLIP2), _mm_shuffle_ps(_vectorSSE, _vectorSSE, CROSS_FLIP1))
 	);
 }
 
 //Vector Cross Product (Static & Global Operator Overloads)
 vec4f vec4f::Cross(const vec4f& _vector1, const vec4f& _vector2) {
-	return _mm_set_ps(
-		0.0f,
-		(_vector1.x * _vector2.y) - (_vector1.y * _vector2.x),
-		(_vector1.z * _vector2.x) - (_vector1.x * _vector2.z),
-		(_vector1.y * _vector2.z) - (_vector1.z * _vector2.y)
+	return _mm_sub_ps(
+		_mm_mul_ps(_mm_shuffle_ps(_vector1.m128, _vector1.m128, CROSS_FLIP1), _mm_shuffle_ps(_vector2.m128, _vector2.m128, CROSS_FLIP2)),
+		_mm_mul_ps(_mm_shuffle_ps(_vector1.m128, _vector1.m128, CROSS_FLIP2), _mm_shuffle_ps(_vector2.m128, _vector2.m128, CROSS_FLIP1))
 	);
 }
-vec4f vec4f::Cross(const vec4f& _vector1, const float* _vectorFP) {
-	return _mm_set_ps(
-		0.0f,
-		(_vector1.x * _vectorFP[1]) - (_vector1.y * _vectorFP[0]),
-		(_vector1.z * _vectorFP[0]) - (_vector1.x * _vectorFP[2]),
-		(_vector1.y * _vectorFP[2]) - (_vector1.z * _vectorFP[1])
+vec4f vec4f::Cross(const vec4f& _vector, const float* _vectorFP) {
+	__m128 fp = _mm_load_ps(_vectorFP);
+	return _mm_sub_ps(
+		_mm_mul_ps(_mm_shuffle_ps(_vector.m128, _vector.m128, CROSS_FLIP1), _mm_shuffle_ps(fp, fp, CROSS_FLIP2)),
+		_mm_mul_ps(_mm_shuffle_ps(_vector.m128, _vector.m128, CROSS_FLIP2), _mm_shuffle_ps(fp, fp, CROSS_FLIP1))
 	);
 }
-vec4f vec4f::Cross(const vec4f& _vector1, const __m128& _vectorSSE) {
-	return _mm_set_ps(
-		0.0f,
-		(_vector1.x * GetSSEValue(_vectorSSE, 1)) - (_vector1.y * GetSSEValue(_vectorSSE, 0)),
-		(_vector1.z * GetSSEValue(_vectorSSE, 0)) - (_vector1.x * GetSSEValue(_vectorSSE, 2)),
-		(_vector1.y * GetSSEValue(_vectorSSE, 2)) - (_vector1.z * GetSSEValue(_vectorSSE, 1))
+vec4f vec4f::Cross(const vec4f& _vector, const __m128& _vectorSSE) {
+	return _mm_sub_ps(
+		_mm_mul_ps(_mm_shuffle_ps(_vector.m128, _vector.m128, CROSS_FLIP1), _mm_shuffle_ps(_vectorSSE, _vectorSSE, CROSS_FLIP2)),
+		_mm_mul_ps(_mm_shuffle_ps(_vector.m128, _vector.m128, CROSS_FLIP2), _mm_shuffle_ps(_vectorSSE, _vectorSSE, CROSS_FLIP1))
 	);
 }
-vec4f vec4f::Cross(const float* _vectorFP, const vec4f& _vector2) {
-	return _mm_set_ps(
-		0.0f,
-		(_vectorFP[0] * _vector2.y) - (_vectorFP[1] * _vector2.x),
-		(_vectorFP[2] * _vector2.x) - (_vectorFP[0] * _vector2.z),
-		(_vectorFP[1] * _vector2.z) - (_vectorFP[2] * _vector2.y)
+vec4f vec4f::Cross(const float* _vectorFP, const vec4f& _vector) {
+	__m128 fp = _mm_load_ps(_vectorFP);
+	return _mm_sub_ps(
+		_mm_mul_ps(_mm_shuffle_ps(fp, fp, CROSS_FLIP1), _mm_shuffle_ps(_vector.m128, _vector.m128, CROSS_FLIP2)),
+		_mm_mul_ps(_mm_shuffle_ps(fp, fp, CROSS_FLIP2), _mm_shuffle_ps(_vector.m128, _vector.m128, CROSS_FLIP1))
 	);
 }
-vec4f vec4f::Cross(const __m128& _vectorSSE, const vec4f& _vector2) {
-	return _mm_set_ps(
-		0.0f,
-		(GetSSEValue(_vectorSSE, 0) * _vector2.y) - (GetSSEValue(_vectorSSE, 1) * _vector2.x),
-		(GetSSEValue(_vectorSSE, 2) * _vector2.x) - (GetSSEValue(_vectorSSE, 0) * _vector2.z),
-		(GetSSEValue(_vectorSSE, 1) * _vector2.z) - (GetSSEValue(_vectorSSE, 2) * _vector2.y)
+vec4f vec4f::Cross(const __m128& _vectorSSE, const vec4f& _vector) {
+	return _mm_sub_ps(
+		_mm_mul_ps(_mm_shuffle_ps(_vectorSSE, _vectorSSE, CROSS_FLIP1), _mm_shuffle_ps(_vector.m128, _vector.m128, CROSS_FLIP2)),
+		_mm_mul_ps(_mm_shuffle_ps(_vectorSSE, _vectorSSE, CROSS_FLIP2), _mm_shuffle_ps(_vector.m128, _vector.m128, CROSS_FLIP1))
 	);
 }
 vec4f operator^(const vec4f& _vector1, const vec4f& _vector2) {
-	return _mm_set_ps(
-		0.0f,
-		(_vector1.x * _vector2.y) - (_vector1.y * _vector2.x),
-		(_vector1.z * _vector2.x) - (_vector1.x * _vector2.z),
-		(_vector1.y * _vector2.z) - (_vector1.z * _vector2.y)
+	return _mm_sub_ps(
+		_mm_mul_ps(_mm_shuffle_ps(_vector1.m128, _vector1.m128, CROSS_FLIP1), _mm_shuffle_ps(_vector2.m128, _vector2.m128, CROSS_FLIP2)),
+		_mm_mul_ps(_mm_shuffle_ps(_vector1.m128, _vector1.m128, CROSS_FLIP2), _mm_shuffle_ps(_vector2.m128, _vector2.m128, CROSS_FLIP1))
 	);
 }
-vec4f operator^(const vec4f& _vector1, const float* _vectorFP) {
-	return _mm_set_ps(
-		0.0f,
-		(_vector1.x * _vectorFP[1]) - (_vector1.y * _vectorFP[0]),
-		(_vector1.z * _vectorFP[0]) - (_vector1.x * _vectorFP[2]),
-		(_vector1.y * _vectorFP[2]) - (_vector1.z * _vectorFP[1])
+vec4f operator^(const vec4f& _vector, const float* _vectorFP) {
+	__m128 fp = _mm_load_ps(_vectorFP);
+	return _mm_sub_ps(
+		_mm_mul_ps(_mm_shuffle_ps(_vector.m128, _vector.m128, CROSS_FLIP1), _mm_shuffle_ps(fp, fp, CROSS_FLIP2)),
+		_mm_mul_ps(_mm_shuffle_ps(_vector.m128, _vector.m128, CROSS_FLIP2), _mm_shuffle_ps(fp, fp, CROSS_FLIP1))
 	);
 }
-vec4f operator^(const vec4f& _vector1, const __m128& _vectorSSE) {
-	return _mm_set_ps(
-		0.0f,
-		(_vector1.x * GetSSEValue(_vectorSSE, 1)) - (_vector1.y * GetSSEValue(_vectorSSE, 0)),
-		(_vector1.z * GetSSEValue(_vectorSSE, 0)) - (_vector1.x * GetSSEValue(_vectorSSE, 2)),
-		(_vector1.y * GetSSEValue(_vectorSSE, 2)) - (_vector1.z * GetSSEValue(_vectorSSE, 1))
+vec4f operator^(const vec4f& _vector, const __m128& _vectorSSE) {
+	return _mm_sub_ps(
+		_mm_mul_ps(_mm_shuffle_ps(_vector.m128, _vector.m128, CROSS_FLIP1), _mm_shuffle_ps(_vectorSSE, _vectorSSE, CROSS_FLIP2)),
+		_mm_mul_ps(_mm_shuffle_ps(_vector.m128, _vector.m128, CROSS_FLIP2), _mm_shuffle_ps(_vectorSSE, _vectorSSE, CROSS_FLIP1))
 	);
 }
-vec4f operator^(const float* _vectorFP, const vec4f& _vector2) {
-	return _mm_set_ps(
-		0.0f,
-		(_vectorFP[0] * _vector2.y) - (_vectorFP[1] * _vector2.x),
-		(_vectorFP[2] * _vector2.x) - (_vectorFP[0] * _vector2.z),
-		(_vectorFP[1] * _vector2.z) - (_vectorFP[2] * _vector2.y)
+vec4f operator^(const float* _vectorFP, const vec4f& _vector) {
+	__m128 fp = _mm_load_ps(_vectorFP);
+	return _mm_sub_ps(
+		_mm_mul_ps(_mm_shuffle_ps(fp, fp, CROSS_FLIP1), _mm_shuffle_ps(_vector.m128, _vector.m128, CROSS_FLIP2)),
+		_mm_mul_ps(_mm_shuffle_ps(fp, fp, CROSS_FLIP2), _mm_shuffle_ps(_vector.m128, _vector.m128, CROSS_FLIP1))
 	);
 }
-vec4f operator^(const __m128& _vectorSSE, const vec4f& _vector2) {
-	return _mm_set_ps(
-		0.0f,
-		(GetSSEValue(_vectorSSE, 0) * _vector2.y) - (GetSSEValue(_vectorSSE, 1) * _vector2.x),
-		(GetSSEValue(_vectorSSE, 2) * _vector2.x) - (GetSSEValue(_vectorSSE, 0) * _vector2.z),
-		(GetSSEValue(_vectorSSE, 1) * _vector2.z) - (GetSSEValue(_vectorSSE, 2) * _vector2.y)
+vec4f operator^(const __m128& _vectorSSE, const vec4f& _vector) {
+	return _mm_sub_ps(
+		_mm_mul_ps(_mm_shuffle_ps(_vectorSSE, _vectorSSE, CROSS_FLIP1), _mm_shuffle_ps(_vector.m128, _vector.m128, CROSS_FLIP2)),
+		_mm_mul_ps(_mm_shuffle_ps(_vectorSSE, _vectorSSE, CROSS_FLIP2), _mm_shuffle_ps(_vector.m128, _vector.m128, CROSS_FLIP1))
 	);
 }
 
 //Vector Cross Product Additions
 vec4f vec4f::Cross(const float* _vectorFP1, const float* _vectorFP2) {
-	return _mm_set_ps(
-		0.0f,
-		(_vectorFP1[0] * _vectorFP2[1]) - (_vectorFP1[1] * _vectorFP2[0]),
-		(_vectorFP1[2] * _vectorFP2[0]) - (_vectorFP1[0] * _vectorFP2[2]),
-		(_vectorFP1[1] * _vectorFP2[2]) - (_vectorFP1[2] * _vectorFP2[1])
+	__m128 fp1 = _mm_load_ps(_vectorFP1);
+	__m128 fp2 = _mm_load_ps(_vectorFP2);
+	return _mm_sub_ps(
+		_mm_mul_ps(_mm_shuffle_ps(fp1, fp1, CROSS_FLIP1), _mm_shuffle_ps(fp2, fp2, CROSS_FLIP2)),
+		_mm_mul_ps(_mm_shuffle_ps(fp1, fp1, CROSS_FLIP2), _mm_shuffle_ps(fp2, fp2, CROSS_FLIP1))
 	);
 }
 vec4f vec4f::Cross(const __m128& _vectorSSE1, const __m128& _vectorSSE2) {
-	return _mm_set_ps(
-		0.0f,
-		(GetSSEValue(_vectorSSE1, 0) * GetSSEValue(_vectorSSE2, 1)) - (GetSSEValue(_vectorSSE1, 1) * GetSSEValue(_vectorSSE2, 0)),
-		(GetSSEValue(_vectorSSE1, 2) * GetSSEValue(_vectorSSE2, 0)) - (GetSSEValue(_vectorSSE1, 0) * GetSSEValue(_vectorSSE2, 2)),
-		(GetSSEValue(_vectorSSE1, 1) * GetSSEValue(_vectorSSE2, 2)) - (GetSSEValue(_vectorSSE1, 2) * GetSSEValue(_vectorSSE2, 1))
+	return _mm_sub_ps(
+		_mm_mul_ps(_mm_shuffle_ps(_vectorSSE1, _vectorSSE1, CROSS_FLIP1), _mm_shuffle_ps(_vectorSSE2, _vectorSSE2, CROSS_FLIP2)),
+		_mm_mul_ps(_mm_shuffle_ps(_vectorSSE1, _vectorSSE1, CROSS_FLIP2), _mm_shuffle_ps(_vectorSSE2, _vectorSSE2, CROSS_FLIP1))
 	);
 }
 vec4f vec4f::Cross(const float* _vectorFP, const __m128& _vectorSSE) {
-	return _mm_set_ps(
-		0.0f,
-		(_vectorFP[0] * GetSSEValue(_vectorSSE, 1)) - (_vectorFP[1] * GetSSEValue(_vectorSSE, 0)),
-		(_vectorFP[2] * GetSSEValue(_vectorSSE, 0)) - (_vectorFP[0] * GetSSEValue(_vectorSSE, 2)),
-		(_vectorFP[1] * GetSSEValue(_vectorSSE, 2)) - (_vectorFP[2] * GetSSEValue(_vectorSSE, 1))
+	__m128 fp = _mm_load_ps(_vectorFP);
+	return _mm_sub_ps(
+		_mm_mul_ps(_mm_shuffle_ps(fp, fp, CROSS_FLIP1), _mm_shuffle_ps(_vectorSSE, _vectorSSE, CROSS_FLIP2)),
+		_mm_mul_ps(_mm_shuffle_ps(fp, fp, CROSS_FLIP2), _mm_shuffle_ps(_vectorSSE, _vectorSSE, CROSS_FLIP1))
 	);
 }
 vec4f vec4f::Cross(const __m128& _vectorSSE, const float* _vectorFP) {
-	return _mm_set_ps(
-		0.0f,
-		(GetSSEValue(_vectorSSE, 0) * _vectorFP[1]) - (GetSSEValue(_vectorSSE, 1) * _vectorFP[0]),
-		(GetSSEValue(_vectorSSE, 2) * _vectorFP[0]) - (GetSSEValue(_vectorSSE, 0) * _vectorFP[2]),
-		(GetSSEValue(_vectorSSE, 1) * _vectorFP[2]) - (GetSSEValue(_vectorSSE, 2) * _vectorFP[1])
+	__m128 fp = _mm_load_ps(_vectorFP);
+	return _mm_sub_ps(
+		_mm_mul_ps(_mm_shuffle_ps(_vectorSSE,_vectorSSE, CROSS_FLIP1), _mm_shuffle_ps(fp, fp, CROSS_FLIP2)),
+		_mm_mul_ps(_mm_shuffle_ps(_vectorSSE,_vectorSSE, CROSS_FLIP2), _mm_shuffle_ps(fp, fp, CROSS_FLIP1))
 	);
 }
 
@@ -896,7 +862,7 @@ vec4f vec4f::Homogenize(const __m128& _vectorSSE) {
 	if (vec4f::IsZero(_vectorSSE))
 		return _mm_setzero_ps();
 	else
-		return _mm_div_ps(_vectorSSE, _mm_set1_ps(GetSSEValue(_vectorSSE, 3)));
+		return _mm_div_ps(_vectorSSE, _mm_shuffle_ps(_vectorSSE, _vectorSSE, SSE_W));
 }
 
 //Vector Angle Between
