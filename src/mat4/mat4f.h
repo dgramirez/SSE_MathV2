@@ -1,15 +1,12 @@
 #ifndef MAT4F_H
 #define MAT4F_H
 
-struct vec4f;
 #include <xmmintrin.h>
 
 struct mat4f {
 	//Union between SSE, float Array and Vectors
 	union {
 		struct { __m128 m128X, m128Y, m128Z, m128T; };
-		struct { vec4f vecX, vecY, vecZ, vecT; };
-		vec4f vec[4];
 		float e[16];
 		struct {
 			float
@@ -23,7 +20,6 @@ struct mat4f {
 	//Constructors and Assignment
 	mat4f();
 	mat4f(const float& _diagonal);
-	mat4f(const vec4f& _vectorX, const vec4f& _vectorY, const vec4f& _vectorZ, const vec4f& _vectorT);
 	mat4f(const __m128& _vectorSSEx, const __m128& _vectorSSEy, const __m128& _vectorSSEz, const __m128& _vectorSSEt);
 	mat4f(const float* _vectorFPx, const float* _vectorFPy, const float* _vectorFPz, const float* _vectorFPt);
 	mat4f(const float* _matrixFP);
@@ -35,7 +31,6 @@ struct mat4f {
 	void operator=(const mat4f& _matrix);
 	void operator=(const float* _matrixFP);
 	static mat4f Set(const float& _diagonal);
-	static mat4f Set(const vec4f& _vectorX, const vec4f& _vectorY, const vec4f& _vectorZ, const vec4f& _vectorT);
 	static mat4f Set(const __m128& _vectorSSEx, const __m128& _vectorSSEy, const __m128& _vectorSSEz, const __m128& _vectorSSEt);
 	static mat4f Set(const float* _vectorFPx, const float* _vectorFPy, const float* _vectorFPz, const float* _vectorFPt);
 	static mat4f Set(const float* _matrixFP);
@@ -69,50 +64,38 @@ struct mat4f {
 
 	//Translation Matrix
 	void Translate(const float& _x, const float& _y, const float& _z, const float& _w);
-	void Translate(const vec4f _vector);
 	void Translate(const __m128& _vectorSSE);
 	void Translate(const float* _vectorFP);
 	static mat4f TranslationMatrix(const float& _x, const float& _y, const float& _z, const mat4f& _matrix);
 	static mat4f TranslationMatrix(const mat4f& _matrix, const float& _x, const float& _y, const float& _z);
-	static mat4f TranslationMatrix(const mat4f& _matrix, const vec4f& _vector);
-	static mat4f TranslationMatrix(const vec4f& _vector, const mat4f& _matrix);
 	static mat4f TranslationMatrix(const mat4f& _matrix, const __m128& _vectorSSE);
 	static mat4f TranslationMatrix(const __m128& _vectorSSE, const mat4f& _matrix);
 	static mat4f TranslationMatrix(const mat4f& _matrix, const float* _vectorFP);
-	static mat4f TranslationMatrix(const float* _matrixFP, const vec4f& _vector);
 	static mat4f TranslationMatrix(const float* _matrixFP, const __m128& _sse);
 	static mat4f TranslationMatrix(const float* _matrixFP, const float* _vectorFP);
 
 	//Scaling Matrix
 	void Scale(const float& diagonal);
 	void Scale(const float& _x, const float& _y, const float& _z);
-	void Scale(const vec4f _vector);
 	void Scale(const __m128& _vectorSSE);
 	void Scale(const float* _vectorFP);
 	static mat4f ScalingMatrix(const float& _x, const float& _y, const float& _z, const mat4f& _matrix);
 	static mat4f ScalingMatrix(const mat4f& _matrix, const float& _x, const float& _y, const float& _z);
-	static mat4f ScalingMatrix(const mat4f& _matrix, const vec4f& _vector);
-	static mat4f ScalingMatrix(const vec4f& _vector, const mat4f& _matrix);
 	static mat4f ScalingMatrix(const mat4f& _matrix, const __m128& _vectorSSE);
 	static mat4f ScalingMatrix(const __m128& _vectorSSE, const mat4f& _matrix);
 	static mat4f ScalingMatrix(const mat4f& _matrix, const float* _vectorFP);
-	static mat4f ScalingMatrix(const float* _matrixFP, const vec4f& _vector);
 	static mat4f ScalingMatrix(const float* _matrixFP, const __m128& _sse);
 	static mat4f ScalingMatrix(const float* _matrixFP, const float* _vectorFP);
 
 	//Rotation Matrix
 	void Rotate(const float& _radians, const float& _x, const float& _y, const float& _z);
-	void Rotate(const float& _radians, const vec4f _vector);
 	void Rotate(const float& _radians, const __m128& _vectorSSE);
 	void Rotate(const float& _radians, const float* _vectorFP);
 	static mat4f RotationMatrix(const mat4f& _matrix, const float& _radians, const float& _x, const float& _y, const float& _z);
 	static mat4f RotationMatrix(const float& _radians, const float& _x, const float& _y, const float& _z, const mat4f& _matrix);
-	static mat4f RotationMatrix(const mat4f& _matrix, const float& _radians, const vec4f& _vector);
-	static mat4f RotationMatrix(const float& _radians, const vec4f& _vector, const mat4f& _matrix);
 	static mat4f RotationMatrix(const mat4f& _matrix, const float& _radians, const __m128& _vectorSSE);
 	static mat4f RotationMatrix(const float& _radians, const __m128& _vectorSSE, const mat4f& _matrix);
 	static mat4f RotationMatrix(const mat4f& _matrix, const float& _radians, const float* _vectorFP);
-	static mat4f RotationMatrix(const float* _matrixFP, const float& _radians,  const vec4f& _vector);
 	static mat4f RotationMatrix(const float* _matrixFP, const float& _radians,  const __m128& _sse);
 	static mat4f RotationMatrix(const float* _matrixFP, const float& _radians,  const float* _vectorFP);
 
@@ -142,7 +125,6 @@ struct mat4f {
 	mat4f operator~();
 	static mat4f Transpose(const mat4f& _matrix);
 	static mat4f Transpose(const float* _matrixFP);
-	static mat4f Transpose(const vec4f& _row0, const vec4f& _row1, const vec4f& _row2, const vec4f& _row3);
 	static mat4f Transpose(const __m128& _row0, const __m128& _row1, const __m128& _row2, const __m128& _row3);
 	static mat4f Transpose(const float* _row0, const float* _row1, const float* _row2, const float* _row3);
 
@@ -205,20 +187,14 @@ struct mat4f {
 	friend mat4f operator*(const mat4f& _matrix1, const mat4f& _matrix2);
 
 	//Matrix-Vector Multiplication
-	void Mul(const vec4f& _vector);
 	void Mul(const __m128& _vectorSSE);
-	void operator*=(const vec4f& _vector);
 	void operator*=(const __m128& _vectorSSE);
-	static vec4f Mul(const mat4f& _matrix, const vec4f& _vector);
-	static vec4f Mul(const mat4f& _matrix, const __m128& _vectorSSE);
-	static vec4f Mul(const float* _matrix, const vec4f& _vector);
-	static vec4f Mul(const float* _matrix, const __m128& _vectorSSE);
+	static __m128 Mul(const mat4f& _matrix, const __m128& _vectorSSE);
+	static __m128 Mul(const float* _matrix, const __m128& _vectorSSE);
 
 	//Vector-Matrix Multiplication
-	static vec4f Mul(const vec4f& _vector, const mat4f& _matrix);
-	static vec4f Mul(const __m128& _vectorSSE, const mat4f& _matrix);
-	static vec4f Mul(const vec4f& _vector, const float* _matrix);
-	static vec4f Mul(const __m128& _vectorSSE, const float* _matrix);
+	static __m128 Mul(const __m128& _vectorSSE, const mat4f& _matrix);
+	static __m128 Mul(const __m128& _vectorSSE, const float* _matrix);
 
 	//Matrix Determinant 3D
 	float Determinant3D() const;
@@ -238,6 +214,10 @@ struct mat4f {
 	void InverseFast();
 	static mat4f InverseFast(const mat4f& _matrix);
 	static mat4f InverseFast(const float* _matrixFP);
+
+	//Addition: Epsilon Change
+	static void ChangeEpsilon(const float& _epsilon = -1.0f);
+	static float GetEpsilon();
 };
 
 #endif //MAT4F_H
