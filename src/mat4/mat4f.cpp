@@ -1,4 +1,4 @@
-#include "mat4.h"
+#include "mat4f.h"
 #include <math.h>
 #include <float.h>
 
@@ -14,10 +14,10 @@ mat4f::mat4f() {
 	m128T = _mm_setzero_ps();
 }
 mat4f::mat4f(const float& _diagonal) {
-	m128X = _mm_set_ps(0.0f, 0.0f, 0.0f, 0.0f);
-	m128Y = _mm_set_ps(0.0f, 0.0f, 0.0f, 0.0f);
-	m128Z = _mm_set_ps(0.0f, 0.0f, 0.0f, 0.0f);
-	m128T = _mm_set_ps(0.0f, 0.0f, 0.0f, 0.0f);
+	m128X = _mm_set_ps(0.0f, 0.0f, 0.0f, _diagonal);
+	m128Y = _mm_set_ps(0.0f, 0.0f, _diagonal, 0.0f);
+	m128Z = _mm_set_ps(0.0f, _diagonal, 0.0f, 0.0f);
+	m128T = _mm_set_ps(_diagonal, 0.0f, 0.0f, 0.0f);
 }
 mat4f::mat4f(const __m128& _vectorSSEx, const __m128& _vectorSSEy, const __m128& _vectorSSEz, const __m128& _vectorSSEt) {
 	m128X = _vectorSSEx;
@@ -57,4 +57,3 @@ mat4f mat4f::Set(const float& _e11, const float& _e12, const float& _e13, const 
 	const float& _e21, const float& _e22, const float& _e23, const float& _e24,
 	const float& _e31, const float& _e32, const float& _e33, const float& _e34,
 	const float& _e41, const float& _e42, const float& _e43, const float& _e44) { return fake_ans; }
-
