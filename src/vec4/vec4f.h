@@ -122,28 +122,28 @@ struct vec4f {
 	static vec4f Sub(const __m128& _vectorSSE, const float* _vectorFP);
 
 	//Vector-Scalar Multiply (Self & Self Operator Overload)
-	void Mul(const float& _s);
-	void operator*=(const float& _s);
+	void Mul(const float& _scalar);
+	void operator*=(const float& _scalar);
 
 	//Vector-Scalar Multiply (Static & Global Operator Overload)
-	static vec4f Mul(const vec4f& _vector, const float& _s);
-	static vec4f Mul(const float& _s, const vec4f& _vector);
-	static vec4f Mul(const float* _vectorFP, const float& _s);
-	static vec4f Mul(const float& _s, const float* _vectorFP);
-	static vec4f Mul(const __m128& _vectorSSE, const float& _s);
-	static vec4f Mul(const float& _s, const __m128& _vectorSSE);
-	friend vec4f operator*(const vec4f& _vector, const float& _s);
-	friend vec4f operator*(const float& _s, const vec4f& _vector);
+	static vec4f Mul(const vec4f& _vector, const float& _scalar);
+	static vec4f Mul(const float& _scalar, const vec4f& _vector);
+	static vec4f Mul(const float* _vectorFP, const float& _scalar);
+	static vec4f Mul(const float& _scalar, const float* _vectorFP);
+	static vec4f Mul(const __m128& _vectorSSE, const float& _scalar);
+	static vec4f Mul(const float& _scalar, const __m128& _vectorSSE);
+	friend vec4f operator*(const vec4f& _vector, const float& _scalar);
+	friend vec4f operator*(const float& _scalar, const vec4f& _vector);
 
 	//Vector-Scalar Divide (Self & Self Operator Overload)
-	void Div(const float& _s);
-	void operator/=(const float& _s);
+	void Div(const float& _scalar);
+	void operator/=(const float& _scalar);
 
 	//Vector-Scalar Divide (Static & Global Operator Overload)
-	static vec4f Div(const vec4f& _vector, const float& _s);
-	static vec4f Div(const float* _vectorFP, const float& _s);
-	static vec4f Div(const __m128& _vectorSSE, const float& _s);
-	friend vec4f operator/(const vec4f& _vector, const float& _s);
+	static vec4f Div(const vec4f& _vector, const float& _scalar);
+	static vec4f Div(const float* _vectorFP, const float& _scalar);
+	static vec4f Div(const __m128& _vectorSSE, const float& _scalar);
+	friend vec4f operator/(const vec4f& _vector, const float& _scalar);
 
 	//Vector Negate
 	void Negate();
