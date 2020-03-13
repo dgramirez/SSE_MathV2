@@ -1,7 +1,7 @@
 #include "vec4f.h"
 #include "../xplat.h"
 
-#define CINT(x) static_cast<int>(x) //Cast to int (unsigned)
+#define CINT(x) static_cast<int>(x) //Cast to integer
 
 /* Some Notes when reading Paramter names:
  *		- FP notes a Floating Point data type (float*)
@@ -23,9 +23,9 @@ namespace {
 	float epsilon = FLT_EPSILON * 2;
 	
 	//Global Const Values for Shuffle
-	const int CROSS_FLIP1 = 0xC9;
-	const int CROSS_FLIP2 = 0xD2;
-	const int SSE_W = 0xFF;
+	const int CROSS_FLIP1 = 0xC9;	//11 00 10 01, or 3 0 2 1
+	const int CROSS_FLIP2 = 0xD2;	//11 01 00 10, or 3 1 0 2
+	const int SSE_W = 0xFF;			//11 11 11 11, or 3 3 3 3
 }
 
 //Epsilon
