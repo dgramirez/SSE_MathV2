@@ -159,7 +159,7 @@ struct mat4f {
 	static mat4f Add(const mat4f& _matrix1, const mat4f& _matrix2);
 	static mat4f Add(const mat4f& _matrix, const float* _matrixFP);
 	static mat4f Add(const float* _matrixFP, const mat4f& _matrix);
-	static mat4f Add(const float* _matrixFP1, const mat4f& _matrixFP2);
+	static mat4f Add(const float* _matrixFP1, const float* _matrixFP2);
 	friend mat4f operator+(const mat4f& _matrix1, const mat4f& _matrix2);
 	friend mat4f operator+(const mat4f& _matrix, const float* _matrixFP);
 	friend mat4f operator+(const float* _matrixFP, const mat4f& _matrix);
@@ -172,7 +172,7 @@ struct mat4f {
 	static mat4f Sub(const mat4f& _matrix1, const mat4f& _matrix2);
 	static mat4f Sub(const mat4f& _matrix, const float* _matrixFP);
 	static mat4f Sub(const float* _matrixFP, const mat4f& _matrix);
-	static mat4f Sub(const float* _matrixFP1, const mat4f& _matrixFP2);
+	static mat4f Sub(const float* _matrixFP1, const float* _matrixFP2);
 	friend mat4f operator-(const mat4f& _matrix1, const mat4f& _matrix2);
 	friend mat4f operator-(const mat4f& _matrix, const float* _matrixFP);
 	friend mat4f operator-(const float* _matrixFP, const mat4f& _matrix);
