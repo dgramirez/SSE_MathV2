@@ -50,7 +50,7 @@ namespace {
 	}
 }
 
-TEST_CASE("Contructors, Assignment, and Set", "[vec4], [operator=], [Set]") {
+TEST_CASE("Contructors, Assignment, and Set", "[vec4f], [operator=], [Set]") {
 	//Create Constants
 	const float _PI = 3.1415927;
 

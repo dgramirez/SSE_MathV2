@@ -1,6 +1,6 @@
 #include "vec4f.h"
-#include "../xplat.h"
-
+#include <math.h>
+#include <float.h>
 #define CINT(x) static_cast<int>(x) //Cast to integer
 
 /* Some Notes when reading Paramter names:
