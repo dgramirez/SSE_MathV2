@@ -27,7 +27,6 @@ struct mat4f {
 			const float& _e21, const float& _e22, const float& _e23, const float& _e24,
 			const float& _e31, const float& _e32, const float& _e33, const float& _e34,
 			const float& _e41, const float& _e42, const float& _e43, const float& _e44);
-	void operator=(const float& _diagonal);
 	void operator=(const mat4f& _matrix);
 	void operator=(const float* _matrixFP);
 	static mat4f Set(const float& _diagonal);

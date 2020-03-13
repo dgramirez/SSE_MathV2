@@ -35,7 +35,7 @@ namespace {
 
 TEST_CASE("Constructors, Assignment, and Set", "[mat4f] [operator=] [Set]")
 {
-	SECTION("Constructor", "[mat4f]") {
+	SECTION("Constructor Tests", "[mat4f]") {
 		float zeroFP[16] = {};
 		float identityFP[16] = { 
 			1, 0, 0, 0,
@@ -47,6 +47,30 @@ TEST_CASE("Constructors, Assignment, and Set", "[mat4f] [operator=] [Set]")
 		CHECK(!memcmp(identity.e, identityFP, sizeof(mat4)));
 		CHECK(!memcmp(matFPM.e, randMatFP, sizeof(mat4)));
 		CHECK(!memcmp(matSSE.e, &randVecArrayA[0].m128, sizeof(mat4)));
-		CHECK(!memcmp(matFPV.e, randVecArrayB[0].e, sizeof(mat4)));
+		CHECK(!memcmp(matFPV.e, &randVecArrayB[0], sizeof(mat4)));
+	}
+
+	SECTION("Assignment Tests", "[operator=]") {
+		mat4 assignedA = matSSE;
+		mat4 assignedB = randMatFP;
+
+		CHECK(!memcmp(&assignedA, &matSSE, sizeof(mat4)));
+		CHECK(!memcmp(&assignedB, randMatFP, sizeof(mat4)));
+		CHECK(&assignedA != &matSSE);
+	}
+
+	SECTION("Set Tests", "[Set]") {
+		mat4 answer[5];
+		answer[0] = mat4::Set(1.0f);
+		answer[1] = mat4::Set(randVecArrayB[0].m128, randVecArrayB[1].m128, randVecArrayB[2].m128, randVecArrayB[3].m128);
+		answer[2] = mat4::Set(randVecArrayA[0].e, randVecArrayA[1].e, randVecArrayA[2].e, randVecArrayA[3].e);
+		answer[3] = mat4::Set(randMatFP);
+		answer[4] = mat4::Set(0.0f, 1.0f, 2.0f, 3.0f, 0.0f, 2.0f, 4.0f, 6.0f, 0.0f, 3.0f, 6.0f, 9.0f, 0.0f, 4.0f, 8.0f, 12.0f);
+
+		CHECK(!memcmp(&answer[0], &identity, sizeof(mat4)));
+		CHECK(!memcmp(&answer[1], &randVecArrayB, sizeof(mat4)));
+		CHECK(!memcmp(&answer[2], &randVecArrayA, sizeof(mat4)));
+		CHECK(!memcmp(&answer[3], randMatFP, sizeof(mat4)));
+		CHECK(!memcmp(&answer[4], &matMAN, sizeof(mat4)));
 	}
 }

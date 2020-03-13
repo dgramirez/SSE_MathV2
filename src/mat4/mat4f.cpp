@@ -46,8 +46,9 @@ mat4f::mat4f(const float& _e11, const float& _e12, const float& _e13, const floa
 	m128Z = _mm_set_ps(_e34, _e33, _e32, _e31);
 	m128T = _mm_set_ps(_e44, _e43, _e42, _e41);
 }
-void mat4f::operator=(const float& _diagonal) {}
-void mat4f::operator=(const mat4f& _matrix) {}
+void mat4f::operator=(const mat4f& _matrix) {
+
+}
 void mat4f::operator=(const float* _matrixFP) {}
 mat4f mat4f::Set(const float& _diagonal) { return fake_ans; }
 mat4f mat4f::Set(const __m128& _vectorSSEx, const __m128& _vectorSSEy, const __m128& _vectorSSEz, const __m128& _vectorSSEt) { return fake_ans; }
