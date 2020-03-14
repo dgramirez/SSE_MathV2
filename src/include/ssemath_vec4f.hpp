@@ -81,9 +81,9 @@ namespace sml {
 				return true;
 
 			//Absolute Value the vectors
-			__m128 absV1 = sml::Vabs(m128);
-			__m128 absV2 = sml::Vabs(_vector.m128);
-			__m128 diff =  sml::Vabs(_mm_sub_ps(_vector.m128, m128));
+			__m128 absV1 = sml::VectorAbs(m128);
+			__m128 absV2 = sml::VectorAbs(_vector.m128);
+			__m128 diff =  sml::VectorAbs(_mm_sub_ps(_vector.m128, m128));
 			__m128 relDiv = _mm_min_ps(_mm_add_ps(absV1, absV2), _mm_set1_ps(FLT_MAX));
 
 			//Relative Equality Check
@@ -105,9 +105,9 @@ namespace sml {
 				return true;
 
 			//Absolute Value the vectors
-			__m128 absV1 = sml::Vabs(m128);
-			__m128 absV2 = sml::Vabs(fp);
-			__m128 diff = sml::Vabs(_mm_sub_ps(fp, m128));
+			__m128 absV1 = sml::VectorAbs(m128);
+			__m128 absV2 = sml::VectorAbs(fp);
+			__m128 diff = sml::VectorAbs(_mm_sub_ps(fp, m128));
 			__m128 relDiv = _mm_min_ps(_mm_add_ps(absV1, absV2), _mm_set1_ps(FLT_MAX));
 
 			//Relative Equality Check
@@ -126,9 +126,9 @@ namespace sml {
 				return true;
 
 			//Absolute Value the vectors
-			__m128 absV1 = sml::Vabs(m128);
-			__m128 absV2 = sml::Vabs(_vectorSSE);
-			__m128 diff = sml::Vabs(_mm_sub_ps(_vectorSSE, m128));
+			__m128 absV1 = sml::VectorAbs(m128);
+			__m128 absV2 = sml::VectorAbs(_vectorSSE);
+			__m128 diff = sml::VectorAbs(_mm_sub_ps(_vectorSSE, m128));
 			__m128 relDiv = _mm_min_ps(_mm_add_ps(absV1, absV2), _mm_set1_ps(FLT_MAX));
 
 			//Relative Equality Check
@@ -469,15 +469,15 @@ namespace sml {
 		//Vector Project
 		void Project(const vec4f& _vector) {
 			__m128 n = sml::Normalize(_vector.m128);
-			m128 = sml::Mul(n, Dot(n));
+			m128 = sml::VectorMul(n, Dot(n));
 		}
 		void Project(const float* _vectorFP) {
 			__m128 n = sml::Normalize(_vectorFP);
-			m128 = sml::Mul(n, Dot(n));
+			m128 = sml::VectorMul(n, Dot(n));
 		}
 		void Project(const __m128& _vectorSSE) {
 			__m128 n = sml::Normalize(_vectorSSE);
-			m128 = sml::Mul(n, Dot(n));
+			m128 = sml::VectorMul(n, Dot(n));
 		}
 
 		//Vector Reflect
@@ -488,13 +488,13 @@ namespace sml {
 				m128 = _mm_xor_ps(_mm_add_ps(_mm_mul_ps(sml::Project(m128, _vector.m128), _mm_set1_ps(-2.0f)), m128), SSE_NEG_ZERO);
 		}
 		void Reflect(const float* _vectorFP) {
-			if (sml::IsZero(_vectorFP))
+			if (sml::VectorIsZero(_vectorFP))
 				Negate();
 			else
 				m128 = _mm_xor_ps(_mm_add_ps(_mm_mul_ps(sml::Project(m128, _vectorFP), _mm_set1_ps(-2.0f)), m128), SSE_NEG_ZERO);
 		}
 		void Reflect(const __m128& _vectorSSE) {
-			if (sml::IsZero(_vectorSSE))
+			if (sml::VectorIsZero(_vectorSSE))
 				Negate();
 			else
 				m128 = _mm_xor_ps(_mm_add_ps(_mm_mul_ps(sml::Project(m128, _vectorSSE), _mm_set1_ps(-2.0f)), m128), SSE_NEG_ZERO);
@@ -502,33 +502,33 @@ namespace sml {
 	};
 
 	//Vec4 Absolute Value
-	static __m128 Vabs(const vec4f& _vector) {
+	static __m128 VectorAbs(const vec4f& _vector) {
 		//Remove the negative bit
 		return _mm_and_ps(_vector.m128, SSE_POS_NAN);
 	}
 
 	//Set
-	static __m128 Set(const vec4f& _vector) {
+	static __m128 VectorSet(const vec4f& _vector) {
 		return _vector.m128;
 	}
 
 	//Equality Check (Zero)
-	static bool IsZero(const vec4f& _vector, const float& _epsilon = SSE_EPSILON) {
+	static bool VectorIsZero(const vec4f& _vector, const float& _epsilon = SSE_EPSILON) {
 		//Return the Comparison of the 0 vector to the m128 parameter (0 == same bit value)
 		return M128CompareCheck(_mm_cmple_ps(_vector.m128, _mm_set1_ps(_epsilon)));
 	}
 
 	//Equality Check
-	static bool IsEqual(const vec4f& _vector1, const vec4f& _vector2, const float& _epsilon = SSE_EPSILON) {
+	static bool VectorIsEqual(const vec4f& _vector1, const vec4f& _vector2, const float& _epsilon = SSE_EPSILON) {
 		//Exact Equality Check
 		__m128 eq = _mm_cmpeq_ps(_vector1.m128, _vector2.m128);
 		if (M128CompareCheck(eq))
 			return true;
 
 		//Absolute Value the vectors
-		__m128 absV1 = Vabs(_vector1.m128);
-		__m128 absV2 = Vabs(_vector2.m128);
-		__m128 diff = Vabs(_mm_sub_ps(_vector2.m128, _vector1.m128));
+		__m128 absV1 = sml::VectorAbs(_vector1.m128);
+		__m128 absV2 = sml::VectorAbs(_vector2.m128);
+		__m128 diff =  sml::VectorAbs(_mm_sub_ps(_vector2.m128, _vector1.m128));
 		__m128 relDiv = _mm_min_ps(_mm_add_ps(absV1, absV2), _mm_set1_ps(FLT_MAX));
 
 		//Relative Equality Check
@@ -540,7 +540,7 @@ namespace sml {
 		eq = _mm_or_ps(eq, _mm_cmple_ps(diff, _mm_set1_ps(_epsilon)));
 		return (M128CompareCheck(eq));
 	}
-	static bool IsEqual(const vec4f& _vector, const float* _vectorFP, const float& _epsilon = SSE_EPSILON) {
+	static bool VectorIsEqual(const vec4f& _vector, const float* _vectorFP, const float& _epsilon = SSE_EPSILON) {
 		//Exact Equality Check
 		__m128 fp = _mm_load_ps(_vectorFP);
 		__m128 eq = _mm_cmpeq_ps(_vector.m128, fp);
@@ -548,9 +548,9 @@ namespace sml {
 			return true;
 
 		//Absolute Value the vectors
-		__m128 absV1 = Vabs(_vector.m128);
-		__m128 absV2 = Vabs(fp);
-		__m128 diff = Vabs(_mm_sub_ps(fp, _vector.m128));
+		__m128 absV1 = sml::VectorAbs(_vector.m128);
+		__m128 absV2 = sml::VectorAbs(fp);
+		__m128 diff =  sml::VectorAbs(_mm_sub_ps(fp, _vector.m128));
 		__m128 relDiv = _mm_min_ps(_mm_add_ps(absV1, absV2), _mm_set1_ps(FLT_MAX));
 
 		//Relative Equality Check
@@ -562,16 +562,16 @@ namespace sml {
 		eq = _mm_or_ps(eq, _mm_cmple_ps(diff, _mm_set1_ps(_epsilon)));
 		return (M128CompareCheck(eq));
 	}
-	static bool IsEqual(const vec4f& _vector, const __m128& _vectorSSE, const float& _epsilon = SSE_EPSILON) {
+	static bool VectorIsEqual(const vec4f& _vector, const __m128& _vectorSSE, const float& _epsilon = SSE_EPSILON) {
 		//Exact Equality Check
 		__m128 eq = _mm_cmpeq_ps(_vector.m128, _vectorSSE);
 		if (M128CompareCheck(eq))
 			return true;
 
 		//Absolute Value the vectors
-		__m128 absV1 = Vabs(_vector.m128);
-		__m128 absV2 = Vabs(_vectorSSE);
-		__m128 diff = Vabs(_mm_sub_ps(_vectorSSE, _vector.m128));
+		__m128 absV1 = sml::VectorAbs(_vector.m128);
+		__m128 absV2 = sml::VectorAbs(_vectorSSE);
+		__m128 diff =  sml::VectorAbs(_mm_sub_ps(_vectorSSE, _vector.m128));
 		__m128 relDiv = _mm_min_ps(_mm_add_ps(absV1, absV2), _mm_set1_ps(FLT_MAX));
 
 		//Relative Equality Check
@@ -583,7 +583,7 @@ namespace sml {
 		eq = _mm_or_ps(eq, _mm_cmple_ps(diff, _mm_set1_ps(_epsilon)));
 		return (M128CompareCheck(eq));
 	}
-	static bool IsEqual(const float* _vectorFP, const vec4f& _vector, const float& _epsilon = SSE_EPSILON) {
+	static bool VectorIsEqual(const float* _vectorFP, const vec4f& _vector, const float& _epsilon = SSE_EPSILON) {
 		//Exact Equality Check
 		__m128 fp = _mm_load_ps(_vectorFP);
 		__m128 eq = _mm_cmpeq_ps(fp, _vector.m128);
@@ -591,9 +591,9 @@ namespace sml {
 			return true;
 
 		//Absolute Value the vectors
-		__m128 absV1 = Vabs(fp);
-		__m128 absV2 = Vabs(_vector.m128);
-		__m128 diff = Vabs(_mm_sub_ps(_vector.m128, fp));
+		__m128 absV1 = sml::VectorAbs(fp);
+		__m128 absV2 = sml::VectorAbs(_vector.m128);
+		__m128 diff =  sml::VectorAbs(_mm_sub_ps(_vector.m128, fp));
 		__m128 relDiv = _mm_min_ps(_mm_add_ps(absV1, absV2), _mm_set1_ps(FLT_MAX));
 
 		//Relative Equality Check
@@ -605,16 +605,16 @@ namespace sml {
 		eq = _mm_or_ps(eq, _mm_cmple_ps(diff, _mm_set1_ps(_epsilon)));
 		return (M128CompareCheck(eq));
 	}
-	static bool IsEqual(const __m128& _vectorSSE, const vec4f& _vector, const float& _epsilon = SSE_EPSILON) {
+	static bool VectorIsEqual(const __m128& _vectorSSE, const vec4f& _vector, const float& _epsilon = SSE_EPSILON) {
 		//Exact Equality Check
 		__m128 eq = _mm_cmpeq_ps(_vectorSSE, _vector.m128);
 		if (M128CompareCheck(eq))
 			return true;
 
 		//Absolute Value the vectors
-		__m128 absV1 = Vabs(_vectorSSE);
-		__m128 absV2 = Vabs(_vector.m128);
-		__m128 diff = Vabs(_mm_sub_ps(_vector.m128, _vectorSSE));
+		__m128 absV1 = sml::VectorAbs(_vectorSSE);
+		__m128 absV2 = sml::VectorAbs(_vector.m128);
+		__m128 diff =  sml::VectorAbs(_mm_sub_ps(_vector.m128, _vectorSSE));
 		__m128 relDiv = _mm_min_ps(_mm_add_ps(absV1, absV2), _mm_set1_ps(FLT_MAX));
 
 		//Relative Equality Check
@@ -628,54 +628,54 @@ namespace sml {
 	}
 
 	//Vector-Vector Addition
-	static __m128 Add(const vec4f& _vector1, const vec4f& _vector2) {
+	static __m128 VectorAdd(const vec4f& _vector1, const vec4f& _vector2) {
 		return _mm_add_ps(_vector1.m128, _vector2.m128);
 	}
-	static __m128 Add(const vec4f& _vector, const float* _vectorFP) {
+	static __m128 VectorAdd(const vec4f& _vector, const float* _vectorFP) {
 		return _mm_add_ps(_vector.m128, _mm_load_ps(_vectorFP));
 	}
-	static __m128 Add(const vec4f& _vector, const __m128& _vectorSSE) {
+	static __m128 VectorAdd(const vec4f& _vector, const __m128& _vectorSSE) {
 		return _mm_add_ps(_vector.m128, _vectorSSE);
 	}
-	static __m128 Add(const float* _vectorFP, const vec4f& _vector) {
+	static __m128 VectorAdd(const float* _vectorFP, const vec4f& _vector) {
 		return _mm_add_ps(_mm_load_ps(_vectorFP), _vector.m128);
 	}
-	static __m128 Add(const __m128& _vectorSSE, const vec4f& _vector) {
+	static __m128 VectorAdd(const __m128& _vectorSSE, const vec4f& _vector) {
 		return _mm_add_ps(_vectorSSE, _vector.m128);
 	}
 
 	//Vector-Vector Subtraction
-	static __m128 Sub(const vec4f& _vector1, const vec4f& _vector2) {
+	static __m128 VectorSub(const vec4f& _vector1, const vec4f& _vector2) {
 		return _mm_sub_ps(_vector1.m128, _vector2.m128);
 	}
-	static __m128 Sub(const vec4f& _vector, const float* _vectorFP) {
+	static __m128 VectorSub(const vec4f& _vector, const float* _vectorFP) {
 		return _mm_sub_ps(_vector.m128, _mm_load_ps(_vectorFP));
 	}
-	static __m128 Sub(const vec4f& _vector, const __m128& _vectorSSE) {
+	static __m128 VectorSub(const vec4f& _vector, const __m128& _vectorSSE) {
 		return _mm_sub_ps(_vector.m128, _vectorSSE);
 	}
-	static __m128 Sub(const float* _vectorFP, const vec4f& _vector) {
+	static __m128 VectorSub(const float* _vectorFP, const vec4f& _vector) {
 		return _mm_sub_ps(_mm_load_ps(_vectorFP), _vector.m128);
 	}
-	static __m128 Sub(const __m128& _vectorSSE, const vec4f& _vector) {
+	static __m128 VectorSub(const __m128& _vectorSSE, const vec4f& _vector) {
 		return _mm_sub_ps(_vectorSSE, _vector.m128);
 	}
 
 	//Vector-Scalar Multiply
-	static __m128 Mul(const vec4f& _vector, const float& _scalar) {
+	static __m128 VectorMul(const vec4f& _vector, const float& _scalar) {
 		return _mm_mul_ps(_vector.m128, _mm_set1_ps(_scalar));
 	}
-	static __m128 Mul(const float& _scalar, const vec4f& _vector) {
+	static __m128 VectorMul(const float& _scalar, const vec4f& _vector) {
 		return _mm_mul_ps(_mm_set1_ps(_scalar), _vector.m128);
 	}
 
 	//Vector-Scalar Divide (Static & Global Operator Overload)
-	static __m128 Div(const vec4f& _vector, const float& _scalar) {
+	static __m128 VectorDiv(const vec4f& _vector, const float& _scalar) {
 		return _mm_div_ps(_vector.m128, _mm_set1_ps(_scalar));
 	}
 
 	//Vector Negate
-	static __m128 Negate(const vec4f& _vector) {
+	static __m128 VectorNegate(const vec4f& _vector) {
 		return _mm_xor_ps(_vector.m128, SSE_NEG_ZERO);
 	}
 
@@ -858,46 +858,46 @@ namespace sml {
 
 	//Vector Project
 	static __m128 Project(const vec4f& _vector1, const vec4f& _vector2) {
-		__m128 n = sml::Normalize(_vector2.m128); return sml::Mul(n, _vector1.Dot(n));
+		__m128 n = sml::Normalize(_vector2.m128); return sml::VectorMul(n, _vector1.Dot(n));
 	}
 	static __m128 Project(const vec4f& _vector, const float* _vectorFP) {
-		__m128 n = sml::Normalize(_vectorFP); return sml::Mul(n, _vector.Dot(n));
+		__m128 n = sml::Normalize(_vectorFP); return sml::VectorMul(n, _vector.Dot(n));
 	}
 	static __m128 Project(const vec4f& _vector, const __m128& _vectorSSE) {
-		__m128 n = sml::Normalize(_vectorSSE); return sml::Mul(n, _vector.Dot(n));
+		__m128 n = sml::Normalize(_vectorSSE); return sml::VectorMul(n, _vector.Dot(n));
 	}
 	static __m128 Project(const float* _vectorFP, const vec4f& _vector) {
-		__m128 n = sml::Normalize(_vector.m128); return sml::Mul(n, sml::Dot(_vectorFP, n));
+		__m128 n = sml::Normalize(_vector.m128); return sml::VectorMul(n, sml::Dot(_vectorFP, n));
 	}
 	static __m128 Project(const __m128& _vectorSSE, const vec4f& _vector) {
-		__m128 n = sml::Normalize(_vector.m128); return sml::Mul(n, sml::Dot(_vectorSSE, n));
+		__m128 n = sml::Normalize(_vector.m128); return sml::VectorMul(n, sml::Dot(_vectorSSE, n));
 	}
 
 	//Vector Reflect
 	static __m128 Reflect(const vec4f& _vector1, const vec4f& _vector2) {
 		if (_vector2.IsZero())
-			return sml::Negate(_vector1.m128);
+			return sml::VectorNegate(_vector1.m128);
 		return _mm_xor_ps(_mm_add_ps(_mm_mul_ps(sml::Project(_vector1.m128, _vector2.m128), _mm_set1_ps(-2.0f)), _vector1.m128), SSE_NEG_ZERO);
 	}
 	static __m128 Reflect(const vec4f& _vector, const float* _vectorFP) {
-		if (sml::IsZero(_vectorFP))
-			return sml::Negate(_vector.m128);
+		if (sml::VectorIsZero(_vectorFP))
+			return sml::VectorNegate(_vector.m128);
 		return _mm_xor_ps(_mm_add_ps(_mm_mul_ps(sml::Project(_vector.m128, _mm_load_ps(_vectorFP)), _mm_set1_ps(-2.0f)), _vector.m128), SSE_NEG_ZERO);
 	}
 	static __m128 Reflect(const vec4f& _vector, const __m128& _vectorSSE) {
-		if (sml::IsZero(_vectorSSE))
-			return sml::Negate(_vector.m128);
+		if (sml::VectorIsZero(_vectorSSE))
+			return sml::VectorNegate(_vector.m128);
 		return _mm_xor_ps(_mm_add_ps(_mm_mul_ps(sml::Project(_vector.m128, _vectorSSE), _mm_set1_ps(-2.0f)), _vector.m128), SSE_NEG_ZERO);
 	}
 	static __m128 Reflect(const float* _vectorFP, const vec4f& _vector) {
 		__m128 fp = _mm_load_ps(_vectorFP);
 		if (_vector.IsZero())
-			return sml::Negate(_vectorFP);
+			return sml::VectorNegate(_vectorFP);
 		return _mm_xor_ps(_mm_add_ps(_mm_mul_ps(sml::Project(fp, _vector.m128), _mm_set1_ps(-2.0f)), fp), SSE_NEG_ZERO);
 	}
 	static __m128 Reflect(const __m128& _vectorSSE, const vec4f& _vector) {
 		if (_vector.IsZero())
-			return sml::Negate(_vectorSSE);
+			return sml::VectorNegate(_vectorSSE);
 		return _mm_xor_ps(_mm_add_ps(_mm_mul_ps(sml::Project(_vectorSSE, _vector.m128), _mm_set1_ps(-2.0f)), _vectorSSE), SSE_NEG_ZERO);
 	}
 

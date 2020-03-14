@@ -3,5 +3,6 @@
 
 #include "ssemath_base.hpp"
 #include "ssemath_vec4f.hpp"
+#include "ssemath_mat4f.hpp"
 
 #endif
