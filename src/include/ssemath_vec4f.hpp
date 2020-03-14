@@ -282,8 +282,8 @@ namespace sml {
 		void Negate() {
 			m128 = _mm_xor_ps(m128, SSE_NEG_ZERO);
 		}
-		void operator-() {
-			Negate();
+		vec4f operator-() {
+			Negate(); return *this;
 		}
 
 		//Other Vector Math
@@ -318,7 +318,7 @@ namespace sml {
 		}
 
 		float Length() const {
-			sqrtf(M128AddComponents(_mm_mul_ps(m128, m128)));
+			return sqrtf(M128AddComponents(_mm_mul_ps(m128, m128)));
 		}
 		float LengthSq() const {
 			return M128AddComponents(_mm_mul_ps(m128, m128));
@@ -339,7 +339,6 @@ namespace sml {
 			else
 				m128 = _mm_div_ps(m128, _mm_shuffle_ps(m128, m128, SSE_W));
 		}
-
 
 		//Vector Dot Product
 		float Dot(const vec4f& _vector) const {
@@ -503,9 +502,14 @@ namespace sml {
 	};
 
 	//Vec4 Absolute Value
-	static __m128 vabs(const vec4f& _vector) {
+	static __m128 Vabs(const vec4f& _vector) {
 		//Remove the negative bit
 		return _mm_and_ps(_vector.m128, SSE_POS_NAN);
+	}
+
+	//Set
+	static __m128 Set(const vec4f& _vector) {
+		return _vector.m128;
 	}
 
 	//Equality Check (Zero)
@@ -672,7 +676,7 @@ namespace sml {
 
 	//Vector Negate
 	static __m128 Negate(const vec4f& _vector) {
-		return _mm_and_ps(_vector.m128, SSE_POS_NAN);
+		return _mm_xor_ps(_vector.m128, SSE_NEG_ZERO);
 	}
 
 	//Vector Minimum (Per Component)
@@ -897,6 +901,9 @@ namespace sml {
 		return _mm_xor_ps(_mm_add_ps(_mm_mul_ps(sml::Project(_vectorSSE, _vector.m128), _mm_set1_ps(-2.0f)), _vectorSSE), SSE_NEG_ZERO);
 	}
 
+#ifdef VEC4_FLOATS_GLOBAL
+	typedef vec4f vec4;
+#endif
 }
 
 
