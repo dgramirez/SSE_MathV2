@@ -64,7 +64,7 @@ namespace sml {
 		}
 
 		//Vec4 Absolute Value
-		void Vabs() {
+		void Abs() {
 			//Toggle the negative bit
 			m128 = _mm_and_ps(m128, SSE_POS_NAN);
 		}
@@ -283,7 +283,7 @@ namespace sml {
 			m128 = _mm_xor_ps(m128, SSE_NEG_ZERO);
 		}
 		vec4f operator-() {
-			Negate(); return *this;
+			return _mm_xor_ps(m128, SSE_NEG_ZERO);
 		}
 
 		//Other Vector Math
