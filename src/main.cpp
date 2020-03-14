@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "include/ssemath.h"
 
 int main( int argc, char* argv[] )
 {

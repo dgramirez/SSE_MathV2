@@ -10,27 +10,20 @@
 #define CROSS_FLIP2 0xD2	//11 01 00 10, or 3 1 0 2
 #define SSE_W 0xFF			//11 11 11 11, or 3 3 3 3
 
-//Defines for Casting to Integer
-#define CINT(x) static_cast<int>(x) //Cast to integer
+//Defines for Global Values
+static const __m128 SSE_POS_NAN = _mm_or_ps(_mm_set1_ps(FLT_MAX), _mm_set1_ps(FLT_MIN));
+static const __m128 SSE_NEG_ZERO = _mm_set1_ps(-0.0f);
+static const float SSE_EPSILON = FLT_EPSILON * 2;
 
 namespace sml {
-	//SSE Value to identify Positive NaN. Used for Vector Absolute Function.
-	static const __m128 m128PosNaN = _mm_or_ps(_mm_set1_ps(FLT_MAX), _mm_set1_ps(FLT_MIN));
-
-	//SSE Value to identify Negative 0. Used in Negate Function
-	static const __m128 m128NegativeZero = _mm_set1_ps(-0.0f);
-
-	//Global Epsilon (Changable via ChangeEpsilon Function)
-	static float epsilon = FLT_EPSILON * 2;
-
 	//Absolute Value
 	static __m128 Vabs(const float* _vectorFP) {
 		//Toggle the negative bit
-		return _mm_and_ps(_mm_load_ps(_vectorFP), m128PosNaN);
+		return _mm_and_ps(_mm_load_ps(_vectorFP), SSE_POS_NAN);
 	}
 	static __m128 Vabs(const __m128& _vectorSSE) {
 		//Toggle the negative bit
-		return _mm_and_ps(_vectorSSE, m128PosNaN);
+		return _mm_and_ps(_vectorSSE, SSE_POS_NAN);
 	}
 
 	//m128 Helpers
@@ -48,17 +41,17 @@ namespace sml {
 	}
 
 	//IsZero
-	static bool IsZero(const float* _vectorFP) {
+	static bool IsZero(const float* _vectorFP, const float& _epsilon = SSE_EPSILON) {
 		//Return the Comparison of the 0 vector to the float pointer parameter (0 == same bit value)
-		return M128CompareCheck(_mm_cmple_ps(_mm_load_ps(_vectorFP), _mm_set1_ps(FLT_EPSILON)));
+		return M128CompareCheck(_mm_cmple_ps(_mm_load_ps(_vectorFP), _mm_set1_ps(_epsilon)));
 	}
-	static bool IsZero(const __m128& _vectorSSE) {
+	static bool IsZero(const __m128& _vectorSSE, const float& _epsilon = SSE_EPSILON) {
 		//Return the Comparison of the 0 vector to the m128 parameter (0 == same bit value)
-		return M128CompareCheck(_mm_cmple_ps(_vectorSSE, _mm_set1_ps(FLT_EPSILON)));
+		return M128CompareCheck(_mm_cmple_ps(_vectorSSE, _mm_set1_ps(_epsilon)));
 	}
 
 	//IsEqual
-	static bool IsEqual(const float* _vectorFP1, const float* _vectorFP2) {
+	static bool IsEqual(const float* _vectorFP1, const float* _vectorFP2, const float& _epsilon = SSE_EPSILON) {
 		//Exact Equality Check
 		__m128 fp1 = _mm_load_ps(_vectorFP1);
 		__m128 fp2 = _mm_load_ps(_vectorFP2);
@@ -73,15 +66,15 @@ namespace sml {
 		__m128 relDiv = _mm_min_ps(_mm_add_ps(absV1, absV2) , _mm_set1_ps(FLT_MAX));
 
 		//Relative Equality Check
-		eq = _mm_or_ps(eq, _mm_cmple_ps(_mm_div_ps(diff, relDiv), _mm_set1_ps(epsilon)));
+		eq = _mm_or_ps(eq, _mm_cmple_ps(_mm_div_ps(diff, relDiv), _mm_set1_ps(_epsilon)));
 		if (M128CompareCheck(eq))
 			return true;
 
 		//Near-Zero Equality Check
-		eq = _mm_or_ps(eq, _mm_cmple_ps(diff, _mm_set1_ps(epsilon)));
+		eq = _mm_or_ps(eq, _mm_cmple_ps(diff, _mm_set1_ps(_epsilon)));
 		return (M128CompareCheck(eq));
 	}
-	static bool IsEqual(const __m128& _vectorSSE1, const __m128& _vectorSSE2) {
+	static bool IsEqual(const __m128& _vectorSSE1, const __m128& _vectorSSE2, const float& _epsilon = SSE_EPSILON) {
 		//Exact Equality Check
 		__m128 eq = _mm_cmpeq_ps(_vectorSSE1, _vectorSSE2);
 		if (M128CompareCheck(eq))
@@ -94,15 +87,15 @@ namespace sml {
 		__m128 relDiv = _mm_min_ps(_mm_add_ps(absV1, absV2), _mm_set1_ps(FLT_MAX));
 
 		//Relative Equality Check
-		eq = _mm_or_ps(eq, _mm_cmple_ps(_mm_div_ps(diff, relDiv), _mm_set1_ps(epsilon)));
+		eq = _mm_or_ps(eq, _mm_cmple_ps(_mm_div_ps(diff, relDiv), _mm_set1_ps(_epsilon)));
 		if (M128CompareCheck(eq))
 			return true;
 
 		//Near-Zero Equality Check
-		eq = _mm_or_ps(eq, _mm_cmple_ps(diff, _mm_set1_ps(epsilon)));
+		eq = _mm_or_ps(eq, _mm_cmple_ps(diff, _mm_set1_ps(_epsilon)));
 		return (M128CompareCheck(eq));
 	}
-	static bool IsEqual(const float* _vectorFP, const __m128& _vectorSSE) {
+	static bool IsEqual(const float* _vectorFP, const __m128& _vectorSSE, const float& _epsilon = SSE_EPSILON) {
 		//Exact Equality Check
 		__m128 fp = _mm_load_ps(_vectorFP);
 		__m128 eq = _mm_cmpeq_ps(fp, _vectorSSE);
@@ -116,15 +109,15 @@ namespace sml {
 		__m128 relDiv = _mm_min_ps(_mm_add_ps(absV1, absV2), _mm_set1_ps(FLT_MAX));
 
 		//Relative Equality Check
-		eq = _mm_or_ps(eq, _mm_cmple_ps(_mm_div_ps(diff, relDiv), _mm_set1_ps(epsilon)));
+		eq = _mm_or_ps(eq, _mm_cmple_ps(_mm_div_ps(diff, relDiv), _mm_set1_ps(_epsilon)));
 		if (M128CompareCheck(eq))
 			return true;
 
 		//Near-Zero Equality Check
-		eq = _mm_or_ps(eq, _mm_cmple_ps(diff, _mm_set1_ps(epsilon)));
+		eq = _mm_or_ps(eq, _mm_cmple_ps(diff, _mm_set1_ps(_epsilon)));
 		return (M128CompareCheck(eq));
 	}
-	static bool IsEqual(const __m128& _vectorSSE, const float* _vectorFP) {
+	static bool IsEqual(const __m128& _vectorSSE, const float* _vectorFP, const float& _epsilon = SSE_EPSILON) {
 		//Exact Equality Check
 		__m128 fp = _mm_load_ps(_vectorFP);
 		__m128 eq = _mm_cmpeq_ps(_vectorSSE, fp);
@@ -138,12 +131,12 @@ namespace sml {
 		__m128 relDiv = _mm_min_ps(_mm_add_ps(absV1, absV2), _mm_set1_ps(FLT_MAX));
 
 		//Relative Equality Check
-		eq = _mm_or_ps(eq, _mm_cmple_ps(_mm_div_ps(diff, relDiv), _mm_set1_ps(epsilon)));
+		eq = _mm_or_ps(eq, _mm_cmple_ps(_mm_div_ps(diff, relDiv), _mm_set1_ps(_epsilon)));
 		if (M128CompareCheck(eq))
 			return true;
 
 		//Near-Zero Equality Check
-		eq = _mm_or_ps(eq, _mm_cmple_ps(diff, _mm_set1_ps(epsilon)));
+		eq = _mm_or_ps(eq, _mm_cmple_ps(diff, _mm_set1_ps(_epsilon)));
 		return (M128CompareCheck(eq));
 	}
 
@@ -170,8 +163,8 @@ namespace sml {
 	static __m128 Div(const __m128& _vectorSSE, const float& _scalar)	{ return _mm_div_ps(_vectorSSE, _mm_set1_ps(_scalar)); }
 
 	//Vector Negate
-	static __m128 Negate(const float* _vectorFP)	{ return _mm_xor_ps(_mm_load_ps(_vectorFP), m128NegativeZero); }
-	static __m128 Negate(const __m128& _vectorSSE)	{ return _mm_xor_ps(_vectorSSE, m128NegativeZero); }
+	static __m128 Negate(const float* _vectorFP)	{ return _mm_xor_ps(_mm_load_ps(_vectorFP), SSE_NEG_ZERO); }
+	static __m128 Negate(const __m128& _vectorSSE)	{ return _mm_xor_ps(_vectorSSE, SSE_NEG_ZERO); }
 
 	//Vector Minimum
 	static __m128 Min(const float* _vectorFP1, const float* _vectorFP2)		{ return _mm_min_ps(_mm_load_ps(_vectorFP1), _mm_load_ps(_vectorFP2)); }
@@ -318,22 +311,22 @@ namespace sml {
 	static __m128 Reflect(const float* _vectorFP1, const float* _vectorFP2) {
 		if (IsZero(_vectorFP2))
 			return Negate(_vectorFP1);
-		return _mm_xor_ps(_mm_add_ps(_mm_mul_ps(Project(_vectorFP1, _vectorFP2), _mm_set1_ps(-2.0f)), _mm_load_ps(_vectorFP1)), m128NegativeZero);
+		return _mm_xor_ps(_mm_add_ps(_mm_mul_ps(Project(_vectorFP1, _vectorFP2), _mm_set1_ps(-2.0f)), _mm_load_ps(_vectorFP1)), SSE_NEG_ZERO);
 	}
 	static __m128 Reflect(const __m128& _vectorSSE1, const __m128& _vectorSSE2) {
 		if (IsZero(_vectorSSE2))
 			return Negate(_vectorSSE1);
-		return _mm_xor_ps(_mm_add_ps(_mm_mul_ps(Project(_vectorSSE1, _vectorSSE2), _mm_set1_ps(-2.0f)), _vectorSSE1), m128NegativeZero);
+		return _mm_xor_ps(_mm_add_ps(_mm_mul_ps(Project(_vectorSSE1, _vectorSSE2), _mm_set1_ps(-2.0f)), _vectorSSE1), SSE_NEG_ZERO);
 	}
 	static __m128 Reflect(const float* _vectorFP, const __m128& _vectorSSE) {
 		if (IsZero(_vectorSSE))
 			return Negate(_vectorFP);
-		return _mm_xor_ps(_mm_add_ps(_mm_mul_ps(Project(_vectorFP, _vectorSSE), _mm_set1_ps(-2.0f)), _mm_load_ps(_vectorFP)), m128NegativeZero);
+		return _mm_xor_ps(_mm_add_ps(_mm_mul_ps(Project(_vectorFP, _vectorSSE), _mm_set1_ps(-2.0f)), _mm_load_ps(_vectorFP)), SSE_NEG_ZERO);
 	}
 	static __m128 Reflect(const __m128& _vectorSSE, const float* _vectorFP) {
 		if (IsZero(_vectorFP))
 			return Negate(_vectorSSE);
-		return _mm_xor_ps(_mm_add_ps(_mm_mul_ps(Project(_vectorSSE, _vectorFP), _mm_set1_ps(-2.0f)), _vectorSSE), m128NegativeZero);
+		return _mm_xor_ps(_mm_add_ps(_mm_mul_ps(Project(_vectorSSE, _vectorFP), _mm_set1_ps(-2.0f)), _vectorSSE), SSE_NEG_ZERO);
 	}
 }
 
