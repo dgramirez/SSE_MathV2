@@ -10,41 +10,50 @@
 #define CROSS_FLIP2 0xD2	//11 01 00 10, or 3 1 0 2
 #define SSE_W 0xFF			//11 11 11 11, or 3 3 3 3
 
-//Defines for Global Values
-static const __m128 SSE_POS_NAN = _mm_or_ps(_mm_set1_ps(FLT_MAX), _mm_set1_ps(FLT_MIN));
-static const __m128 SSE_NEG_ZERO = _mm_set1_ps(-0.0f);
-static const float SSE_EPSILON = FLT_EPSILON * 2;
-
 namespace sml {
+
+	//Defines for Global Values
+	static const __m128 SSE_POS_NAN = _mm_or_ps(_mm_set1_ps(FLT_MAX), _mm_set1_ps(FLT_MIN));
+	static const __m128 SSE_NEG_ZERO = _mm_set1_ps(-0.0f);
+	static const float SSE_EPSILON = FLT_EPSILON * 2;
+
 	//Absolute Value
 	static __m128 Vabs(const float* _vectorFP) {
-		//Toggle the negative bit
+		//Remove the negative bit
 		return _mm_and_ps(_mm_load_ps(_vectorFP), SSE_POS_NAN);
 	}
 	static __m128 Vabs(const __m128& _vectorSSE) {
-		//Toggle the negative bit
+		//Remove the negative bit
 		return _mm_and_ps(_vectorSSE, SSE_POS_NAN);
 	}
 
 	//m128 Helpers
 	static bool M128CompareCheck(const __m128& _vectorSSE) {
+		//Create Temporary variables (one for shuffe, other for storing)
 		__m128 tmp = _mm_and_ps(_mm_movehl_ps(_vectorSSE, _vectorSSE), _vectorSSE);
 		float ret;
 		_mm_store_ss(&ret, _mm_and_ps(tmp, _mm_shuffle_ps(tmp, tmp, 1)));
+
+		//Return the result
 		return static_cast<bool>(ret);
 	}
 	static float M128AddComponents(const __m128& _vectorSSE) {
+		//Create Temporary variables (one for shuffe, other for storing)
 		__m128 tmp = _mm_add_ps(_mm_movehl_ps(_vectorSSE, _vectorSSE), _vectorSSE);
 		float ret;
 		_mm_store_ss(&ret, _mm_add_ss(tmp, _mm_shuffle_ps(tmp, tmp, 1)));
+
+		//Return the result
 		return ret;
 	}
 
 	//Set
 	static __m128 Set(const float& _x, const float& _y, const float& _z, const float& _w) {
+		//Setting the values. Note: order is reversed (3, 2, 1, 0)
 		return _mm_set_ps(_w, _z, _y, _x);
 	}
 	static __m128 Set(const float* _vectorFP) {
+		//Load the float pointer into an m128
 		return _mm_load_ps(_vectorFP);
 	}
 
@@ -241,22 +250,18 @@ namespace sml {
 	static __m128 Normalize(const float* _vectorFP) {
 		//Get Length Squared
 		float l = LengthSq(_vectorFP);
-		if (l == 0.0f)
+		if (l < FLT_EPSILON)
 			return _mm_setzero_ps();
-		else {
-			l = 1 / sqrtf(l);
-			return _mm_mul_ps(_mm_load_ps(_vectorFP), _mm_set1_ps(l));
-		}
+		else
+			return _mm_mul_ps(_mm_load_ps(_vectorFP), _mm_set1_ps(1 / sqrtf(l)));
 	}
 	static __m128 Normalize(const __m128& _vectorSSE) {
 		//Get Length Squared
 		float l = LengthSq(_vectorSSE);
-		if (l == 0.0f)
+		if (l < FLT_EPSILON)
 			return _mm_setzero_ps();
-		else {
-			l = 1 / sqrtf(l);
-			return _mm_mul_ps(_vectorSSE, _mm_set1_ps(l));
-		}
+		else
+			return _mm_mul_ps(_vectorSSE, _mm_set1_ps(1 / sqrtf(l)));
 	}
 
 	//Vector Homogenize
@@ -339,8 +344,8 @@ namespace sml {
 }
 
 //Undefining
-#undef CROSS_FLIP1
-#undef CROSS_FLIP2
-#undef CROSS_FLIP3
+//#undef CROSS_FLIP1
+//#undef CROSS_FLIP2
+//#undef SSE_W
 
 #endif
