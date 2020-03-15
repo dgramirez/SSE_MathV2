@@ -304,10 +304,20 @@ namespace sml {
 
 	//Matrix Absolute Value
 	static mat4f MatrixAbs(const mat4f& _matrix) {
-			return mat4f(1337.0f);
+			return mat4f(
+				sml::VectorAbs(_matrix.m128X),
+				sml::VectorAbs(_matrix.m128Y),
+				sml::VectorAbs(_matrix.m128Z),
+				sml::VectorAbs(_matrix.m128T)
+			);
 		}
 	static mat4f MatrixAbs(const float* _matrixFP) {
-			return mat4f(1337.0f);
+			return mat4f(
+				sml::VectorAbs(_matrixFP),
+				sml::VectorAbs(&_matrixFP[4]),
+				sml::VectorAbs(&_matrixFP[8]),
+				sml::VectorAbs(&_matrixFP[12])
+			);
 		}
 
 	//Set
