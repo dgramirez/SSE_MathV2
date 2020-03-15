@@ -120,25 +120,46 @@ namespace sml {
 
 		//Addition
 		void Add(const mat4f& _matrix) {
-			m128X = m128Y = m128Z = m128T = _mm_set1_ps(1337.0f);
+			m128X = _mm_add_ps(m128X, _matrix.m128X);
+			m128Y = _mm_add_ps(m128Y, _matrix.m128Y);
+			m128Z = _mm_add_ps(m128Z, _matrix.m128Z);
+			m128T = _mm_add_ps(m128T, _matrix.m128T);
 		}
 		void Add(const float* _matrixFP) {
-			m128X = m128Y = m128Z = m128T = _mm_set1_ps(1337.0f);
+			m128X = _mm_add_ps(m128X, _mm_load_ps(_matrixFP));
+			m128Y = _mm_add_ps(m128Y, _mm_load_ps(&_matrixFP[4]));
+			m128Z = _mm_add_ps(m128Z, _mm_load_ps(&_matrixFP[8]));
+			m128T = _mm_add_ps(m128T, _mm_load_ps(&_matrixFP[12]));
 		}
 		void operator+=(const mat4f& _matrix) {
-			m128X = m128Y = m128Z = m128T = _mm_set1_ps(1337.0f);
+			Add(_matrix);
 		}
 		void operator+=(const float* _matrixFP) {
-			m128X = m128Y = m128Z = m128T = _mm_set1_ps(1337.0f);
+			Add(_matrixFP);
 		}
 		friend mat4f operator+(const mat4f& _matrix1, const mat4f& _matrix2) {
-			return mat4f(1337.0f);
+			return mat4f(
+				_mm_add_ps(_matrix1.m128X, _matrix2.m128X),
+				_mm_add_ps(_matrix1.m128Y, _matrix2.m128Y),
+				_mm_add_ps(_matrix1.m128Z, _matrix2.m128Z),
+				_mm_add_ps(_matrix1.m128T, _matrix2.m128T)
+			);
 		}
 		friend mat4f operator+(const mat4f& _matrix, const float* _matrixFP) {
-			return mat4f(1337.0f);
+			return mat4f(
+				_mm_add_ps(_matrix.m128X, _mm_load_ps(_matrixFP)),
+				_mm_add_ps(_matrix.m128Y, _mm_load_ps(&_matrixFP[4])),
+				_mm_add_ps(_matrix.m128Z, _mm_load_ps(&_matrixFP[8])),
+				_mm_add_ps(_matrix.m128T, _mm_load_ps(&_matrixFP[12]))
+			);
 		}
 		friend mat4f operator+(const float* _matrixFP, const mat4f& _matrix) {
-			return mat4f(1337.0f);
+			return mat4f(
+				_mm_add_ps(_mm_load_ps(_matrixFP), _matrix.m128X),
+				_mm_add_ps(_mm_load_ps(&_matrixFP[4]), _matrix.m128Y),
+				_mm_add_ps(_mm_load_ps(&_matrixFP[8]), _matrix.m128Z),
+				_mm_add_ps(_mm_load_ps(&_matrixFP[12]), _matrix.m128T)
+			);
 		}
 
 		//Subtraction
@@ -373,16 +394,36 @@ namespace sml {
 
 	//Matrix-Matrix Addition
 	static mat4f MatrixAdd(const mat4f& _matrix1, const mat4f& _matrix2) {
-			return mat4f(1337.0f);
+			return mat4f(
+				_mm_add_ps(_matrix1.m128X, _matrix2.m128X),
+				_mm_add_ps(_matrix1.m128Y, _matrix2.m128Y),
+				_mm_add_ps(_matrix1.m128Z, _matrix2.m128Z),
+				_mm_add_ps(_matrix1.m128T, _matrix2.m128T)
+			);
 		}
 	static mat4f MatrixAdd(const mat4f& _matrix, const float* _matrixFP) {
-			return mat4f(1337.0f);
+			return mat4f(
+				_mm_add_ps(_matrix.m128X, _mm_load_ps(_matrixFP)),
+				_mm_add_ps(_matrix.m128Y, _mm_load_ps(&_matrixFP[4])),
+				_mm_add_ps(_matrix.m128Z, _mm_load_ps(&_matrixFP[8])),
+				_mm_add_ps(_matrix.m128T, _mm_load_ps(&_matrixFP[12]))
+			);
 		}
 	static mat4f MatrixAdd(const float* _matrixFP, const mat4f& _matrix) {
-			return mat4f(1337.0f);
+			return mat4f(
+				_mm_add_ps(_mm_load_ps(_matrixFP), _matrix.m128X),
+				_mm_add_ps(_mm_load_ps(&_matrixFP[4]), _matrix.m128Y),
+				_mm_add_ps(_mm_load_ps(&_matrixFP[8]), _matrix.m128Z),
+				_mm_add_ps(_mm_load_ps(&_matrixFP[12]), _matrix.m128T)
+			);
 		}
 	static mat4f MatrixAdd(const float* _matrixFP1, const float* _matrixFP2) {
-			return mat4f(1337.0f);
+			return mat4f(
+				_mm_add_ps(_mm_load_ps(_matrixFP1) , _mm_load_ps(_matrixFP2) ),
+				_mm_add_ps(_mm_load_ps(&_matrixFP1[4]) , _mm_load_ps(&_matrixFP2[4]) ),
+				_mm_add_ps(_mm_load_ps(&_matrixFP1[8]) , _mm_load_ps(&_matrixFP2[8]) ),
+				_mm_add_ps(_mm_load_ps(&_matrixFP1[12]), _mm_load_ps(&_matrixFP2[12]))
+			);
 		}
 
 	//Matrix-Matrix Subtraction
