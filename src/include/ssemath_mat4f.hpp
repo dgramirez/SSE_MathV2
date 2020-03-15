@@ -366,13 +366,37 @@ namespace sml {
 
 		//Axis Rotation
 		void RotateX(const float& _radians) {
-			m128X = m128Y = m128Z = m128T = _mm_set1_ps(1337.0f);
+			float cosV = cosf(_radians);
+			float sinV = sinf(_radians);
+			
+			*this = mat4f(
+			_mm_set_ps(0.0f, 0.0f, 0.0f, 1.0f),
+			_mm_set_ps(0.0f,-sinV, cosV, 0.0f),
+			_mm_set_ps(0.0f, cosV, sinV, 0.0f),
+			_mm_set_ps(1.0f, 0.0f, 0.0f, 0.0f)
+			) * (*this);
 		}
 		void RotateY(const float& _radians) {
-			m128X = m128Y = m128Z = m128T = _mm_set1_ps(1337.0f);
+			float cosV = cosf(_radians);
+			float sinV = sinf(_radians);
+			
+			*this = mat4f(
+			_mm_set_ps(0.0f, sinV, 0.0f, cosV),
+			_mm_set_ps(0.0f, 0.0f, 1.0f, 0.0f),
+			_mm_set_ps(0.0f, cosV, 0.0f,-sinV),
+			_mm_set_ps(1.0f, 0.0f, 0.0f, 0.0f)
+			) * (*this);
 		}
 		void RotateZ(const float& _radians) {
-			m128X = m128Y = m128Z = m128T = _mm_set1_ps(1337.0f);
+			float cosV = cosf(_radians);
+			float sinV = sinf(_radians);
+			
+			*this = mat4f(
+			_mm_set_ps(0.0f, 0.0f,-sinV, cosV),
+			_mm_set_ps(0.0f, 0.0f, cosV, sinV),
+			_mm_set_ps(0.0f, 1.0f, 0.0f, 0.0f),
+			_mm_set_ps(1.0f, 0.0f, 0.0f, 0.0f)
+			) * (*this);
 		}
 
 		//Transpose
@@ -714,45 +738,39 @@ namespace sml {
 	}
 
 	//X Rotation Matrix
-	static mat4f XRotationMatrix(const mat4f& _matrix, const float& _radians) {
-			return mat4f(1337.0f);
-	}
-	static mat4f XRotationMatrix(const float& _radians, const mat4f& _matrix) {
-			return mat4f(1337.0f);
-	}
-	static mat4f XRotationMatrix(const float* _matrixFP, const float& _radians) {
-			return mat4f(1337.0f);
-	}
-	static mat4f XRotationMatrix(const float& _radians, const float* _matrixFP) {
-			return mat4f(1337.0f);
+	static mat4f XRotationMatrix(const float& _radians) {
+		float cosV = cosf(_radians);
+		float sinV = sinf(_radians);
+		return mat4f(
+			_mm_set_ps(0.0f, 0.0f, 0.0f, 1.0f),
+			_mm_set_ps(0.0f,-sinV, cosV, 0.0f),
+			_mm_set_ps(0.0f, cosV, sinV, 0.0f),
+			_mm_set_ps(1.0f, 0.0f, 0.0f, 0.0f)
+		);
 	}
 
 	//Y Rotation Matrix
-	static mat4f YRotationMatrix(const mat4f& _matrix, const float& _radians) {
-			return mat4f(1337.0f);
-	}
-	static mat4f YRotationMatrix(const float& _radians, const mat4f& _matrix) {
-			return mat4f(1337.0f);
-	}
-	static mat4f YRotationMatrix(const float* _matrixFP, const float& _radians) {
-			return mat4f(1337.0f);
-	}
-	static mat4f YRotationMatrix(const float& _radians, const float* _matrixFP) {
-			return mat4f(1337.0f);
+	static mat4f YRotationMatrix(const float& _radians) {
+		float cosV = cosf(_radians);
+		float sinV = sinf(_radians);
+		return mat4f(
+			_mm_set_ps(0.0f, sinV, 0.0f, cosV),
+			_mm_set_ps(0.0f, 0.0f, 1.0f, 0.0f),
+			_mm_set_ps(0.0f, cosV, 0.0f,-sinV),
+			_mm_set_ps(1.0f, 0.0f, 0.0f, 0.0f)
+		);
 	}
 
 	//Z Rotation Matrix
-	static mat4f ZRotationMatrix(const mat4f& _matrix, const float& _radians) {
-			return mat4f(1337.0f);
-	}
-	static mat4f ZRotationMatrix(const float& _radians, const mat4f& _matrix) {
-			return mat4f(1337.0f);
-	}
-	static mat4f ZRotationMatrix(const float* _matrixFP, const float& _radians) {
-			return mat4f(1337.0f);
-	}
-	static mat4f ZRotationMatrix(const float& _radians, const float* _matrixFP) {
-			return mat4f(1337.0f);
+	static mat4f ZRotationMatrix(const float& _radians) {
+		float cosV = cosf(_radians);
+		float sinV = sinf(_radians);
+		return mat4f(
+			_mm_set_ps(0.0f, 0.0f,-sinV, cosV),
+			_mm_set_ps(0.0f, 0.0f, cosV, sinV),
+			_mm_set_ps(0.0f, 1.0f, 0.0f, 0.0f),
+			_mm_set_ps(1.0f, 0.0f, 0.0f, 0.0f)
+		);
 	}
 
 	//Transpose Matrix
