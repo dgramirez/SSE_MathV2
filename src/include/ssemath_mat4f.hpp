@@ -363,7 +363,7 @@ namespace sml {
 				sml::VectorAbs(_matrix.m128Z),
 				sml::VectorAbs(_matrix.m128T)
 			);
-		}
+	}
 	static mat4f MatrixAbs(const float* _matrixFP) {
 			return mat4f(
 				sml::VectorAbs(_matrixFP),
@@ -371,21 +371,21 @@ namespace sml {
 				sml::VectorAbs(&_matrixFP[8]),
 				sml::VectorAbs(&_matrixFP[12])
 			);
-		}
+	}
 
 	//Set
 	static mat4f MatrixSet(const float& _diagonal) {
 			return mat4f(_diagonal);
-		}
+	}
 	static mat4f MatrixSet(const __m128& _vectorSSEx, const __m128& _vectorSSEy, const __m128& _vectorSSEz, const __m128& _vectorSSEt) {
 			return mat4f(_vectorSSEx, _vectorSSEy, _vectorSSEz, _vectorSSEt);
-		}
+	}
 	static mat4f MatrixSet(const float* _vectorFPx, const float* _vectorFPy, const float* _vectorFPz, const float* _vectorFPt) {
 			return mat4f(_vectorFPx, _vectorFPy, _vectorFPz, _vectorFPt);
-		}
+	}
 	static mat4f MatrixSet(const float* _matrixFP) {
 			return mat4f(_matrixFP);
-		}
+	}
 	static mat4f MatrixSet(const float& _e11, const float& _e12, const float& _e13, const float& _e14,
 		const float& _e21, const float& _e22, const float& _e23, const float& _e24,
 		const float& _e31, const float& _e32, const float& _e33, const float& _e34,
@@ -394,15 +394,15 @@ namespace sml {
 						 _e21, _e22, _e23, _e24, 
 						 _e31, _e32, _e33, _e34, 
 						 _e41, _e42, _e43, _e44);
-		}
+	}
 
 	//Get Common Matrices
 	static mat4f MatrixIdentity() {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f MatrixZero() {
 			return mat4f(1337.0f);
-		}
+	}
 
 	//Equality Check
 	static bool MatrixIsZero(const mat4f& _matrix) {
@@ -432,7 +432,7 @@ namespace sml {
 				_mm_add_ps(_matrix1.m128Z, _matrix2.m128Z),
 				_mm_add_ps(_matrix1.m128T, _matrix2.m128T)
 			);
-		}
+	}
 	static mat4f MatrixAdd(const mat4f& _matrix, const float* _matrixFP) {
 			return mat4f(
 				_mm_add_ps(_matrix.m128X, _mm_load_ps(_matrixFP)),
@@ -440,7 +440,7 @@ namespace sml {
 				_mm_add_ps(_matrix.m128Z, _mm_load_ps(&_matrixFP[8])),
 				_mm_add_ps(_matrix.m128T, _mm_load_ps(&_matrixFP[12]))
 			);
-		}
+	}
 	static mat4f MatrixAdd(const float* _matrixFP, const mat4f& _matrix) {
 			return mat4f(
 				_mm_add_ps(_mm_load_ps(_matrixFP), _matrix.m128X),
@@ -448,7 +448,7 @@ namespace sml {
 				_mm_add_ps(_mm_load_ps(&_matrixFP[8]), _matrix.m128Z),
 				_mm_add_ps(_mm_load_ps(&_matrixFP[12]), _matrix.m128T)
 			);
-		}
+	}
 	static mat4f MatrixAdd(const float* _matrixFP1, const float* _matrixFP2) {
 			return mat4f(
 				_mm_add_ps(_mm_load_ps(_matrixFP1) , _mm_load_ps(_matrixFP2) ),
@@ -456,7 +456,7 @@ namespace sml {
 				_mm_add_ps(_mm_load_ps(&_matrixFP1[8]) , _mm_load_ps(&_matrixFP2[8]) ),
 				_mm_add_ps(_mm_load_ps(&_matrixFP1[12]), _mm_load_ps(&_matrixFP2[12]))
 			);
-		}
+	}
 
 	//Matrix-Matrix Subtraction
 	static mat4f MatrixSub(const mat4f& _matrix1, const mat4f& _matrix2) {
@@ -466,7 +466,7 @@ namespace sml {
 				_mm_sub_ps(_matrix1.m128Z, _matrix2.m128Z),
 				_mm_sub_ps(_matrix1.m128T, _matrix2.m128T)
 			);
-		}
+	}
 	static mat4f MatrixSub(const mat4f& _matrix, const float* _matrixFP) {
 			return mat4f(
 				_mm_sub_ps(_matrix.m128X, _mm_load_ps(_matrixFP)),
@@ -474,7 +474,7 @@ namespace sml {
 				_mm_sub_ps(_matrix.m128Z, _mm_load_ps(&_matrixFP[8])),
 				_mm_sub_ps(_matrix.m128T, _mm_load_ps(&_matrixFP[12]))
 			);
-		}
+	}
 	static mat4f MatrixSub(const float* _matrixFP, const mat4f& _matrix) {
 			return mat4f(
 				_mm_sub_ps(_mm_load_ps(_matrixFP), _matrix.m128X),
@@ -482,7 +482,7 @@ namespace sml {
 				_mm_sub_ps(_mm_load_ps(&_matrixFP[8]), _matrix.m128Z),
 				_mm_sub_ps(_mm_load_ps(&_matrixFP[12]), _matrix.m128T)
 			);
-		}
+	}
 	static mat4f MatrixSub(const float* _matrixFP1, const float* _matrixFP2) {
 			return mat4f(
 				_mm_sub_ps(_mm_load_ps(_matrixFP1) , _mm_load_ps(_matrixFP2) ),
@@ -490,7 +490,7 @@ namespace sml {
 				_mm_sub_ps(_mm_load_ps(&_matrixFP1[8]) , _mm_load_ps(&_matrixFP2[8]) ),
 				_mm_sub_ps(_mm_load_ps(&_matrixFP1[12]), _mm_load_ps(&_matrixFP2[12]))
 			);
-		}
+	}
 
 	//Matrix-Scalar Divide
 	static mat4f MatrixDiv(const mat4f& _matrix, const float& _scalar) {
@@ -500,7 +500,7 @@ namespace sml {
 			_mm_div_ps(_matrix.m128Z, _mm_set1_ps(_scalar)),
 			_mm_div_ps(_matrix.m128T, _mm_set1_ps(_scalar))
 		);
-		}
+	}
 	static mat4f MatrixDiv(const float* _matrixFP, const float& _scalar) {
 		return mat4f(
 			_mm_div_ps(_mm_load_ps(_matrixFP), _mm_set1_ps(_scalar)),
@@ -508,35 +508,35 @@ namespace sml {
 			_mm_div_ps(_mm_load_ps(&_matrixFP[8]), _mm_set1_ps(_scalar)),
 			_mm_div_ps(_mm_load_ps(&_matrixFP[12]), _mm_set1_ps(_scalar))
 		);
-		}
+	}
 
 	//Matrix-Scalar Multiply
 	static mat4f MatrixMulS(const mat4f& _matrix, const float& _scalar) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f MatrixMulS(const float& _scalar, const mat4f& _matrix) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f MatrixMulS(const float* _matrix, const float& _scalar) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f MatrixMulS(const float& _scalar, const float* _matrix) {
 			return mat4f(1337.0f);
-		}
+	}
 
 	//Matrix-Matrix Multiply
 	static mat4f MatrixMulM(const mat4f& _matrix1, const mat4f& _matrix2) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f MatrixMulM(const mat4f& _matrix, const float* _matrixFP) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f MatrixMulM(const float* _matrixFP, const mat4f& _matrix) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f MatrixMulM(const float* _matrixFP1, const float* _matrixFP2) {
 			return mat4f(1337.0f);
-		}
+	}
 
 	//Matrix-Vector Multiply
 	static __m128 MatrixMulV(const mat4f& _matrix, const __m128& _vectorSSE) {
@@ -569,129 +569,129 @@ namespace sml {
 	//Matrix Negate
 	static mat4f MatrixNegate(const mat4f& _matrix) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f MatrixNegate(const float* _matrixFP) {
 			return mat4f(1337.0f);
-		}
+	}
 
 	//Translation Matrix
 	static mat4f TranslationMatrix(const float& _x, const float& _y, const float& _z, const mat4f& _matrix) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f TranslationMatrix(const mat4f& _matrix, const float& _x, const float& _y, const float& _z) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f TranslationMatrix(const mat4f& _matrix, const __m128& _vectorSSE) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f TranslationMatrix(const __m128& _vectorSSE, const mat4f& _matrix) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f TranslationMatrix(const mat4f& _matrix, const float* _vectorFP) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f TranslationMatrix(const float* _matrixFP, const __m128& _sse) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f TranslationMatrix(const float* _matrixFP, const float* _vectorFP) {
 			return mat4f(1337.0f);
-		}
+	}
 
 	//Scaling Matrix
 	static mat4f ScalingMatrix(const float& _x, const float& _y, const float& _z, const mat4f& _matrix) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f ScalingMatrix(const mat4f& _matrix, const float& _x, const float& _y, const float& _z) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f ScalingMatrix(const mat4f& _matrix, const __m128& _vectorSSE) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f ScalingMatrix(const __m128& _vectorSSE, const mat4f& _matrix) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f ScalingMatrix(const mat4f& _matrix, const float* _vectorFP) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f ScalingMatrix(const float* _matrixFP, const __m128& _sse) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f ScalingMatrix(const float* _matrixFP, const float* _vectorFP) {
 			return mat4f(1337.0f);
-		}
+	}
 
 	//Rotation Matrix
 	static mat4f RotationMatrix(const mat4f& _matrix, const float& _radians, const float& _x, const float& _y, const float& _z) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f RotationMatrix(const float& _radians, const float& _x, const float& _y, const float& _z, const mat4f& _matrix) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f RotationMatrix(const mat4f& _matrix, const float& _radians, const __m128& _vectorSSE) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f RotationMatrix(const float& _radians, const __m128& _vectorSSE, const mat4f& _matrix) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f RotationMatrix(const mat4f& _matrix, const float& _radians, const float* _vectorFP) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f RotationMatrix(const float* _matrixFP, const float& _radians, const __m128& _sse) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f RotationMatrix(const float* _matrixFP, const float& _radians, const float* _vectorFP) {
 			return mat4f(1337.0f);
-		}
+	}
 
 	//X Rotation Matrix
 	static mat4f XRotationMatrix(const mat4f& _matrix, const float& _radians) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f XRotationMatrix(const float& _radians, const mat4f& _matrix) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f XRotationMatrix(const float* _matrixFP, const float& _radians) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f XRotationMatrix(const float& _radians, const float* _matrixFP) {
 			return mat4f(1337.0f);
-		}
+	}
 
 	//Y Rotation Matrix
 	static mat4f YRotationMatrix(const mat4f& _matrix, const float& _radians) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f YRotationMatrix(const float& _radians, const mat4f& _matrix) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f YRotationMatrix(const float* _matrixFP, const float& _radians) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f YRotationMatrix(const float& _radians, const float* _matrixFP) {
 			return mat4f(1337.0f);
-		}
+	}
 
 	//Z Rotation Matrix
 	static mat4f ZRotationMatrix(const mat4f& _matrix, const float& _radians) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f ZRotationMatrix(const float& _radians, const mat4f& _matrix) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f ZRotationMatrix(const float* _matrixFP, const float& _radians) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f ZRotationMatrix(const float& _radians, const float* _matrixFP) {
 			return mat4f(1337.0f);
-		}
+	}
 
 	//Transpose Matrix
 	static mat4f Transpose(const mat4f& _matrix) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f Transpose(const float* _matrixFP) {
 			return mat4f(1337.0f);
-		}
+	}
 
 	//Matrix Determinants
 	static float Determinant3D(const mat4f& _matrix) {
@@ -710,16 +710,16 @@ namespace sml {
 	//Inverse
 	static mat4f Inverse(const mat4f& _matrix) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f Inverse(const float* _matrixFP) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f InverseFast(const mat4f& _matrix) {
 			return mat4f(1337.0f);
-		}
+	}
 	static mat4f InverseFast(const float* _matrixFP) {
 			return mat4f(1337.0f);
-		}
+	}
 }
 
 #ifdef MAT4_FLOATS_GLOBAL
