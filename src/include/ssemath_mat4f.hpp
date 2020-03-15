@@ -481,6 +481,14 @@ namespace sml {
 			);
 		}
 
+	//Matrix-Scalar Divide
+	static mat4f MatrixDiv(const mat4f& _matrix, const float& _scalar) {
+			return mat4f(1337.0f);
+		}
+	static mat4f MatrixDiv(const float* _matrix, const float& _scalar) {
+			return mat4f(1337.0f);
+		}
+
 	//Matrix-Scalar Multiply
 	static mat4f MatrixMulS(const mat4f& _matrix, const float& _scalar) {
 			return mat4f(1337.0f);
@@ -492,14 +500,6 @@ namespace sml {
 			return mat4f(1337.0f);
 		}
 	static mat4f MatrixMulS(const float& _scalar, const float* _matrix) {
-			return mat4f(1337.0f);
-		}
-
-	//Matrix-Scalar Divide
-	static mat4f MatrixDiv(const mat4f& _matrix, const float& _scalar) {
-			return mat4f(1337.0f);
-		}
-	static mat4f MatrixDiv(const float* _matrix, const float& _scalar) {
 			return mat4f(1337.0f);
 		}
 
