@@ -231,16 +231,29 @@ namespace sml {
 
 		//Matrix Scalar Multiplication
 		void MulS(const float& _scalar) {
-			m128X = m128Y = m128Z = m128T = _mm_set1_ps(1337.0f);
+			m128X = _mm_mul_ps(m128X, _mm_set1_ps(_scalar));
+			m128Y = _mm_mul_ps(m128Y, _mm_set1_ps(_scalar));
+			m128Z = _mm_mul_ps(m128Z, _mm_set1_ps(_scalar));
+			m128T = _mm_mul_ps(m128T, _mm_set1_ps(_scalar));
 		}
 		void operator*=(const float& _scalar) {
-			m128X = m128Y = m128Z = m128T = _mm_set1_ps(1337.0f);
+			MulS(_scalar);
 		}
 		friend mat4f operator*(const mat4f& _matrix, const float& _scalar) {
-			return mat4f(1337.0f);
+		return mat4f(
+			_mm_mul_ps(_matrix.m128X, _mm_set1_ps(_scalar)),
+			_mm_mul_ps(_matrix.m128Y, _mm_set1_ps(_scalar)),
+			_mm_mul_ps(_matrix.m128Z, _mm_set1_ps(_scalar)),
+			_mm_mul_ps(_matrix.m128T, _mm_set1_ps(_scalar))
+		);
 		}
 		friend mat4f operator*(const float& _scalar, const mat4f& _matrix) {
-			return mat4f(1337.0f);
+		return mat4f(
+			_mm_mul_ps(_mm_set1_ps(_scalar), _matrix.m128X),
+			_mm_mul_ps(_mm_set1_ps(_scalar), _matrix.m128Y),
+			_mm_mul_ps(_mm_set1_ps(_scalar), _matrix.m128Z),
+			_mm_mul_ps(_mm_set1_ps(_scalar), _matrix.m128T)
+		);
 		}
 
 		//Matrix-Matrix Multiplication
@@ -599,16 +612,36 @@ namespace sml {
 
 	//Matrix-Scalar Multiply
 	static mat4f MatrixMulS(const mat4f& _matrix, const float& _scalar) {
-			return mat4f(1337.0f);
+		return mat4f(
+			_mm_mul_ps(_matrix.m128X, _mm_set1_ps(_scalar)),
+			_mm_mul_ps(_matrix.m128Y, _mm_set1_ps(_scalar)),
+			_mm_mul_ps(_matrix.m128Z, _mm_set1_ps(_scalar)),
+			_mm_mul_ps(_matrix.m128T, _mm_set1_ps(_scalar))
+		);
 	}
 	static mat4f MatrixMulS(const float& _scalar, const mat4f& _matrix) {
-			return mat4f(1337.0f);
+		return mat4f(
+			_mm_mul_ps(_mm_set1_ps(_scalar), _matrix.m128X),
+			_mm_mul_ps(_mm_set1_ps(_scalar), _matrix.m128Y),
+			_mm_mul_ps(_mm_set1_ps(_scalar), _matrix.m128Z),
+			_mm_mul_ps(_mm_set1_ps(_scalar), _matrix.m128T)
+		);
 	}
-	static mat4f MatrixMulS(const float* _matrix, const float& _scalar) {
-			return mat4f(1337.0f);
+	static mat4f MatrixMulS(const float* _matrixFP, const float& _scalar) {
+		return mat4f(
+			_mm_mul_ps(_mm_load_ps(_matrixFP), _mm_set1_ps(_scalar)),
+			_mm_mul_ps(_mm_load_ps(&_matrixFP[4]), _mm_set1_ps(_scalar)),
+			_mm_mul_ps(_mm_load_ps(&_matrixFP[8]), _mm_set1_ps(_scalar)),
+			_mm_mul_ps(_mm_load_ps(&_matrixFP[12]), _mm_set1_ps(_scalar))
+		);
 	}
-	static mat4f MatrixMulS(const float& _scalar, const float* _matrix) {
-			return mat4f(1337.0f);
+	static mat4f MatrixMulS(const float& _scalar, const float* _matrixFP) {
+		return mat4f(
+			_mm_mul_ps(_mm_set1_ps(_scalar), _mm_load_ps(_matrixFP)),
+			_mm_mul_ps(_mm_set1_ps(_scalar), _mm_load_ps(&_matrixFP[4])),
+			_mm_mul_ps(_mm_set1_ps(_scalar), _mm_load_ps(&_matrixFP[8])),
+			_mm_mul_ps(_mm_set1_ps(_scalar), _mm_load_ps(&_matrixFP[12]))
+		);
 	}
 
 	//Matrix-Matrix Multiply
