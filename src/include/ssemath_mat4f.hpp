@@ -2,6 +2,7 @@
 #define SSE_MATH_LIBRARY_MAT4F
 
 namespace sml {
+
 	struct mat4f {
 		//Union between SSE, float Array and Vectors
 		union {
@@ -318,17 +319,38 @@ namespace sml {
 		}
 
 		//Scaling
-		void Scale(const float& diagonal) {
-			m128X = m128Y = m128Z = m128T = _mm_set1_ps(1337.0f);
+		void Scale(const float& _diagonal) {
+			*this = mat4f(
+				_mm_set_ps(0.0f, 0.0f, 0.0f, _diagonal),
+				_mm_set_ps(0.0f, 0.0f, _diagonal, 0.0f),
+				_mm_set_ps(0.0f, _diagonal, 0.0f, 0.0f),
+				_mm_set_ps(1.0f, 0.0f, 0.0f, 0.0f)
+			) * (*this);
 		}
-		void Scale(const float& _x, const float& _y, const float& _z) {
-			m128X = m128Y = m128Z = m128T = _mm_set1_ps(1337.0f);
+		void Scale(const float& _x, const float& _y, const float& _z, const float& _w = 1.0f) {
+			*this = mat4f(
+				_mm_set_ps(0.0f, 0.0f, 0.0f,  _x ),
+				_mm_set_ps(0.0f, 0.0f,  _y , 0.0f),
+				_mm_set_ps(0.0f,  _z , 0.0f, 0.0f),
+				_mm_set_ps( _w,  0.0f, 0.0f, 0.0f)
+			) * (*this);
 		}
 		void Scale(const __m128& _vectorSSE) {
-			m128X = m128Y = m128Z = m128T = _mm_set1_ps(1337.0f);
+			//TODO: Research a better way to do this!
+			*this = mat4f(
+				_mm_mul_ps(_mm_set_ps(0.0f, 0.0f, 0.0f, 1.0f), _vectorSSE),
+				_mm_mul_ps(_mm_set_ps(0.0f, 0.0f, 1.0f, 0.0f), _vectorSSE),
+				_mm_mul_ps(_mm_set_ps(0.0f, 1.0f, 0.0f, 0.0f), _vectorSSE),
+				_mm_mul_ps(_mm_set_ps(1.0f, 0.0f, 0.0f, 0.0f), _vectorSSE)
+			) * (*this);
 		}
 		void Scale(const float* _vectorFP) {
-			m128X = m128Y = m128Z = m128T = _mm_set1_ps(1337.0f);
+			*this = mat4f(
+				_mm_set_ps(0.0f, 0.0f, 0.0f, _vectorFP[0]),
+				_mm_set_ps(0.0f, 0.0f, _vectorFP[1], 0.0f),
+				_mm_set_ps(0.0f, _vectorFP[2], 0.0f, 0.0f),
+				_mm_set_ps(_vectorFP[3], 0.0f, 0.0f, 0.0f)
+			) * (*this);
 		}
 
 		//Rotation
@@ -634,26 +656,38 @@ namespace sml {
 	}
 
 	//Scaling Matrix
-	static mat4f ScalingMatrix(const float& _x, const float& _y, const float& _z, const mat4f& _matrix) {
-			return mat4f(1337.0f);
+	static mat4f ScalingMatrix(const float& _diagonal) {
+		return mat4f(
+			_mm_set_ps(0.0f, 0.0f, 0.0f, _diagonal),
+			_mm_set_ps(0.0f, 0.0f, _diagonal, 0.0f),
+			_mm_set_ps(0.0f, _diagonal, 0.0f, 0.0f),
+			_mm_set_ps(1.0f, 0.0f, 0.0f, 0.0f)	
+		);
 	}
-	static mat4f ScalingMatrix(const mat4f& _matrix, const float& _x, const float& _y, const float& _z) {
-			return mat4f(1337.0f);
+	static mat4f ScalingMatrix(const float& _x, const float& _y, const float& _z, const float& _w = 1.0f) {
+		return mat4f(
+			_mm_set_ps(0.0f, 0.0f, 0.0f,  _x ),
+			_mm_set_ps(0.0f, 0.0f,  _y , 0.0f),
+			_mm_set_ps(0.0f,  _z , 0.0f, 0.0f),
+			_mm_set_ps( _w,  0.0f, 0.0f, 0.0f)
+		);
 	}
-	static mat4f ScalingMatrix(const mat4f& _matrix, const __m128& _vectorSSE) {
-			return mat4f(1337.0f);
+	static mat4f ScalingMatrix(const __m128& _vectorSSE) {
+		//TODO: Research a better way to do this!
+		return mat4f(
+			_mm_mul_ps(_mm_set_ps(0.0f, 0.0f, 0.0f, 1.0f), _vectorSSE),
+			_mm_mul_ps(_mm_set_ps(0.0f, 0.0f, 1.0f, 0.0f), _vectorSSE),
+			_mm_mul_ps(_mm_set_ps(0.0f, 1.0f, 0.0f, 0.0f), _vectorSSE),
+			_mm_mul_ps(_mm_set_ps(1.0f, 0.0f, 0.0f, 0.0f), _vectorSSE)
+		);
 	}
-	static mat4f ScalingMatrix(const __m128& _vectorSSE, const mat4f& _matrix) {
-			return mat4f(1337.0f);
-	}
-	static mat4f ScalingMatrix(const mat4f& _matrix, const float* _vectorFP) {
-			return mat4f(1337.0f);
-	}
-	static mat4f ScalingMatrix(const float* _matrixFP, const __m128& _sse) {
-			return mat4f(1337.0f);
-	}
-	static mat4f ScalingMatrix(const float* _matrixFP, const float* _vectorFP) {
-			return mat4f(1337.0f);
+	static mat4f ScalingMatrix(const float* _vectorFP) {
+		return mat4f(
+			_mm_set_ps(0.0f, 0.0f, 0.0f, _vectorFP[0]),
+			_mm_set_ps(0.0f, 0.0f, _vectorFP[1], 0.0f),
+			_mm_set_ps(0.0f, _vectorFP[2], 0.0f, 0.0f),
+			_mm_set_ps(_vectorFP[3], 0.0f, 0.0f, 0.0f)
+		);
 	}
 
 	//Rotation Matrix
