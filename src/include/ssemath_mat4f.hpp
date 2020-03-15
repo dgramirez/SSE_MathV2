@@ -240,20 +240,20 @@ namespace sml {
 			MulS(_scalar);
 		}
 		friend mat4f operator*(const mat4f& _matrix, const float& _scalar) {
-		return mat4f(
-			_mm_mul_ps(_matrix.m128X, _mm_set1_ps(_scalar)),
-			_mm_mul_ps(_matrix.m128Y, _mm_set1_ps(_scalar)),
-			_mm_mul_ps(_matrix.m128Z, _mm_set1_ps(_scalar)),
-			_mm_mul_ps(_matrix.m128T, _mm_set1_ps(_scalar))
-		);
+			return mat4f(
+				_mm_mul_ps(_matrix.m128X, _mm_set1_ps(_scalar)),
+				_mm_mul_ps(_matrix.m128Y, _mm_set1_ps(_scalar)),
+				_mm_mul_ps(_matrix.m128Z, _mm_set1_ps(_scalar)),
+				_mm_mul_ps(_matrix.m128T, _mm_set1_ps(_scalar))
+			);
 		}
 		friend mat4f operator*(const float& _scalar, const mat4f& _matrix) {
-		return mat4f(
-			_mm_mul_ps(_mm_set1_ps(_scalar), _matrix.m128X),
-			_mm_mul_ps(_mm_set1_ps(_scalar), _matrix.m128Y),
-			_mm_mul_ps(_mm_set1_ps(_scalar), _matrix.m128Z),
-			_mm_mul_ps(_mm_set1_ps(_scalar), _matrix.m128T)
-		);
+			return mat4f(
+				_mm_mul_ps(_mm_set1_ps(_scalar), _matrix.m128X),
+				_mm_mul_ps(_mm_set1_ps(_scalar), _matrix.m128Y),
+				_mm_mul_ps(_mm_set1_ps(_scalar), _matrix.m128Z),
+				_mm_mul_ps(_mm_set1_ps(_scalar), _matrix.m128T)
+			);
 		}
 
 		//Matrix-Matrix Multiplication
