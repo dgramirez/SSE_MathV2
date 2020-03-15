@@ -115,7 +115,7 @@ namespace sml {
 			return sml::VectorIsEqual(m128X, _matrix.m128X) & sml::VectorIsEqual(m128Y, _matrix.m128Y) & sml::VectorIsEqual(m128Z, _matrix.m128Z) & sml::VectorIsEqual(m128T, _matrix.m128T);
 		}
 		bool IsEqual(const float* _matrixFP) const {
-			return sml::VectorIsEqual(m128X, _mm_load_ps(_matrixFP)) & sml::VectorIsEqual(m128Y, _mm_load_ps(&_matrixFP[4])) & sml::VectorIsEqual(m128Z, _mm_load_ps(&_matrixFP[8])) & sml::VectorIsEqual(m128T, _mm_load_ps(&_matrixFP[12]));
+			return sml::VectorIsEqual(m128X, _matrixFP) & sml::VectorIsEqual(m128Y, &_matrixFP[4]) & sml::VectorIsEqual(m128Z, &_matrixFP[8]) & sml::VectorIsEqual(m128T, &_matrixFP[12]);
 		}
 
 		//Addition
