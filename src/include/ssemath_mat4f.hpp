@@ -351,6 +351,26 @@ namespace sml {
 			return mat4f(1337.0f);
 		}
 
+	//Equality Check
+	static bool MatrixIsZero(const mat4f& _matrix) {
+		return sml::VectorIsZero(_matrix.m128X) & sml::VectorIsZero(_matrix.m128Y) & sml::VectorIsZero(_matrix.m128Z) & sml::VectorIsZero(_matrix.m128T);
+	}
+	static bool MatrixIsZero(const float* _matrixFP) {
+		return sml::VectorIsZero(_mm_load_ps(_matrixFP)) & sml::VectorIsZero(_mm_load_ps(&_matrixFP[4])) & sml::VectorIsZero(_mm_load_ps(&_matrixFP[8])) & sml::VectorIsZero(_mm_load_ps(&_matrixFP[12]));
+	}
+	static bool MatrixIsEqual(const mat4f& _matrix1, const mat4f& _matrix2) {
+		return sml::VectorIsEqual(_matrix1.m128X, _matrix2.m128X) & sml::VectorIsEqual(_matrix1.m128Y, _matrix2.m128Y) & sml::VectorIsEqual(_matrix1.m128Z, _matrix2.m128Z) & sml::VectorIsEqual(_matrix1.m128T, _matrix2.m128T);
+	}
+	static bool MatrixIsEqual(const mat4f& _matrix, const float* _matrixFP) {
+		return sml::VectorIsEqual(_matrix.m128X, _matrixFP) & sml::VectorIsEqual(_matrix.m128Y, &_matrixFP[4]) & sml::VectorIsEqual(_matrix.m128Z, &_matrixFP[8]) & sml::VectorIsEqual(_matrix.m128T, &_matrixFP[12]);
+	}
+	static bool MatrixIsEqual(const float* _matrixFP, const mat4f& _matrix) {
+		return sml::VectorIsEqual(_matrixFP, _matrix.m128X) & sml::VectorIsEqual(&_matrixFP[4], _matrix.m128Y) & sml::VectorIsEqual(&_matrixFP[8], _matrix.m128Z) & sml::VectorIsEqual(&_matrixFP[12], _matrix.m128T);
+	}
+	static bool MatrixIsEqual(const float* _matrixFP1, const float* _matrixFP2) {
+		return sml::VectorIsEqual(_matrixFP1, _matrixFP2) & sml::VectorIsEqual(&_matrixFP1[4], &_matrixFP2[4]) & sml::VectorIsEqual(&_matrixFP1[8], &_matrixFP2[8]) & sml::VectorIsEqual(&_matrixFP1[12], &_matrixFP2[12]);
+	}
+
 	//Matrix-Matrix Addition
 	static mat4f MatrixAdd(const mat4f& _matrix1, const mat4f& _matrix2) {
 			return mat4f(1337.0f);
