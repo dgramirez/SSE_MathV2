@@ -368,7 +368,7 @@ namespace sml {
 		void RotateX(const float& _radians) {
 			float cosV = cosf(_radians);
 			float sinV = sinf(_radians);
-			
+
 			*this = mat4f(
 			_mm_set_ps(0.0f, 0.0f, 0.0f, 1.0f),
 			_mm_set_ps(0.0f,-sinV, cosV, 0.0f),
@@ -379,7 +379,7 @@ namespace sml {
 		void RotateY(const float& _radians) {
 			float cosV = cosf(_radians);
 			float sinV = sinf(_radians);
-			
+
 			*this = mat4f(
 			_mm_set_ps(0.0f, sinV, 0.0f, cosV),
 			_mm_set_ps(0.0f, 0.0f, 1.0f, 0.0f),
@@ -390,7 +390,7 @@ namespace sml {
 		void RotateZ(const float& _radians) {
 			float cosV = cosf(_radians);
 			float sinV = sinf(_radians);
-			
+
 			*this = mat4f(
 			_mm_set_ps(0.0f, 0.0f,-sinV, cosV),
 			_mm_set_ps(0.0f, 0.0f, cosV, sinV),
@@ -715,25 +715,19 @@ namespace sml {
 	}
 
 	//Rotation Matrix
-	static mat4f RotationMatrix(const mat4f& _matrix, const float& _radians, const float& _x, const float& _y, const float& _z) {
+	static mat4f RotationMatrix(const float& _radians, const float& _x, const float& _y, const float& _z) {
 			return mat4f(1337.0f);
 	}
-	static mat4f RotationMatrix(const float& _radians, const float& _x, const float& _y, const float& _z, const mat4f& _matrix) {
+	static mat4f RotationMatrix(const float& _radians, const __m128& _vectorSSE) {
 			return mat4f(1337.0f);
 	}
-	static mat4f RotationMatrix(const mat4f& _matrix, const float& _radians, const __m128& _vectorSSE) {
+	static mat4f RotationMatrix(const __m128& _vectorSSE, const float& _radians) {
 			return mat4f(1337.0f);
 	}
-	static mat4f RotationMatrix(const float& _radians, const __m128& _vectorSSE, const mat4f& _matrix) {
+	static mat4f RotationMatrix(const float* _vectorFP, const float& _radians) {
 			return mat4f(1337.0f);
 	}
-	static mat4f RotationMatrix(const mat4f& _matrix, const float& _radians, const float* _vectorFP) {
-			return mat4f(1337.0f);
-	}
-	static mat4f RotationMatrix(const float* _matrixFP, const float& _radians, const __m128& _sse) {
-			return mat4f(1337.0f);
-	}
-	static mat4f RotationMatrix(const float* _matrixFP, const float& _radians, const float* _vectorFP) {
+	static mat4f RotationMatrix(const float& _radians, const float* _vectorFP) {
 			return mat4f(1337.0f);
 	}
 
