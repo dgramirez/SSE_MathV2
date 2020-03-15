@@ -418,11 +418,14 @@ namespace sml {
 		}
 
 		//Determinant
-		float Determinant3D() const {
-			return 1337.0f;
-		}
 		float Determinant() const {
-			return 1337.0f;
+			//TODO: A bit more research for the 4x4 determinant. This is a bunch of shuffles. It works though.
+			return M128AddComponents(_mm_mul_ps(m128X, _mm_set_ps(
+				-Determinant3D(_mm_shuffle_ps(m128Y, m128Y, _MM_SHUFFLE(3, 2, 1, 0)), _mm_shuffle_ps(m128Z, m128Z, _MM_SHUFFLE(3, 2, 1, 0)), _mm_shuffle_ps(m128T, m128T, _MM_SHUFFLE(3, 2, 1, 0))),
+				 Determinant3D(_mm_shuffle_ps(m128Y, m128Y, _MM_SHUFFLE(2, 3, 1, 0)), _mm_shuffle_ps(m128Z, m128Z, _MM_SHUFFLE(2, 3, 1, 0)), _mm_shuffle_ps(m128T, m128T, _MM_SHUFFLE(2, 3, 1, 0))),
+				-Determinant3D(_mm_shuffle_ps(m128Y, m128Y, _MM_SHUFFLE(1, 3, 2, 0)), _mm_shuffle_ps(m128Z, m128Z, _MM_SHUFFLE(1, 3, 2, 0)), _mm_shuffle_ps(m128T, m128T, _MM_SHUFFLE(1, 3, 2, 0))),
+				 Determinant3D(_mm_shuffle_ps(m128Y, m128Y, _MM_SHUFFLE(0, 3, 2, 1)), _mm_shuffle_ps(m128Z, m128Z, _MM_SHUFFLE(0, 3, 2, 1)), _mm_shuffle_ps(m128T, m128T, _MM_SHUFFLE(0, 3, 2, 1)))
+			)));
 		}
 
 		//Invserse
@@ -431,6 +434,11 @@ namespace sml {
 		}
 		void InverseFast() {
 			m128X = m128Y = m128Z = m128T = _mm_set1_ps(1337.0f);
+		}
+
+	private:
+		float Determinant3D(__m128 a, __m128 b, __m128 c) const {
+			return sml::Dot(a, Cross(b, c));
 		}
 	};
 
@@ -794,17 +802,27 @@ namespace sml {
 	}
 
 	//Matrix Determinants
-	static float Determinant3D(const mat4f& _matrix) {
-		return 1337.0f;
-	}
-	static float Determinant3D(const float* _matrixFP) {
-		return 1337.0f;
+	static float Determinant3D(const __m128& a, const __m128& _b, const __m128& _c) {
+		return sml::Dot(a, sml::Cross(_b, _c));
 	}
 	static float Determinant(const mat4f& _matrix) {
-		return 1337.0f;
+		//TODO: A bit more research for the 4x4 determinant. This is a bunch of shuffles. It works though.
+		return sml::M128AddComponents(_mm_mul_ps(_matrix.m128X, _mm_set_ps(
+			-Determinant3D(_mm_shuffle_ps(_matrix.m128Y, _matrix.m128Y, _MM_SHUFFLE(3, 2, 1, 0)), _mm_shuffle_ps(_matrix.m128Z, _matrix.m128Z, _MM_SHUFFLE(3, 2, 1, 0)), _mm_shuffle_ps(_matrix.m128T, _matrix.m128T, _MM_SHUFFLE(3, 2, 1, 0))),
+			 Determinant3D(_mm_shuffle_ps(_matrix.m128Y, _matrix.m128Y, _MM_SHUFFLE(2, 3, 1, 0)), _mm_shuffle_ps(_matrix.m128Z, _matrix.m128Z, _MM_SHUFFLE(2, 3, 1, 0)), _mm_shuffle_ps(_matrix.m128T, _matrix.m128T, _MM_SHUFFLE(2, 3, 1, 0))),
+			-Determinant3D(_mm_shuffle_ps(_matrix.m128Y, _matrix.m128Y, _MM_SHUFFLE(1, 3, 2, 0)), _mm_shuffle_ps(_matrix.m128Z, _matrix.m128Z, _MM_SHUFFLE(1, 3, 2, 0)), _mm_shuffle_ps(_matrix.m128T, _matrix.m128T, _MM_SHUFFLE(1, 3, 2, 0))),
+			 Determinant3D(_mm_shuffle_ps(_matrix.m128Y, _matrix.m128Y, _MM_SHUFFLE(0, 3, 2, 1)), _mm_shuffle_ps(_matrix.m128Z, _matrix.m128Z, _MM_SHUFFLE(0, 3, 2, 1)), _mm_shuffle_ps(_matrix.m128T, _matrix.m128T, _MM_SHUFFLE(0, 3, 2, 1)))
+		)));
 	}
 	static float Determinant(const float* _matrixFP) {
-		return 1337.0f;
+		//TODO: A bit more research for the 4x4 determinant. This is a bunch of shuffles. It works though.
+		mat4f _matrix;
+		return sml::M128AddComponents(_mm_mul_ps(_matrix.m128X, _mm_set_ps(
+			-Determinant3D(_mm_shuffle_ps(_matrix.m128Y, _matrix.m128Y, _MM_SHUFFLE(3, 2, 1, 0)), _mm_shuffle_ps(_matrix.m128Z, _matrix.m128Z, _MM_SHUFFLE(3, 2, 1, 0)), _mm_shuffle_ps(_matrix.m128T, _matrix.m128T, _MM_SHUFFLE(3, 2, 1, 0))),
+			 Determinant3D(_mm_shuffle_ps(_matrix.m128Y, _matrix.m128Y, _MM_SHUFFLE(2, 3, 1, 0)), _mm_shuffle_ps(_matrix.m128Z, _matrix.m128Z, _MM_SHUFFLE(2, 3, 1, 0)), _mm_shuffle_ps(_matrix.m128T, _matrix.m128T, _MM_SHUFFLE(2, 3, 1, 0))),
+			-Determinant3D(_mm_shuffle_ps(_matrix.m128Y, _matrix.m128Y, _MM_SHUFFLE(1, 3, 2, 0)), _mm_shuffle_ps(_matrix.m128Z, _matrix.m128Z, _MM_SHUFFLE(1, 3, 2, 0)), _mm_shuffle_ps(_matrix.m128T, _matrix.m128T, _MM_SHUFFLE(1, 3, 2, 0))),
+			 Determinant3D(_mm_shuffle_ps(_matrix.m128Y, _matrix.m128Y, _MM_SHUFFLE(0, 3, 2, 1)), _mm_shuffle_ps(_matrix.m128Z, _matrix.m128Z, _MM_SHUFFLE(0, 3, 2, 1)), _mm_shuffle_ps(_matrix.m128T, _matrix.m128T, _MM_SHUFFLE(0, 3, 2, 1)))
+		)));
 	}
 
 	//Inverse
