@@ -277,10 +277,18 @@ namespace sml {
 
 		// Negate
 		void Negate() {
-			m128X = m128Y = m128Z = m128T = _mm_set1_ps(1337.0f);
+			m128X = _mm_xor_ps(m128X, SSE_NEG_ZERO);
+			m128Y = _mm_xor_ps(m128Y, SSE_NEG_ZERO);
+			m128Z = _mm_xor_ps(m128Z, SSE_NEG_ZERO);
+			m128T = _mm_xor_ps(m128T, SSE_NEG_ZERO);
 		}
 		mat4f operator-() {
-			return (mat4f(1337.0f));
+			return mat4f(
+				_mm_xor_ps(m128X, SSE_NEG_ZERO),
+				_mm_xor_ps(m128Y, SSE_NEG_ZERO),
+				_mm_xor_ps(m128Z, SSE_NEG_ZERO),
+				_mm_xor_ps(m128T, SSE_NEG_ZERO)
+			);
 		}
 
 		//Translation
@@ -568,10 +576,20 @@ namespace sml {
 
 	//Matrix Negate
 	static mat4f MatrixNegate(const mat4f& _matrix) {
-			return mat4f(1337.0f);
+			return mat4f(
+				_mm_xor_ps(_matrix.m128X, SSE_NEG_ZERO),
+				_mm_xor_ps(_matrix.m128Y, SSE_NEG_ZERO),
+				_mm_xor_ps(_matrix.m128Z, SSE_NEG_ZERO),
+				_mm_xor_ps(_matrix.m128T, SSE_NEG_ZERO)
+			);
 	}
 	static mat4f MatrixNegate(const float* _matrixFP) {
-			return mat4f(1337.0f);
+			return mat4f(
+				_mm_xor_ps(_mm_load_ps(_matrixFP), SSE_NEG_ZERO),
+				_mm_xor_ps(_mm_load_ps(&_matrixFP[4]), SSE_NEG_ZERO),
+				_mm_xor_ps(_mm_load_ps(&_matrixFP[8]), SSE_NEG_ZERO),
+				_mm_xor_ps(_mm_load_ps(&_matrixFP[12]), SSE_NEG_ZERO)
+			);
 	}
 
 	//Translation Matrix
