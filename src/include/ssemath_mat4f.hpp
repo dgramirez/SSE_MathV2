@@ -208,13 +208,24 @@ namespace sml {
 
 		//Matrix Scalar Division
 		void Div(const float& _scalar) {
-			m128X = m128Y = m128Z = m128T = _mm_set1_ps(1337.0f);
+			m128X = _mm_div_ps(m128X, _mm_set1_ps(_scalar));
+			m128Y = _mm_div_ps(m128Y, _mm_set1_ps(_scalar));
+			m128Z = _mm_div_ps(m128Z, _mm_set1_ps(_scalar));
+			m128T = _mm_div_ps(m128T, _mm_set1_ps(_scalar));
 		}
 		void operator/=(const float& _scalar) {
-			m128X = m128Y = m128Z = m128T = _mm_set1_ps(1337.0f);
+			m128X = _mm_div_ps(m128X, _mm_set1_ps(_scalar));
+			m128Y = _mm_div_ps(m128Y, _mm_set1_ps(_scalar));
+			m128Z = _mm_div_ps(m128Z, _mm_set1_ps(_scalar));
+			m128T = _mm_div_ps(m128T, _mm_set1_ps(_scalar));
 		}
 		friend mat4f operator/(const mat4f& _matrix, const float& _scalar) {
-			return mat4f(1.0f);
+			return mat4f(
+			_mm_div_ps(_matrix.m128X, _mm_set1_ps(_scalar)),
+			_mm_div_ps(_matrix.m128Y, _mm_set1_ps(_scalar)),
+			_mm_div_ps(_matrix.m128Z, _mm_set1_ps(_scalar)),
+			_mm_div_ps(_matrix.m128T, _mm_set1_ps(_scalar))
+			);
 		}
 
 		//Matrix Scalar Multiplication
@@ -483,10 +494,16 @@ namespace sml {
 
 	//Matrix-Scalar Divide
 	static mat4f MatrixDiv(const mat4f& _matrix, const float& _scalar) {
-			return mat4f(1337.0f);
+			_mm_div_ps(_matrix.m128X, _mm_set1_ps(_scalar)),
+			_mm_div_ps(_matrix.m128Y, _mm_set1_ps(_scalar)),
+			_mm_div_ps(_matrix.m128Z, _mm_set1_ps(_scalar)),
+			_mm_div_ps(_matrix.m128T, _mm_set1_ps(_scalar))
 		}
-	static mat4f MatrixDiv(const float* _matrix, const float& _scalar) {
-			return mat4f(1337.0f);
+	static mat4f MatrixDiv(const float* _matrixFP, const float& _scalar) {
+			_mm_div_ps(_mm_load_ps(_matrixFP), _mm_set1_ps(_scalar)),
+			_mm_div_ps(_mm_load_ps(&_matrixFP[4]), _mm_set1_ps(_scalar)),
+			_mm_div_ps(_mm_load_ps(&_matrixFP[8]), _mm_set1_ps(_scalar)),
+			_mm_div_ps(_mm_load_ps(&_matrixFP[12]), _mm_set1_ps(_scalar))
 		}
 
 	//Matrix-Scalar Multiply
