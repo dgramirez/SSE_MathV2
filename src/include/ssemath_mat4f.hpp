@@ -401,10 +401,20 @@ namespace sml {
 
 		//Transpose
 		void Transpose() {
-			m128X = m128Y = m128Z = m128T = _mm_set1_ps(1337.0f);
+			_MM_TRANSPOSE4_PS(m128X, m128Y, m128Z, m128T);
 		}
 		mat4f operator~() {
-			return mat4f(1337.0f);
+			__m128 t0 = _mm_shuffle_ps((m128X), (m128Y), 0x44);
+			__m128 t2 = _mm_shuffle_ps((m128X), (m128Y), 0xEE);
+			__m128 t1 = _mm_shuffle_ps((m128Z), (m128T), 0x44);
+			__m128 t3 = _mm_shuffle_ps((m128Z), (m128T), 0xEE);
+
+			return mat4f(
+			_mm_shuffle_ps(t0, t1, 0x88),
+			_mm_shuffle_ps(t0, t1, 0xDD),
+			_mm_shuffle_ps(t2, t3, 0x88),
+			_mm_shuffle_ps(t2, t3, 0xDD)
+			);
 		}
 
 		//Determinant
@@ -731,7 +741,7 @@ namespace sml {
 			return mat4f(1337.0f);
 	}
 
-	//X Rotation Matrix
+	//Axis Rotation Matrices
 	static mat4f XRotationMatrix(const float& _radians) {
 		float cosV = cosf(_radians);
 		float sinV = sinf(_radians);
@@ -742,8 +752,6 @@ namespace sml {
 			_mm_set_ps(1.0f, 0.0f, 0.0f, 0.0f)
 		);
 	}
-
-	//Y Rotation Matrix
 	static mat4f YRotationMatrix(const float& _radians) {
 		float cosV = cosf(_radians);
 		float sinV = sinf(_radians);
@@ -754,8 +762,6 @@ namespace sml {
 			_mm_set_ps(1.0f, 0.0f, 0.0f, 0.0f)
 		);
 	}
-
-	//Z Rotation Matrix
 	static mat4f ZRotationMatrix(const float& _radians) {
 		float cosV = cosf(_radians);
 		float sinV = sinf(_radians);
@@ -769,10 +775,22 @@ namespace sml {
 
 	//Transpose Matrix
 	static mat4f Transpose(const mat4f& _matrix) {
-			return mat4f(1337.0f);
+		__m128 t0 = _mm_shuffle_ps((_matrix.m128X), (_matrix.m128Y), 0x44);
+		__m128 t2 = _mm_shuffle_ps((_matrix.m128X), (_matrix.m128Y), 0xEE);
+		__m128 t1 = _mm_shuffle_ps((_matrix.m128Z), (_matrix.m128T), 0x44);
+		__m128 t3 = _mm_shuffle_ps((_matrix.m128Z), (_matrix.m128T), 0xEE);
+
+		return mat4f(
+			_mm_shuffle_ps(t0, t1, 0x88),
+			_mm_shuffle_ps(t0, t1, 0xDD),
+			_mm_shuffle_ps(t2, t3, 0x88),
+			_mm_shuffle_ps(t2, t3, 0xDD)
+		);
 	}
 	static mat4f Transpose(const float* _matrixFP) {
-			return mat4f(1337.0f);
+		mat4f ret(_matrixFP);
+		_MM_TRANSPOSE4_PS(ret.m128X, ret.m128Y, ret.m128Z, ret.m128T);
+		return ret;
 	}
 
 	//Matrix Determinants
