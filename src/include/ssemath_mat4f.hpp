@@ -292,14 +292,29 @@ namespace sml {
 		}
 
 		//Translation
-		void Translate(const float& _x, const float& _y, const float& _z, const float& _w) {
-			m128X = m128Y = m128Z = m128T = _mm_set1_ps(1337.0f);
+		void Translate(const float& _x, const float& _y, const float& _z, const float& _w = 1.0f) {
+			*this = mat4f(
+				_mm_set_ps(0.0f, 0.0f, 0.0f, 1.0f),
+				_mm_set_ps(0.0f, 0.0f, 1.0f, 0.0f),
+				_mm_set_ps(0.0f, 1.0f, 0.0f, 0.0f),
+				_mm_set_ps( _w ,  _z ,  _y ,  _x )
+			) * (*this);
 		}
 		void Translate(const __m128& _vectorSSE) {
-			m128X = m128Y = m128Z = m128T = _mm_set1_ps(1337.0f);
+			*this = mat4f(
+				_mm_set_ps(0.0f, 0.0f, 0.0f, 1.0f),
+				_mm_set_ps(0.0f, 0.0f, 1.0f, 0.0f),
+				_mm_set_ps(0.0f, 1.0f, 0.0f, 0.0f),
+				_vectorSSE
+			) * (*this);
 		}
 		void Translate(const float* _vectorFP) {
-			m128X = m128Y = m128Z = m128T = _mm_set1_ps(1337.0f);
+			*this = mat4f(
+				_mm_set_ps(0.0f, 0.0f, 0.0f, 1.0f),
+				_mm_set_ps(0.0f, 0.0f, 1.0f, 0.0f),
+				_mm_set_ps(0.0f, 1.0f, 0.0f, 0.0f),
+				_mm_load_ps(_vectorFP)
+			) * (*this);
 		}
 
 		//Scaling
@@ -576,43 +591,46 @@ namespace sml {
 
 	//Matrix Negate
 	static mat4f MatrixNegate(const mat4f& _matrix) {
-			return mat4f(
-				_mm_xor_ps(_matrix.m128X, SSE_NEG_ZERO),
-				_mm_xor_ps(_matrix.m128Y, SSE_NEG_ZERO),
-				_mm_xor_ps(_matrix.m128Z, SSE_NEG_ZERO),
-				_mm_xor_ps(_matrix.m128T, SSE_NEG_ZERO)
-			);
+		return mat4f(
+			_mm_xor_ps(_matrix.m128X, SSE_NEG_ZERO),
+			_mm_xor_ps(_matrix.m128Y, SSE_NEG_ZERO),
+			_mm_xor_ps(_matrix.m128Z, SSE_NEG_ZERO),
+			_mm_xor_ps(_matrix.m128T, SSE_NEG_ZERO)
+		);
 	}
 	static mat4f MatrixNegate(const float* _matrixFP) {
-			return mat4f(
-				_mm_xor_ps(_mm_load_ps(_matrixFP), SSE_NEG_ZERO),
-				_mm_xor_ps(_mm_load_ps(&_matrixFP[4]), SSE_NEG_ZERO),
-				_mm_xor_ps(_mm_load_ps(&_matrixFP[8]), SSE_NEG_ZERO),
-				_mm_xor_ps(_mm_load_ps(&_matrixFP[12]), SSE_NEG_ZERO)
-			);
+		return mat4f(
+			_mm_xor_ps(_mm_load_ps(_matrixFP), SSE_NEG_ZERO),
+			_mm_xor_ps(_mm_load_ps(&_matrixFP[4]), SSE_NEG_ZERO),
+			_mm_xor_ps(_mm_load_ps(&_matrixFP[8]), SSE_NEG_ZERO),
+			_mm_xor_ps(_mm_load_ps(&_matrixFP[12]), SSE_NEG_ZERO)
+		);
 	}
 
 	//Translation Matrix
-	static mat4f TranslationMatrix(const float& _x, const float& _y, const float& _z, const mat4f& _matrix) {
-			return mat4f(1337.0f);
+	static mat4f TranslationMatrix(const float& _x, const float& _y, const float& _z, const float& _w = 1.0f) {
+		return mat4f(
+			_mm_set_ps(0.0f, 0.0f, 0.0f, 1.0f),
+			_mm_set_ps(0.0f, 0.0f, 1.0f, 0.0f),
+			_mm_set_ps(0.0f, 1.0f, 0.0f, 0.0f),
+			_mm_set_ps( _w ,  _z ,  _y ,  _x )
+		);
 	}
-	static mat4f TranslationMatrix(const mat4f& _matrix, const float& _x, const float& _y, const float& _z) {
-			return mat4f(1337.0f);
+	static mat4f TranslationMatrix(const __m128& _vectorSSE) {
+		return mat4f(
+			_mm_set_ps(0.0f, 0.0f, 0.0f, 1.0f),
+			_mm_set_ps(0.0f, 0.0f, 1.0f, 0.0f),
+			_mm_set_ps(0.0f, 1.0f, 0.0f, 0.0f),
+			_vectorSSE
+		);
 	}
-	static mat4f TranslationMatrix(const mat4f& _matrix, const __m128& _vectorSSE) {
-			return mat4f(1337.0f);
-	}
-	static mat4f TranslationMatrix(const __m128& _vectorSSE, const mat4f& _matrix) {
-			return mat4f(1337.0f);
-	}
-	static mat4f TranslationMatrix(const mat4f& _matrix, const float* _vectorFP) {
-			return mat4f(1337.0f);
-	}
-	static mat4f TranslationMatrix(const float* _matrixFP, const __m128& _sse) {
-			return mat4f(1337.0f);
-	}
-	static mat4f TranslationMatrix(const float* _matrixFP, const float* _vectorFP) {
-			return mat4f(1337.0f);
+	static mat4f TranslationMatrix(const float* _vectorFP) {
+		return mat4f(
+			_mm_set_ps(0.0f, 0.0f, 0.0f, 1.0f),
+			_mm_set_ps(0.0f, 0.0f, 1.0f, 0.0f),
+			_mm_set_ps(0.0f, 1.0f, 0.0f, 0.0f),
+			_mm_load_ps(_vectorFP)
+		);
 	}
 
 	//Scaling Matrix
