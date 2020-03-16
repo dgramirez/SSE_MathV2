@@ -26,7 +26,7 @@ namespace sml {
 			m128[0] = _mm_set_ps(0.0f, 0.0f, 0.0f, _diagonal);
 			m128[1] = _mm_set_ps(0.0f, 0.0f, _diagonal, 0.0f);
 			m128[2] = _mm_set_ps(0.0f, _diagonal, 0.0f, 0.0f);
-			m128[3] = _mm_set_ps(_diagonal, 0.0f, 0.0f, 0.0f);
+			m128[3] = _mm_set_ps(  1.0f   , 0.0f, 0.0f, 0.0f);
 		}
 		mat4f(const __m128& _vectorSSEx, const __m128& _vectorSSEy, const __m128& _vectorSSEz, const __m128& _vectorSSEt) {
 			m128[0] = _vectorSSEx;
@@ -259,25 +259,128 @@ namespace sml {
 
 		//Matrix-Matrix Multiplication
 		void MulM(const mat4f& _matrix) {
-			m128[0] = m128[1] = m128[2] = m128[3] = _mm_set1_ps(1337.0f);
+			*this = mat4f(
+				Dot(m128[0], _matrix.m128[0]),
+				Dot(m128[0], _matrix.m128[1]),
+				Dot(m128[0], _matrix.m128[2]),
+				Dot(m128[0], _matrix.m128[3]),
+
+				Dot(m128[1], _matrix.m128[0]),
+				Dot(m128[1], _matrix.m128[1]),
+				Dot(m128[1], _matrix.m128[2]),
+				Dot(m128[1], _matrix.m128[3]),
+
+				Dot(m128[2], _matrix.m128[0]),
+				Dot(m128[2], _matrix.m128[1]),
+				Dot(m128[2], _matrix.m128[2]),
+				Dot(m128[2], _matrix.m128[3]),
+
+				Dot(m128[3], _matrix.m128[0]),
+				Dot(m128[3], _matrix.m128[1]),
+				Dot(m128[3], _matrix.m128[2]),
+				Dot(m128[3], _matrix.m128[3])
+			);
 		}
 		void MulM(const float* _matrixFP) {
-			m128[0] = m128[1] = m128[2] = m128[3] = _mm_set1_ps(1337.0f);
+			mat4f _matrix(_matrixFP);
+			*this = mat4f(
+				Dot(m128[0], _matrix.m128[0]),
+				Dot(m128[0], _matrix.m128[1]),
+				Dot(m128[0], _matrix.m128[2]),
+				Dot(m128[0], _matrix.m128[3]),
+
+				Dot(m128[1], _matrix.m128[0]),
+				Dot(m128[1], _matrix.m128[1]),
+				Dot(m128[1], _matrix.m128[2]),
+				Dot(m128[1], _matrix.m128[3]),
+
+				Dot(m128[2], _matrix.m128[0]),
+				Dot(m128[2], _matrix.m128[1]),
+				Dot(m128[2], _matrix.m128[2]),
+				Dot(m128[2], _matrix.m128[3]),
+
+				Dot(m128[3], _matrix.m128[0]),
+				Dot(m128[3], _matrix.m128[1]),
+				Dot(m128[3], _matrix.m128[2]),
+				Dot(m128[3], _matrix.m128[3])
+			);
 		}
 		void operator*=(const mat4f& _matrix) {
-			m128[0] = m128[1] = m128[2] = m128[3] = _mm_set1_ps(1337.0f);
+			MulM(_matrix);
 		}
 		void operator*=(const float* _matrixFP) {
-			m128[0] = m128[1] = m128[2] = m128[3] = _mm_set1_ps(1337.0f);
+			MulM(_matrixFP);
 		}
 		friend mat4f operator*(const mat4f& _matrix1, const mat4f& _matrix2) {
-			return mat4f(1337.0f);
+			return mat4f(
+				Dot(_matrix1.m128[0], _matrix2.m128[0]),
+				Dot(_matrix1.m128[0], _matrix2.m128[1]),
+				Dot(_matrix1.m128[0], _matrix2.m128[2]),
+				Dot(_matrix1.m128[0], _matrix2.m128[3]),
+
+				Dot(_matrix1.m128[1], _matrix2.m128[0]),
+				Dot(_matrix1.m128[1], _matrix2.m128[1]),
+				Dot(_matrix1.m128[1], _matrix2.m128[2]),
+				Dot(_matrix1.m128[1], _matrix2.m128[3]),
+
+				Dot(_matrix1.m128[2], _matrix2.m128[0]),
+				Dot(_matrix1.m128[2], _matrix2.m128[1]),
+				Dot(_matrix1.m128[2], _matrix2.m128[2]),
+				Dot(_matrix1.m128[2], _matrix2.m128[3]),
+
+				Dot(_matrix1.m128[3], _matrix2.m128[0]),
+				Dot(_matrix1.m128[3], _matrix2.m128[1]),
+				Dot(_matrix1.m128[3], _matrix2.m128[2]),
+				Dot(_matrix1.m128[3], _matrix2.m128[3])
+			);
 		}
 		friend mat4f operator*(const mat4f& _matrix, const float* _matrixFP) {
-			return mat4f();
+			mat4f matrixFP(_matrixFP);
+			return mat4f(
+				Dot(_matrix.m128[0], matrixFP.m128[0]),
+				Dot(_matrix.m128[0], matrixFP.m128[1]),
+				Dot(_matrix.m128[0], matrixFP.m128[2]),
+				Dot(_matrix.m128[0], matrixFP.m128[3]),
+
+				Dot(_matrix.m128[1], matrixFP.m128[0]),
+				Dot(_matrix.m128[1], matrixFP.m128[1]),
+				Dot(_matrix.m128[1], matrixFP.m128[2]),
+				Dot(_matrix.m128[1], matrixFP.m128[3]),
+
+				Dot(_matrix.m128[2], matrixFP.m128[0]),
+				Dot(_matrix.m128[2], matrixFP.m128[1]),
+				Dot(_matrix.m128[2], matrixFP.m128[2]),
+				Dot(_matrix.m128[2], matrixFP.m128[3]),
+
+				Dot(_matrix.m128[3], matrixFP.m128[0]),
+				Dot(_matrix.m128[3], matrixFP.m128[1]),
+				Dot(_matrix.m128[3], matrixFP.m128[2]),
+				Dot(_matrix.m128[3], matrixFP.m128[3])
+			);
 		}
 		friend mat4f operator*(const float* _matrixFP, const mat4f& _matrix) {
-			return mat4f();
+			mat4f matrixFP(_matrixFP);
+			return mat4f(
+				Dot(matrixFP.m128[0], _matrix.m128[0]),
+				Dot(matrixFP.m128[0], _matrix.m128[1]),
+				Dot(matrixFP.m128[0], _matrix.m128[2]),
+				Dot(matrixFP.m128[0], _matrix.m128[3]),
+
+				Dot(matrixFP.m128[1], _matrix.m128[0]),
+				Dot(matrixFP.m128[1], _matrix.m128[1]),
+				Dot(matrixFP.m128[1], _matrix.m128[2]),
+				Dot(matrixFP.m128[1], _matrix.m128[3]),
+
+				Dot(matrixFP.m128[2], _matrix.m128[0]),
+				Dot(matrixFP.m128[2], _matrix.m128[1]),
+				Dot(matrixFP.m128[2], _matrix.m128[2]),
+				Dot(matrixFP.m128[2], _matrix.m128[3]),
+
+				Dot(matrixFP.m128[3], _matrix.m128[0]),
+				Dot(matrixFP.m128[3], _matrix.m128[1]),
+				Dot(matrixFP.m128[3], _matrix.m128[2]),
+				Dot(matrixFP.m128[3], _matrix.m128[3])
+			);
 		}
 
 		//Matrix-Vector Multiplication
@@ -740,16 +843,100 @@ namespace sml {
 
 	//Matrix-Matrix Multiply
 	static mat4f MatrixMulM(const mat4f& _matrix1, const mat4f& _matrix2) {
-			return mat4f(1337.0f);
+		return mat4f(
+			Dot(_matrix1.m128[0], _matrix2.m128[0]),
+			Dot(_matrix1.m128[0], _matrix2.m128[1]),
+			Dot(_matrix1.m128[0], _matrix2.m128[2]),
+			Dot(_matrix1.m128[0], _matrix2.m128[3]),
+
+			Dot(_matrix1.m128[1], _matrix2.m128[0]),
+			Dot(_matrix1.m128[1], _matrix2.m128[1]),
+			Dot(_matrix1.m128[1], _matrix2.m128[2]),
+			Dot(_matrix1.m128[1], _matrix2.m128[3]),
+
+			Dot(_matrix1.m128[2], _matrix2.m128[0]),
+			Dot(_matrix1.m128[2], _matrix2.m128[1]),
+			Dot(_matrix1.m128[2], _matrix2.m128[2]),
+			Dot(_matrix1.m128[2], _matrix2.m128[3]),
+
+			Dot(_matrix1.m128[3], _matrix2.m128[0]),
+			Dot(_matrix1.m128[3], _matrix2.m128[1]),
+			Dot(_matrix1.m128[3], _matrix2.m128[2]),
+			Dot(_matrix1.m128[3], _matrix2.m128[3])
+		);
 	}
 	static mat4f MatrixMulM(const mat4f& _matrix, const float* _matrixFP) {
-			return mat4f(1337.0f);
+		mat4f matrixFP(_matrixFP);
+		return mat4f(
+			Dot(_matrix.m128[0], matrixFP.m128[0]),
+			Dot(_matrix.m128[0], matrixFP.m128[1]),
+			Dot(_matrix.m128[0], matrixFP.m128[2]),
+			Dot(_matrix.m128[0], matrixFP.m128[3]),
+
+			Dot(_matrix.m128[1], matrixFP.m128[0]),
+			Dot(_matrix.m128[1], matrixFP.m128[1]),
+			Dot(_matrix.m128[1], matrixFP.m128[2]),
+			Dot(_matrix.m128[1], matrixFP.m128[3]),
+
+			Dot(_matrix.m128[2], matrixFP.m128[0]),
+			Dot(_matrix.m128[2], matrixFP.m128[1]),
+			Dot(_matrix.m128[2], matrixFP.m128[2]),
+			Dot(_matrix.m128[2], matrixFP.m128[3]),
+
+			Dot(_matrix.m128[3], matrixFP.m128[0]),
+			Dot(_matrix.m128[3], matrixFP.m128[1]),
+			Dot(_matrix.m128[3], matrixFP.m128[2]),
+			Dot(_matrix.m128[3], matrixFP.m128[3])
+		);
 	}
 	static mat4f MatrixMulM(const float* _matrixFP, const mat4f& _matrix) {
-			return mat4f(1337.0f);
+		mat4f matrixFP(_matrixFP);
+		return mat4f(
+			Dot(matrixFP.m128[0], _matrix.m128[0]),
+			Dot(matrixFP.m128[0], _matrix.m128[1]),
+			Dot(matrixFP.m128[0], _matrix.m128[2]),
+			Dot(matrixFP.m128[0], _matrix.m128[3]),
+			
+			Dot(matrixFP.m128[1], _matrix.m128[0]),
+			Dot(matrixFP.m128[1], _matrix.m128[1]),
+			Dot(matrixFP.m128[1], _matrix.m128[2]),
+			Dot(matrixFP.m128[1], _matrix.m128[3]),
+			
+			Dot(matrixFP.m128[2], _matrix.m128[0]),
+			Dot(matrixFP.m128[2], _matrix.m128[1]),
+			Dot(matrixFP.m128[2], _matrix.m128[2]),
+			Dot(matrixFP.m128[2], _matrix.m128[3]),
+			
+			Dot(matrixFP.m128[3], _matrix.m128[0]),
+			Dot(matrixFP.m128[3], _matrix.m128[1]),
+			Dot(matrixFP.m128[3], _matrix.m128[2]),
+			Dot(matrixFP.m128[3], _matrix.m128[3])
+		);
 	}
 	static mat4f MatrixMulM(const float* _matrixFP1, const float* _matrixFP2) {
-			return mat4f(1337.0f);
+		mat4f matrixFP1(_matrixFP1);
+		mat4f matrixFP2(_matrixFP2);
+		return mat4f(
+			Dot(matrixFP1.m128[0], matrixFP2.m128[0]),
+			Dot(matrixFP1.m128[0], matrixFP2.m128[1]),
+			Dot(matrixFP1.m128[0], matrixFP2.m128[2]),
+			Dot(matrixFP1.m128[0], matrixFP2.m128[3]),
+
+			Dot(matrixFP1.m128[1], matrixFP2.m128[0]),
+			Dot(matrixFP1.m128[1], matrixFP2.m128[1]),
+			Dot(matrixFP1.m128[1], matrixFP2.m128[2]),
+			Dot(matrixFP1.m128[1], matrixFP2.m128[3]),
+
+			Dot(matrixFP1.m128[2], matrixFP2.m128[0]),
+			Dot(matrixFP1.m128[2], matrixFP2.m128[1]),
+			Dot(matrixFP1.m128[2], matrixFP2.m128[2]),
+			Dot(matrixFP1.m128[2], matrixFP2.m128[3]),
+
+			Dot(matrixFP1.m128[3], matrixFP2.m128[0]),
+			Dot(matrixFP1.m128[3], matrixFP2.m128[1]),
+			Dot(matrixFP1.m128[3], matrixFP2.m128[2]),
+			Dot(matrixFP1.m128[3], matrixFP2.m128[3])
+		);
 	}
 
 	//Matrix-Vector Multiply
