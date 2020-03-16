@@ -484,10 +484,36 @@ namespace sml {
 
 		//Invserse
 		void Inverse() {
-			m128X = m128Y = m128Z = m128T = _mm_set1_ps(1337.0f);
-		}
-		void InverseFast() {
-			m128X = m128Y = m128Z = m128T = _mm_set1_ps(1337.0f);
+			//Determinant
+			float det = Determinant();
+			if (det < FLT_EPSILON)
+				return;
+
+			//Transpose Determinant Matrix
+			Transpose();
+			*this = (
+				 Determinant3D(_mm_shuffle_ps(m128Y, m128Y, _MM_SHUFFLE(0, 3, 2, 1)), _mm_shuffle_ps(m128Z, m128Z, _MM_SHUFFLE(0, 3, 2, 1)), _mm_shuffle_ps(m128T, m128T, _MM_SHUFFLE(0, 3, 2, 1))),
+				-Determinant3D(_mm_shuffle_ps(m128X, m128X, _MM_SHUFFLE(0, 3, 2, 1)), _mm_shuffle_ps(m128Z, m128Z, _MM_SHUFFLE(0, 3, 2, 1)), _mm_shuffle_ps(m128T, m128T, _MM_SHUFFLE(0, 3, 2, 1))),
+				 Determinant3D(_mm_shuffle_ps(m128X, m128X, _MM_SHUFFLE(0, 3, 2, 1)), _mm_shuffle_ps(m128Y, m128Y, _MM_SHUFFLE(0, 3, 2, 1)), _mm_shuffle_ps(m128T, m128T, _MM_SHUFFLE(0, 3, 2, 1))),
+				-Determinant3D(_mm_shuffle_ps(m128X, m128X, _MM_SHUFFLE(0, 3, 2, 1)), _mm_shuffle_ps(m128Y, m128Y, _MM_SHUFFLE(0, 3, 2, 1)), _mm_shuffle_ps(m128Z, m128Z, _MM_SHUFFLE(0, 3, 2, 1))),
+
+				-Determinant3D(_mm_shuffle_ps(m128Y, m128Y, _MM_SHUFFLE(1, 3, 2, 0)), _mm_shuffle_ps(m128Z, m128Z, _MM_SHUFFLE(1, 3, 2, 0)), _mm_shuffle_ps(m128T, m128T, _MM_SHUFFLE(1, 3, 2, 0))),
+				 Determinant3D(_mm_shuffle_ps(m128X, m128X, _MM_SHUFFLE(1, 3, 2, 0)), _mm_shuffle_ps(m128Z, m128Z, _MM_SHUFFLE(1, 3, 2, 0)), _mm_shuffle_ps(m128T, m128T, _MM_SHUFFLE(1, 3, 2, 0))),
+				-Determinant3D(_mm_shuffle_ps(m128X, m128X, _MM_SHUFFLE(1, 3, 2, 0)), _mm_shuffle_ps(m128Y, m128Y, _MM_SHUFFLE(1, 3, 2, 0)), _mm_shuffle_ps(m128T, m128T, _MM_SHUFFLE(1, 3, 2, 0))),
+				 Determinant3D(_mm_shuffle_ps(m128X, m128X, _MM_SHUFFLE(1, 3, 2, 0)), _mm_shuffle_ps(m128Y, m128Y, _MM_SHUFFLE(1, 3, 2, 0)), _mm_shuffle_ps(m128Z, m128Z, _MM_SHUFFLE(1, 3, 2, 0))),
+
+				 Determinant3D(_mm_shuffle_ps(m128Y, m128Y, _MM_SHUFFLE(2, 3, 1, 0)), _mm_shuffle_ps(m128Z, m128Z, _MM_SHUFFLE(2, 3, 1, 0)), _mm_shuffle_ps(m128T, m128T, _MM_SHUFFLE(2, 3, 1, 0))),
+				-Determinant3D(_mm_shuffle_ps(m128X, m128X, _MM_SHUFFLE(2, 3, 1, 0)), _mm_shuffle_ps(m128Z, m128Z, _MM_SHUFFLE(2, 3, 1, 0)), _mm_shuffle_ps(m128T, m128T, _MM_SHUFFLE(2, 3, 1, 0))),
+				 Determinant3D(_mm_shuffle_ps(m128X, m128X, _MM_SHUFFLE(2, 3, 1, 0)), _mm_shuffle_ps(m128Y, m128Y, _MM_SHUFFLE(2, 3, 1, 0)), _mm_shuffle_ps(m128T, m128T, _MM_SHUFFLE(2, 3, 1, 0))),
+				-Determinant3D(_mm_shuffle_ps(m128X, m128X, _MM_SHUFFLE(2, 3, 1, 0)), _mm_shuffle_ps(m128Y, m128Y, _MM_SHUFFLE(2, 3, 1, 0)), _mm_shuffle_ps(m128Z, m128Z, _MM_SHUFFLE(2, 3, 1, 0))),
+
+				-Determinant3D(_mm_shuffle_ps(m128Y, m128Y, _MM_SHUFFLE(3, 2, 1, 0)), _mm_shuffle_ps(m128Z, m128Z, _MM_SHUFFLE(3, 2, 1, 0)), _mm_shuffle_ps(m128T, m128T, _MM_SHUFFLE(3, 2, 1, 0))),
+				 Determinant3D(_mm_shuffle_ps(m128X, m128X, _MM_SHUFFLE(3, 2, 1, 0)), _mm_shuffle_ps(m128Z, m128Z, _MM_SHUFFLE(3, 2, 1, 0)), _mm_shuffle_ps(m128T, m128T, _MM_SHUFFLE(3, 2, 1, 0))),
+				-Determinant3D(_mm_shuffle_ps(m128X, m128X, _MM_SHUFFLE(3, 2, 1, 0)), _mm_shuffle_ps(m128Y, m128Y, _MM_SHUFFLE(3, 2, 1, 0)), _mm_shuffle_ps(m128T, m128T, _MM_SHUFFLE(3, 2, 1, 0))),
+				 Determinant3D(_mm_shuffle_ps(m128X, m128X, _MM_SHUFFLE(3, 2, 1, 0)), _mm_shuffle_ps(m128Y, m128Y, _MM_SHUFFLE(3, 2, 1, 0)), _mm_shuffle_ps(m128Z, m128Z, _MM_SHUFFLE(3, 2, 1, 0)))
+			);
+
+			return MulS(1.0f / det);
 		}
 
 	private:
@@ -938,7 +964,7 @@ namespace sml {
 	}
 	static float Determinant(const float* _matrixFP) {
 		//TODO: A bit more research for the 4x4 determinant. This is a bunch of shuffles. It works though.
-		mat4f _matrix;
+		mat4f _matrix(_matrixFP);
 		return sml::M128AddComponents(_mm_mul_ps(_matrix.m128X, _mm_set_ps(
 			-Determinant3D(_mm_shuffle_ps(_matrix.m128Y, _matrix.m128Y, _MM_SHUFFLE(3, 2, 1, 0)), _mm_shuffle_ps(_matrix.m128Z, _matrix.m128Z, _MM_SHUFFLE(3, 2, 1, 0)), _mm_shuffle_ps(_matrix.m128T, _matrix.m128T, _MM_SHUFFLE(3, 2, 1, 0))),
 			 Determinant3D(_mm_shuffle_ps(_matrix.m128Y, _matrix.m128Y, _MM_SHUFFLE(2, 3, 1, 0)), _mm_shuffle_ps(_matrix.m128Z, _matrix.m128Z, _MM_SHUFFLE(2, 3, 1, 0)), _mm_shuffle_ps(_matrix.m128T, _matrix.m128T, _MM_SHUFFLE(2, 3, 1, 0))),
@@ -949,17 +975,44 @@ namespace sml {
 
 	//Inverse
 	static mat4f Inverse(const mat4f& _matrix) {
-			return mat4f(1337.0f);
+		//Determinant
+		float det = Determinant(_matrix);
+		if (det < FLT_EPSILON)
+			return _matrix;
+
+		//Transpose Determinant Matrix
+		mat4f transpose = sml::Transpose(_matrix);
+		mat4f a_transpose(
+			 Determinant3D(_mm_shuffle_ps(_matrix.m128Y, _matrix.m128Y, _MM_SHUFFLE(0, 3, 2, 1)), _mm_shuffle_ps(_matrix.m128Z, _matrix.m128Z, _MM_SHUFFLE(0, 3, 2, 1)), _mm_shuffle_ps(_matrix.m128T, _matrix.m128T, _MM_SHUFFLE(0, 3, 2, 1))),
+			-Determinant3D(_mm_shuffle_ps(_matrix.m128X, _matrix.m128X, _MM_SHUFFLE(0, 3, 2, 1)), _mm_shuffle_ps(_matrix.m128Z, _matrix.m128Z, _MM_SHUFFLE(0, 3, 2, 1)), _mm_shuffle_ps(_matrix.m128T, _matrix.m128T, _MM_SHUFFLE(0, 3, 2, 1))),
+			 Determinant3D(_mm_shuffle_ps(_matrix.m128X, _matrix.m128X, _MM_SHUFFLE(0, 3, 2, 1)), _mm_shuffle_ps(_matrix.m128Y, _matrix.m128Y, _MM_SHUFFLE(0, 3, 2, 1)), _mm_shuffle_ps(_matrix.m128T, _matrix.m128T, _MM_SHUFFLE(0, 3, 2, 1))),
+			-Determinant3D(_mm_shuffle_ps(_matrix.m128X, _matrix.m128X, _MM_SHUFFLE(0, 3, 2, 1)), _mm_shuffle_ps(_matrix.m128Y, _matrix.m128Y, _MM_SHUFFLE(0, 3, 2, 1)), _mm_shuffle_ps(_matrix.m128Z, _matrix.m128Z, _MM_SHUFFLE(0, 3, 2, 1))),
+
+			-Determinant3D(_mm_shuffle_ps(_matrix.m128Y, _matrix.m128Y, _MM_SHUFFLE(1, 3, 2, 0)), _mm_shuffle_ps(_matrix.m128Z, _matrix.m128Z, _MM_SHUFFLE(1, 3, 2, 0)), _mm_shuffle_ps(_matrix.m128T, _matrix.m128T, _MM_SHUFFLE(1, 3, 2, 0))),
+			 Determinant3D(_mm_shuffle_ps(_matrix.m128X, _matrix.m128X, _MM_SHUFFLE(1, 3, 2, 0)), _mm_shuffle_ps(_matrix.m128Z, _matrix.m128Z, _MM_SHUFFLE(1, 3, 2, 0)), _mm_shuffle_ps(_matrix.m128T, _matrix.m128T, _MM_SHUFFLE(1, 3, 2, 0))),
+			-Determinant3D(_mm_shuffle_ps(_matrix.m128X, _matrix.m128X, _MM_SHUFFLE(1, 3, 2, 0)), _mm_shuffle_ps(_matrix.m128Y, _matrix.m128Y, _MM_SHUFFLE(1, 3, 2, 0)), _mm_shuffle_ps(_matrix.m128T, _matrix.m128T, _MM_SHUFFLE(1, 3, 2, 0))),
+			 Determinant3D(_mm_shuffle_ps(_matrix.m128X, _matrix.m128X, _MM_SHUFFLE(1, 3, 2, 0)), _mm_shuffle_ps(_matrix.m128Y, _matrix.m128Y, _MM_SHUFFLE(1, 3, 2, 0)), _mm_shuffle_ps(_matrix.m128Z, _matrix.m128Z, _MM_SHUFFLE(1, 3, 2, 0))),
+
+			 Determinant3D(_mm_shuffle_ps(_matrix.m128Y, _matrix.m128Y, _MM_SHUFFLE(2, 3, 1, 0)), _mm_shuffle_ps(_matrix.m128Z, _matrix.m128Z, _MM_SHUFFLE(2, 3, 1, 0)), _mm_shuffle_ps(_matrix.m128T, _matrix.m128T, _MM_SHUFFLE(2, 3, 1, 0))),
+			-Determinant3D(_mm_shuffle_ps(_matrix.m128X, _matrix.m128X, _MM_SHUFFLE(2, 3, 1, 0)), _mm_shuffle_ps(_matrix.m128Z, _matrix.m128Z, _MM_SHUFFLE(2, 3, 1, 0)), _mm_shuffle_ps(_matrix.m128T, _matrix.m128T, _MM_SHUFFLE(2, 3, 1, 0))),
+			 Determinant3D(_mm_shuffle_ps(_matrix.m128X, _matrix.m128X, _MM_SHUFFLE(2, 3, 1, 0)), _mm_shuffle_ps(_matrix.m128Y, _matrix.m128Y, _MM_SHUFFLE(2, 3, 1, 0)), _mm_shuffle_ps(_matrix.m128T, _matrix.m128T, _MM_SHUFFLE(2, 3, 1, 0))),
+			-Determinant3D(_mm_shuffle_ps(_matrix.m128X, _matrix.m128X, _MM_SHUFFLE(2, 3, 1, 0)), _mm_shuffle_ps(_matrix.m128Y, _matrix.m128Y, _MM_SHUFFLE(2, 3, 1, 0)), _mm_shuffle_ps(_matrix.m128Z, _matrix.m128Z, _MM_SHUFFLE(2, 3, 1, 0))),
+
+			-Determinant3D(_mm_shuffle_ps(_matrix.m128Y, _matrix.m128Y, _MM_SHUFFLE(3, 2, 1, 0)), _mm_shuffle_ps(_matrix.m128Z, _matrix.m128Z, _MM_SHUFFLE(3, 2, 1, 0)), _mm_shuffle_ps(_matrix.m128T, _matrix.m128T, _MM_SHUFFLE(3, 2, 1, 0))),
+			 Determinant3D(_mm_shuffle_ps(_matrix.m128X, _matrix.m128X, _MM_SHUFFLE(3, 2, 1, 0)), _mm_shuffle_ps(_matrix.m128Z, _matrix.m128Z, _MM_SHUFFLE(3, 2, 1, 0)), _mm_shuffle_ps(_matrix.m128T, _matrix.m128T, _MM_SHUFFLE(3, 2, 1, 0))),
+			-Determinant3D(_mm_shuffle_ps(_matrix.m128X, _matrix.m128X, _MM_SHUFFLE(3, 2, 1, 0)), _mm_shuffle_ps(_matrix.m128Y, _matrix.m128Y, _MM_SHUFFLE(3, 2, 1, 0)), _mm_shuffle_ps(_matrix.m128T, _matrix.m128T, _MM_SHUFFLE(3, 2, 1, 0))),
+			 Determinant3D(_mm_shuffle_ps(_matrix.m128X, _matrix.m128X, _MM_SHUFFLE(3, 2, 1, 0)), _mm_shuffle_ps(_matrix.m128Y, _matrix.m128Y, _MM_SHUFFLE(3, 2, 1, 0)), _mm_shuffle_ps(_matrix.m128Z, _matrix.m128Z, _MM_SHUFFLE(3, 2, 1, 0)))
+			);
+
+		return sml::MatrixMulS(a_transpose, 1.0f / det);
 	}
 	static mat4f Inverse(const float* _matrixFP) {
-			return mat4f(1337.0f);
+			return Inverse(mat4f(_matrixFP));
 	}
 	static mat4f InverseFast(const mat4f& _matrix) {
 			return mat4f(1337.0f);
 	}
-	static mat4f InverseFast(const float* _matrixFP) {
-			return mat4f(1337.0f);
-	}
+
 }
 
 #ifdef MAT4_FLOATS_GLOBAL
