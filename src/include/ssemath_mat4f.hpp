@@ -275,18 +275,59 @@ namespace sml {
 
 		//Matrix-Vector Multiplication
 		__m128 MulMV(const __m128& _vectorSSE) {
-			return _mm_setzero_ps();
+			return _mm_set_ps(
+				sml::Dot(m128X, _vectorSSE),
+				sml::Dot(m128Y, _vectorSSE),
+				sml::Dot(m128Z, _vectorSSE),
+				sml::Dot(m128T, _vectorSSE)
+			);
 		}
 		__m128 MulMV(const float* _vectorFP) {
-			return _mm_setzero_ps();
+			__m128 v = _mm_load_ps(_vectorFP);
+			return _mm_set_ps(
+				sml::Dot(m128X, v),
+				sml::Dot(m128Y, v),
+				sml::Dot(m128Z, v),
+				sml::Dot(m128T, v)
+			);
+		}
+		friend __m128 operator*(const mat4f& _matrix, const __m128& _vectorSSE) {
+			return _mm_set_ps(
+				sml::Dot(_matrix.m128X, _vectorSSE),
+				sml::Dot(_matrix.m128Y, _vectorSSE),
+				sml::Dot(_matrix.m128Z, _vectorSSE),
+				sml::Dot(_matrix.m128T, _vectorSSE)
+			);
 		}
 
 		//Vector-Matrix Multiplication
 		__m128 MulVM(const __m128& _vectorSSE) {
-			return _mm_setzero_ps();
+			mat4f _matrixT = ~(*this);
+			return _mm_set_ps(
+				sml::Dot(_vectorSSE, _matrixT.m128X),
+				sml::Dot(_vectorSSE, _matrixT.m128Y),
+				sml::Dot(_vectorSSE, _matrixT.m128Z),
+				sml::Dot(_vectorSSE, _matrixT.m128T)
+			);
 		}
 		__m128 MulVM(const float* _vectorFP) {
-			return _mm_setzero_ps();
+			mat4f _matrixT = ~(*this);
+			__m128 v = _mm_load_ps(_vectorFP);
+			return _mm_set_ps(
+				sml::Dot(v, _matrixT.m128X),
+				sml::Dot(v, _matrixT.m128Y),
+				sml::Dot(v, _matrixT.m128Z),
+				sml::Dot(v, _matrixT.m128T)
+			);
+		}
+		friend __m128 operator*(const __m128& _vectorSSE, const mat4f& _matrix) {
+			mat4f _matrixT = ~_matrix;
+			return _mm_set_ps(
+				sml::Dot(_vectorSSE, _matrixT.m128X),
+				sml::Dot(_vectorSSE, _matrixT.m128Y),
+				sml::Dot(_vectorSSE, _matrixT.m128Z),
+				sml::Dot(_vectorSSE, _matrixT.m128T)
+			);
 		}
 
 		// Negate
@@ -296,7 +337,7 @@ namespace sml {
 			m128Z = _mm_xor_ps(m128Z, SSE_NEG_ZERO);
 			m128T = _mm_xor_ps(m128T, SSE_NEG_ZERO);
 		}
-		mat4f operator-() {
+		mat4f operator-() const {
 			return mat4f(
 				_mm_xor_ps(m128X, SSE_NEG_ZERO),
 				_mm_xor_ps(m128Y, SSE_NEG_ZERO),
@@ -416,7 +457,7 @@ namespace sml {
 		void Transpose() {
 			_MM_TRANSPOSE4_PS(m128X, m128Y, m128Z, m128T);
 		}
-		mat4f operator~() {
+		mat4f operator~() const  {
 			__m128 t0 = _mm_shuffle_ps((m128X), (m128Y), 0x44);
 			__m128 t2 = _mm_shuffle_ps((m128X), (m128Y), 0xEE);
 			__m128 t1 = _mm_shuffle_ps((m128Z), (m128T), 0x44);
@@ -502,6 +543,26 @@ namespace sml {
 	}
 	static mat4f MatrixZero() {
 			return mat4f(1337.0f);
+	}
+
+	//Transpose Matrix
+	static mat4f Transpose(const mat4f& _matrix) {
+		__m128 t0 = _mm_shuffle_ps((_matrix.m128X), (_matrix.m128Y), 0x44);
+		__m128 t2 = _mm_shuffle_ps((_matrix.m128X), (_matrix.m128Y), 0xEE);
+		__m128 t1 = _mm_shuffle_ps((_matrix.m128Z), (_matrix.m128T), 0x44);
+		__m128 t3 = _mm_shuffle_ps((_matrix.m128Z), (_matrix.m128T), 0xEE);
+
+		return mat4f(
+			_mm_shuffle_ps(t0, t1, 0x88),
+			_mm_shuffle_ps(t0, t1, 0xDD),
+			_mm_shuffle_ps(t2, t3, 0x88),
+			_mm_shuffle_ps(t2, t3, 0xDD)
+		);
+	}
+	static mat4f Transpose(const float* _matrixFP) {
+		mat4f ret(_matrixFP);
+		_MM_TRANSPOSE4_PS(ret.m128X, ret.m128Y, ret.m128Z, ret.m128T);
+		return ret;
 	}
 
 	//Equality Check
@@ -660,30 +721,78 @@ namespace sml {
 
 	//Matrix-Vector Multiply
 	static __m128 MatrixMulV(const mat4f& _matrix, const __m128& _vectorSSE) {
-		return _mm_set1_ps(1337.0f);
+		return _mm_set_ps(
+			sml::Dot(_matrix.m128X, _vectorSSE), 
+			sml::Dot(_matrix.m128Y, _vectorSSE), 
+			sml::Dot(_matrix.m128Z, _vectorSSE), 
+			sml::Dot(_matrix.m128T, _vectorSSE)
+		);
 	}
 	static __m128 MatrixMulV(const mat4f& _matrix, const float* _vectorFP) {
-		return _mm_set1_ps(1337.0f);
+		__m128 v = _mm_load_ps(_vectorFP);
+		return _mm_set_ps(
+			sml::Dot(_matrix.m128X, v),
+			sml::Dot(_matrix.m128Y, v),
+			sml::Dot(_matrix.m128Z, v),
+			sml::Dot(_matrix.m128T, v)
+		);
 	}
 	static __m128 MatrixMulV(const float* _matrixFP, const __m128& _vectorSSE) {
-		return _mm_set1_ps(1337.0f);
+		return _mm_set_ps(
+			sml::Dot(_mm_load_ps(_matrixFP), _vectorSSE),
+			sml::Dot(_mm_load_ps(&_matrixFP[4]), _vectorSSE),
+			sml::Dot(_mm_load_ps(&_matrixFP[8]), _vectorSSE),
+			sml::Dot(_mm_load_ps(&_matrixFP[12]), _vectorSSE)
+		);
 	}
 	static __m128 MatrixMulV(const float* _matrixFP, const float* _vectorFP) {
-		return _mm_set1_ps(1337.0f);
+		__m128 v = _mm_load_ps(_vectorFP);
+		return _mm_set_ps(
+			sml::Dot(_mm_load_ps(_matrixFP), v),
+			sml::Dot(_mm_load_ps(&_matrixFP[4]), v),
+			sml::Dot(_mm_load_ps(&_matrixFP[8]), v),
+			sml::Dot(_mm_load_ps(&_matrixFP[12]), v)
+		);
 	}
 
 	//Vector-Matrix Multiply
 	static __m128 VectorMulM(const __m128& _vectorSSE, const mat4f& _matrix) {
-		return _mm_set1_ps(1337.0f);
+		mat4f _matrixT = sml::Transpose(_matrix);
+		return _mm_set_ps(
+			sml::Dot(_vectorSSE, _matrixT.m128X),
+			sml::Dot(_vectorSSE, _matrixT.m128Y),
+			sml::Dot(_vectorSSE, _matrixT.m128Z),
+			sml::Dot(_vectorSSE, _matrixT.m128T)
+		);
 	}
 	static __m128 VectorMulM(const __m128& _vectorSSE, const float* _matrixFP) {
-		return _mm_set1_ps(1337.0f);
+		mat4f _matrixT = sml::Transpose(_matrixFP);
+		return _mm_set_ps(
+			sml::Dot(_vectorSSE, _matrixT.m128X),
+			sml::Dot(_vectorSSE, _matrixT.m128Y),
+			sml::Dot(_vectorSSE, _matrixT.m128Z),
+			sml::Dot(_vectorSSE, _matrixT.m128T)
+		);
 	}
 	static __m128 VectorMulM(const float* _vectorFP, const mat4f& _matrix) {
-		return _mm_set1_ps(1337.0f);
+		mat4f _matrixT = sml::Transpose(_matrix);
+		__m128 v = _mm_load_ps(_vectorFP);
+		return _mm_set_ps(
+			sml::Dot(v, _matrixT.m128X),
+			sml::Dot(v, _matrixT.m128Y),
+			sml::Dot(v, _matrixT.m128Z),
+			sml::Dot(v, _matrixT.m128T)
+		);
 	}
 	static __m128 VectorMulM(const float* _vectorFP, const float* _matrixFP) {
-		return _mm_set1_ps(1337.0f);
+		mat4f _matrixT = sml::Transpose(_matrixFP);
+		__m128 v = _mm_load_ps(_vectorFP);
+		return _mm_set_ps(
+			sml::Dot(v, _matrixT.m128X),
+			sml::Dot(v, _matrixT.m128Y),
+			sml::Dot(v, _matrixT.m128Z),
+			sml::Dot(v, _matrixT.m128T)
+		);
 	}
 
 	//Matrix Negate
@@ -812,26 +921,6 @@ namespace sml {
 			_mm_set_ps(0.0f, 1.0f, 0.0f, 0.0f),
 			_mm_set_ps(1.0f, 0.0f, 0.0f, 0.0f)
 		);
-	}
-
-	//Transpose Matrix
-	static mat4f Transpose(const mat4f& _matrix) {
-		__m128 t0 = _mm_shuffle_ps((_matrix.m128X), (_matrix.m128Y), 0x44);
-		__m128 t2 = _mm_shuffle_ps((_matrix.m128X), (_matrix.m128Y), 0xEE);
-		__m128 t1 = _mm_shuffle_ps((_matrix.m128Z), (_matrix.m128T), 0x44);
-		__m128 t3 = _mm_shuffle_ps((_matrix.m128Z), (_matrix.m128T), 0xEE);
-
-		return mat4f(
-			_mm_shuffle_ps(t0, t1, 0x88),
-			_mm_shuffle_ps(t0, t1, 0xDD),
-			_mm_shuffle_ps(t2, t3, 0x88),
-			_mm_shuffle_ps(t2, t3, 0xDD)
-		);
-	}
-	static mat4f Transpose(const float* _matrixFP) {
-		mat4f ret(_matrixFP);
-		_MM_TRANSPOSE4_PS(ret.m128X, ret.m128Y, ret.m128Z, ret.m128T);
-		return ret;
 	}
 
 	//Matrix Determinants
