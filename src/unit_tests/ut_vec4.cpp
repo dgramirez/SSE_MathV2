@@ -1,8 +1,7 @@
 #define VEC4_FLOATS_GLOBAL
 
-#include "../xplat.h"
 #include "catch2.hpp"
-#include "../include/ssemath.h"
+#include "ut_utility.h"
 using namespace sml;
 
 namespace {
@@ -19,20 +18,9 @@ namespace {
 	const __m128 randM128B = _mm_set_ps(31179.39351f, 32603.31492f, 74536.62178f, 96166.19073f);
 	const float randScalarA = 7.34f;
 	const float randScalarB = 2.85f;
-
-	float rand_num() {
-		return static_cast<float>(rand()) / (static_cast<float>(RAND_MAX)/100.0f);
-	}
-
-	bool near_equal(float x, float y, float relValue= 0.00001f) {
-		float diff = fabs(x - y);
-		float A = fabs(x); float B = fabs(y);
-		float length = (A > B ? A : B) * relValue;
-		return diff <= length;
-	}
 }
 
-TEST_CASE("Contructors, Assignment, and Set", "[vec4f], [operator=], [Set]") {
+TEST_CASE("Contructors, Assignment, and Set for sml::vec4f", "[vec4f], [operator=], [Set]") {
 	//Create Constants
 	const float _PI = 3.1415927;
 
